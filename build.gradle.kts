@@ -4,7 +4,7 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.4"
 }
 
-group = "com.example.wayfarebackend"
+group = "com.wayfare"
 version = "0.0.1-SNAPSHOT"
 
 java {
@@ -16,7 +16,8 @@ repositories {
 }
 
 dependencies {
-	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
+	implementation("org.springframework.boot:spring-boot-starter-web")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 

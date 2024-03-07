@@ -1,1 +1,1 @@
-rootProject.name = "Wayfare-Backend"
+rootProject.name = "backend"
