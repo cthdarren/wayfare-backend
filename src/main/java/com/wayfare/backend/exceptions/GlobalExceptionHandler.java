@@ -11,7 +11,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseObject handleIllegalArgumentException(IllegalArgumentException e) {
-        ResponseObject response = new ResponseObject(false, e.getMessage());
-        return response;
+        return new ResponseObject(false, e.getMessage());
     }
 }
