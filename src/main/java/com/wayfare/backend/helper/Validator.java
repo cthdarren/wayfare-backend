@@ -17,7 +17,7 @@ public class Validator {
     public boolean validateRegex(){
         Matcher matcher = this.pattern.matcher(this.input);
         if (!matcher.find())
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(errMsg);
         return true;
     }
 }
