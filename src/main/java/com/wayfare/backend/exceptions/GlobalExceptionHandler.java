@@ -1,22 +1,17 @@
-//package com.wayfare.backend.exceptions;
-//
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.web.ErrorResponse;
-//import org.springframework.web.bind.MethodArgumentNotValidException;
-//import org.springframework.web.bind.annotation.ExceptionHandler;
-//import org.springframework.web.bind.annotation.RestControllerAdvice;
-//
-//@RestControllerAdvice
-//public class GlobalExceptionHandler extends  {
-//
-//
-//    @ExceptionHandler(MethodArgumentNotValidException.class)
-//    public ErrorResponse handleException(MethodArgumentNotValidException e){
-//        e.getBindingResult().getAllErrors();
-//    }
-//
-//    @ExceptionHandler(JsonMappingException.class)
-//    public ResponseEntity<ErrorMessage> handleJsonMappingException(JsonMappingException e){
-//    }
+package com.wayfare.backend.exceptions;
 
-//}
+import com.wayfare.backend.ResponseObject;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+@RestControllerAdvice
+@ResponseBody
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseObject handleIllegalArgumentException(IllegalArgumentException e) {
+        ResponseObject response = new ResponseObject(false, e.getMessage());
+        return response;
+    }
+}
