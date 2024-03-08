@@ -19,12 +19,12 @@ public class User{
     private String phoneNumber;
     private String secret;
     private byte[] salt;
-    private final Instant dateCreated;
+    private Instant dateCreated;
     private Instant dateModified;
 
     public User(String username, String email, String firstName, String lastName, String phoneNumber, String secret) {
         super();
-        dateCreated = Instant.now();
+        this.dateCreated = Instant.now();
         generateSalt();
         setUsername(username);
         setEmail(email);
