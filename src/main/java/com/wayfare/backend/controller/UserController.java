@@ -31,23 +31,23 @@ public class UserController {
         if (test.isPresent())
             result = new ResponseObject(true, test.get());
         else
-            result = new ResponseObject(false, null);
+            result = new ResponseObject(false, "User not found");
         
-        //purely for debugging purposes and seeing results in console
-        try{
-            String json = mapper.writeValueAsString(result);
-            System.out.println(json);
-        }
-        catch (JsonProcessingException e){ 
-            e.printStackTrace();
-        }
+//        //purely for debugging purposes and seeing results in console
+//        try{
+//            String json = mapper.writeValueAsString(result);
+//            System.out.println(json);
+//        }
+//        catch (JsonProcessingException e){
+//            e.printStackTrace();
+//        }
 
         return result;
 
     }
     @PostMapping(value = "/user/create", consumes = "application/json; charset=UTF-8", produces = "application/json; charset=UTF-8")
     public ResponseObject createUser(@RequestBody User user){
-        // purely for debugging and seeing output in console REMOVE FOR PROD
+//        // purely for debugging and seeing output in console REMOVE FOR PROD
 //        try{
 //            String json = mapper.writeValueAsString(user);
 //            System.out.println(json);
@@ -56,7 +56,6 @@ public class UserController {
 //            e.printStackTrace();
 //        }
         try{
-//            user.validateFields();
             User inserted = userRepo.insert(user);
             return new ResponseObject(true, inserted);
 

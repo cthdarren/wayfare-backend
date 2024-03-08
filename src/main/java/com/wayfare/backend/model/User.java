@@ -31,17 +31,12 @@ public class User{
         super();
         this.dateCreated = Instant.now();
         generateSalt();
-//        try {
-            setUsername(username);
-            setEmail(email);
-            setFirstName(firstName);
-            setLastName(lastName);
-            setPhoneNumber(phoneNumber);
-            setSecret(secret);
-//        }
-//        catch (IllegalArgumentException e){
-
-//        }
+        setUsername(username);
+        setEmail(email);
+        setFirstName(firstName);
+        setLastName(lastName);
+        setPhoneNumber(phoneNumber);
+        setSecret(secret);
     }
 
     public void generateSalt(){
