@@ -8,23 +8,23 @@ import java.time.Instant;
 import java.util.Random;
 import java.util.regex.Pattern;
 
-@Document("User")
+@Document("users")
 public class User{
 
     @Id
-    private String _username;
-    private String _email;
-    private String _firstName;
-    private String _lastName;
-    private String _phoneNumber;
-    private String _secret;
-    private byte[] _salt;
-    private final Instant _dateCreated;
-    private Instant _dateModified;
+    private String username;
+    private String email;
+    private String firstName;
+    private String lastName;
+    private String phoneNumber;
+    private String secret;
+    private byte[] salt;
+    private final Instant dateCreated;
+    private Instant dateModified;
 
     public User(String username, String email, String firstName, String lastName, String phoneNumber, String secret) {
         super();
-        _dateCreated = Instant.now();
+        dateCreated = Instant.now();
         generateSalt();
         setUsername(username);
         setEmail(email);
@@ -38,24 +38,24 @@ public class User{
         final Random r = new SecureRandom();
         byte[] salt = new byte[64];
         r.nextBytes(salt);
-        _salt = salt;
+        this.salt = salt;
     }
 
 
     public String getUsername() {
-        return _username;
+        return this.username;
     }
 
     public void setUsername(String _username) {
-        this._username = _username;
+        this.username = _username;
     }
 
     public String getEmail() {
-        return _email;
+        return this.email;
     }
 
     public void setEmail(String _email) {
-        this._email = _email;
+        this.email = _email;
     }
 
 //    public boolean validateEmail(String email) {
@@ -64,50 +64,50 @@ public class User{
 //    }
 
     public String getPhoneNumber() {
-        return _phoneNumber;
+        return this.phoneNumber;
     }
 
     public void setPhoneNumber(String _phoneNumber) {
-        this._phoneNumber = _phoneNumber;
+        this.phoneNumber = _phoneNumber;
     }
 
     public String getFirstName() {
-        return _firstName;
+        return this.firstName;
     }
 
     public void setFirstName(String _firstName) {
-        this._firstName = _firstName;
+        this.firstName = _firstName;
     }
 
     public String getLastName() {
-        return _lastName;
+        return lastName;
     }
 
     public void setLastName(String _lastName) {
-        this._lastName = _lastName;
+        this.lastName = _lastName;
     }
 
     public String getSecret() {
-        return _secret;
+        return this.secret;
     }
 
     public void setSecret(String _secret) {
-        this._secret = _secret;
+        this.secret = _secret;
     }
 
     public Instant getDateModified() {
-        return _dateModified;
+        return dateModified;
     }
 
     public void setDateModified(Instant _dateModified) {
-        this._dateModified = _dateModified;
+        this.dateModified = _dateModified;
     }
 
     public Instant getDateCreated() {
-        return _dateCreated;
+        return dateCreated;
     }
 
     public byte[] getSalt() {
-        return _salt;
+        return salt;
     }
 }
