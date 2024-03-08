@@ -8,9 +8,8 @@ import com.wayfare.backend.model.User;
 import com.wayfare.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
@@ -24,8 +23,17 @@ public class UserController {
         System.out.println(userRepo.findAll());
         return userRepo.findByFirstName(name);
     }
-    @GetMapping("/allusers")
-    public List<User> allUsers(String name) {
-        return userRepo.findAll();
-   }
+    @PostMapping(value = "/user/create", consumes = "application/json; charset=UTF-8", produces = "application/json; charset=UTF-8")
+    public ResponseEntity<String> createUser(@RequestBody User user) throws Exception {
+        System.out.println(user.getFirstName());
+        try{
+            String success = "true";
+            userRepo.save(new User("test", "lmoa", "test", "last", "1928312", "spingpoing"));
+            return ResponseEntity.ok(success);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.ok("failure");
+        }
+    }
 }
