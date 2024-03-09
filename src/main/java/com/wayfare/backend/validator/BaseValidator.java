@@ -1,4 +1,4 @@
-package com.wayfare.backend.helper;
+package com.wayfare.backend.validator;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,14 +12,11 @@ public class BaseValidator {
         this.errMsg = errMsg;
         this.input = input;
     }
-    public boolean validateRegex(){
+    public String validateRegex(){
         Matcher matcher = this.pattern.matcher(this.input);
         if (!matcher.find()) {
-            System.out.println(this.input);
-            System.out.println(this.errMsg);
-            System.out.println(this.input);
-            throw new IllegalArgumentException(errMsg);
+            return errMsg;
         }
-        return true;
+        return null;
     }
 }

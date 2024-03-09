@@ -1,4 +1,4 @@
-package com.wayfare.backend.helper;
+package com.wayfare.backend.validator;
 
 import java.util.regex.Pattern;
 

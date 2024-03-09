@@ -1,9 +1,7 @@
 package com.wayfare.backend.model;
 
-import com.wayfare.backend.helper.AlphanumericValidator;
-import com.wayfare.backend.helper.EmailValidator;
-import com.wayfare.backend.helper.NameValidator;
-import com.wayfare.backend.helper.PhoneNumberValidator;
+import com.wayfare.backend.exception.InvalidInputException;
+import com.wayfare.backend.validator.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,7 +10,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Random;
+
+import static com.wayfare.backend.helper.helper.generateSalt;
+import static com.wayfare.backend.helper.helper.hashPassword;
 
 
 // Regex guide for validation https://www.w3schools.com/java/java_regex.asp
@@ -30,9 +32,33 @@ public class User{
     private Instant dateCreated;
     private Instant dateModified;
 
-    public User(String username, String email, String firstName, String lastName, String phoneNumber, String secret) throws NoSuchAlgorithmException{
+    public User(String username, String email, String firstName, String lastName, String phoneNumber, String secret) throws NoSuchAlgorithmException, InvalidInputException {
+
+        ArrayList<String> errors = new ArrayList<>();
+        String usernameInvalid = new AlphanumericValidator(username, "Invalid username").validateRegex();
+        String emailInvalid = new EmailValidator(email).validateRegex();
+        String firstNameInvalid = new AlphabeticalValidator(firstName, "Invalid first name").validateRegex();
+        String lastNameInvalid = new AlphabeticalValidator(lastName, "Invalid last name").validateRegex();
+        String phoneNumberInvalid = new PhoneNumberValidator(phoneNumber).validateRegex();
+        String passwordInvalid = new PasswordValidator(secret).validateRegex();
+
+        if (usernameInvalid != null)
+            errors.add(usernameInvalid);
+        if (emailInvalid != null)
+            errors.add(emailInvalid);
+        if (firstNameInvalid != null)
+            errors.add(firstNameInvalid);
+        if (lastNameInvalid != null)
+            errors.add(lastNameInvalid);
+        if (phoneNumberInvalid != null)
+            errors.add(phoneNumberInvalid);
+        if (passwordInvalid != null)
+            errors.add(passwordInvalid);
+
+        if (!errors.isEmpty())
+            throw new InvalidInputException(errors);
+
         this.dateCreated = Instant.now();
-        generateSalt();
         setUsername(username);
         setEmail(email);
         setFirstName(firstName);
@@ -41,20 +67,11 @@ public class User{
         setSecret(secret);
     }
 
-    public void generateSalt(){
-        final Random r = new SecureRandom();
-        byte[] salt = new byte[64];
-        r.nextBytes(salt);
-        this.salt = salt;
-    }
-
-
     public String getUsername() {
         return this.username;
     }
 
     public void setUsername(String username) {
-        new AlphanumericValidator(username).validateRegex();
         this.username = username;
     }
 
@@ -63,29 +80,22 @@ public class User{
     }
 
     public void setEmail(String email) {
-        new EmailValidator(email).validateRegex();
         this.email = email;
     }
-
-
 
     public String getPhoneNumber() {
         return this.phoneNumber;
     }
 
     public void setPhoneNumber(String phoneNumber) {
-        new PhoneNumberValidator(phoneNumber).validateRegex();
         this.phoneNumber = phoneNumber;
     }
-
-
 
     public String getFirstName() {
         return this.firstName;
     }
 
     public void setFirstName(String firstName) {
-        new NameValidator(firstName).validateRegex();
         this.firstName = firstName;
     }
 
@@ -94,7 +104,6 @@ public class User{
     }
 
     public void setLastName(String lastName) {
-        new NameValidator(firstName).validateRegex();
         this.lastName = lastName;
     }
 
@@ -103,10 +112,8 @@ public class User{
     }
 
     public void setSecret(String secret) throws NoSuchAlgorithmException{
-        MessageDigest md = MessageDigest.getInstance("SHA-512");
-        md.update(this.getSalt());
-        byte[] hashedSecret = md.digest(secret.getBytes(StandardCharsets.UTF_8));
-        this.secret = hashedSecret;
+        this.salt = generateSalt();
+        this.secret = hashPassword(secret, getSalt());
     }
 
     public Instant getDateModified() {
