@@ -2,7 +2,9 @@ package com.wayfare.backend.model;
 
 import com.wayfare.backend.exception.InvalidInputException;
 import com.wayfare.backend.validator.*;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.nio.charset.StandardCharsets;
@@ -11,7 +13,9 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 import static com.wayfare.backend.helper.helper.generateSalt;
 import static com.wayfare.backend.helper.helper.hashPassword;
@@ -22,53 +26,40 @@ import static com.wayfare.backend.helper.helper.hashPassword;
 public class User{
 
     @Id
+    private String id;
+
+    @NotBlank(message = "Username cannot be empty")
     private String username;
+    @NotBlank(message = "Email cannot be empty")
     private String email;
+    @NotBlank(message = "First name cannot be empty")
     private String firstName;
+    @NotBlank(message = "Last name cannot be empty")
     private String lastName;
+    @NotBlank(message = "Phone number cannot be empty")
     private String phoneNumber;
-    private byte[] secret;
-    private byte[] salt;
+    @NotBlank(message = "Password cannot be empty")
+    private String secret;
     private Instant dateCreated;
     private Instant dateModified;
+    @DBRef
+    private Set<Role> roles = new HashSet<>();
 
-    public User(String username, String email, String firstName, String lastName, String phoneNumber, String secret) throws NoSuchAlgorithmException, InvalidInputException {
+    public User(){
+    }
 
-        ArrayList<String> errors = new ArrayList<>();
-        String usernameInvalid = new AlphanumericValidator(username, "Invalid username").validateRegex();
-        String emailInvalid = new EmailValidator(email).validateRegex();
-        String firstNameInvalid = new AlphabeticalValidator(firstName, "Invalid first name").validateRegex();
-        String lastNameInvalid = new AlphabeticalValidator(lastName, "Invalid last name").validateRegex();
-        String phoneNumberInvalid = new PhoneNumberValidator(phoneNumber).validateRegex();
-        String passwordInvalid = new PasswordValidator(secret).validateRegex();
-
-        if (usernameInvalid != null)
-            errors.add(usernameInvalid);
-        if (emailInvalid != null)
-            errors.add(emailInvalid);
-        if (firstNameInvalid != null)
-            errors.add(firstNameInvalid);
-        if (lastNameInvalid != null)
-            errors.add(lastNameInvalid);
-        if (phoneNumberInvalid != null)
-            errors.add(phoneNumberInvalid);
-        if (passwordInvalid != null)
-            errors.add(passwordInvalid);
-
-        if (!errors.isEmpty())
-            throw new InvalidInputException(errors);
-
-        this.dateCreated = Instant.now();
-        setUsername(username);
-        setEmail(email);
-        setFirstName(firstName);
-        setLastName(lastName);
-        setPhoneNumber(phoneNumber);
-        setSecret(secret);
+    public User(String username, String email, String fn, String ln, String pn, String secret)
+    {
+        this.username = username;
+        this.email = email;
+        this.firstName = fn;
+        this.lastName = ln;
+        this.phoneNumber = pn;
+        this.secret = secret;
     }
 
     public String getUsername() {
-        return this.username;
+        return username;
     }
 
     public void setUsername(String username) {
@@ -76,23 +67,15 @@ public class User{
     }
 
     public String getEmail() {
-        return this.email;
+        return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public String getPhoneNumber() {
-        return this.phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
     public String getFirstName() {
-        return this.firstName;
+        return firstName;
     }
 
     public void setFirstName(String firstName) {
@@ -107,28 +90,19 @@ public class User{
         this.lastName = lastName;
     }
 
-    public byte[] getSecret() {
-        return this.secret;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setSecret(String secret) throws NoSuchAlgorithmException{
-        this.salt = generateSalt();
-        this.secret = hashPassword(secret, getSalt());
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
-    public Instant getDateModified() {
-        return dateModified;
+    public String getSecret() {
+        return secret;
     }
 
-    public void setDateModified(Instant dateModified) {
-        this.dateModified = dateModified;
-    }
-
-    public Instant getDateCreated() {
-        return dateCreated;
-    }
-
-    public byte[] getSalt() {
-        return salt;
+    public void setSecret(String secret) {
+        this.secret = secret;
     }
 }

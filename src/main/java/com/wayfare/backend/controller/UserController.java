@@ -57,7 +57,7 @@ public class UserController {
 //        }
         try{
             User inserted = userRepo.insert(user);
-            return new ResponseObject(true, inserted.getUsername());
+            return new ResponseObject(true, "lol");//inserted.getUsername());
 
         }
         catch (IllegalArgumentException e){
