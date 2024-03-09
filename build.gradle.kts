@@ -22,7 +22,9 @@ dependencies {
 	implementation("com.fasterxml.jackson.core:jackson-databind:2.16.0")
 	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.16.0")
 	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.16.0")
+	implementation("org.springframework.boot:spring-boot-starter-security")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.springframework.security:spring-security-test")
 }
 
 tasks.withType<Test> {
