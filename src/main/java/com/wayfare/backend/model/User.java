@@ -1,13 +1,21 @@
 package com.wayfare.backend.model;
 
+import com.wayfare.backend.helper.AlphanumericValidator;
+import com.wayfare.backend.helper.EmailValidator;
+import com.wayfare.backend.helper.NameValidator;
+import com.wayfare.backend.helper.PhoneNumberValidator;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.Random;
-import java.util.regex.Pattern;
 
+
+// Regex guide for validation https://www.w3schools.com/java/java_regex.asp
 @Document("users")
 public class User{
 
@@ -17,14 +25,13 @@ public class User{
     private String firstName;
     private String lastName;
     private String phoneNumber;
-    private String secret;
+    private byte[] secret;
     private byte[] salt;
-    private final Instant dateCreated;
+    private Instant dateCreated;
     private Instant dateModified;
 
-    public User(String username, String email, String firstName, String lastName, String phoneNumber, String secret) {
-        super();
-        dateCreated = Instant.now();
+    public User(String username, String email, String firstName, String lastName, String phoneNumber, String secret) throws NoSuchAlgorithmException{
+        this.dateCreated = Instant.now();
         generateSalt();
         setUsername(username);
         setEmail(email);
@@ -46,61 +53,68 @@ public class User{
         return this.username;
     }
 
-    public void setUsername(String _username) {
-        this.username = _username;
+    public void setUsername(String username) {
+        new AlphanumericValidator(username).validateRegex();
+        this.username = username;
     }
 
     public String getEmail() {
         return this.email;
     }
 
-    public void setEmail(String _email) {
-        this.email = _email;
+    public void setEmail(String email) {
+        new EmailValidator(email).validateRegex();
+        this.email = email;
     }
 
-//    public boolean validateEmail(String email) {
-//        String regexPattern = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-//        return Pattern.compile(regexPattern).matcher(email).matches();
-//    }
+
 
     public String getPhoneNumber() {
         return this.phoneNumber;
     }
 
-    public void setPhoneNumber(String _phoneNumber) {
-        this.phoneNumber = _phoneNumber;
+    public void setPhoneNumber(String phoneNumber) {
+        new PhoneNumberValidator(phoneNumber).validateRegex();
+        this.phoneNumber = phoneNumber;
     }
+
+
 
     public String getFirstName() {
         return this.firstName;
     }
 
-    public void setFirstName(String _firstName) {
-        this.firstName = _firstName;
+    public void setFirstName(String firstName) {
+        new NameValidator(firstName).validateRegex();
+        this.firstName = firstName;
     }
 
     public String getLastName() {
         return lastName;
     }
 
-    public void setLastName(String _lastName) {
-        this.lastName = _lastName;
+    public void setLastName(String lastName) {
+        new NameValidator(firstName).validateRegex();
+        this.lastName = lastName;
     }
 
-    public String getSecret() {
+    public byte[] getSecret() {
         return this.secret;
     }
 
-    public void setSecret(String _secret) {
-        this.secret = _secret;
+    public void setSecret(String secret) throws NoSuchAlgorithmException{
+        MessageDigest md = MessageDigest.getInstance("SHA-512");
+        md.update(this.getSalt());
+        byte[] hashedSecret = md.digest(secret.getBytes(StandardCharsets.UTF_8));
+        this.secret = hashedSecret;
     }
 
     public Instant getDateModified() {
         return dateModified;
     }
 
-    public void setDateModified(Instant _dateModified) {
-        this.dateModified = _dateModified;
+    public void setDateModified(Instant dateModified) {
+        this.dateModified = dateModified;
     }
 
     public Instant getDateCreated() {
