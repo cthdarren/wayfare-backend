@@ -7,6 +7,9 @@ import com.wayfare.backend.helper.PhoneNumberValidator;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.Random;
@@ -22,13 +25,12 @@ public class User{
     private String firstName;
     private String lastName;
     private String phoneNumber;
-    private String secret;
+    private byte[] secret;
     private byte[] salt;
     private Instant dateCreated;
     private Instant dateModified;
 
-    public User(String username, String email, String firstName, String lastName, String phoneNumber, String secret) {
-        super();
+    public User(String username, String email, String firstName, String lastName, String phoneNumber, String secret) throws NoSuchAlgorithmException{
         this.dateCreated = Instant.now();
         generateSalt();
         setUsername(username);
@@ -96,12 +98,15 @@ public class User{
         this.lastName = lastName;
     }
 
-    public String getSecret() {
+    public byte[] getSecret() {
         return this.secret;
     }
 
-    public void setSecret(String secret) {
-        this.secret = secret;
+    public void setSecret(String secret) throws NoSuchAlgorithmException{
+        MessageDigest md = MessageDigest.getInstance("SHA-512");
+        md.update(this.getSalt());
+        byte[] hashedSecret = md.digest(secret.getBytes(StandardCharsets.UTF_8));
+        this.secret = hashedSecret;
     }
 
     public Instant getDateModified() {
