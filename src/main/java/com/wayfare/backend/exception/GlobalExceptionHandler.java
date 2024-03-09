@@ -1,4 +1,4 @@
-package com.wayfare.backend.exceptions;
+package com.wayfare.backend.exception;
 
 import com.wayfare.backend.ResponseObject;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -11,9 +11,9 @@ import java.security.NoSuchAlgorithmException;
 @ResponseBody
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseObject handleIllegalArgumentException(IllegalArgumentException e) {
-        return new ResponseObject(false, e.getMessage());
+    @ExceptionHandler(InvalidInputException.class)
+    public ResponseObject handleInvalidInputException(InvalidInputException e) {
+        return new ResponseObject(false, e.getMessage().split(","));
     }
     @ExceptionHandler(NoSuchAlgorithmException.class)
     public ResponseObject handleNoSuchAlgorithmException(NoSuchAlgorithmException e) {
