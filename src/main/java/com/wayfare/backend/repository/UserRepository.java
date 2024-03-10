@@ -6,12 +6,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import java.util.List;
+import java.util.Optional;
 
-
-// collectionResourceRel refers to the name of the collection in mongoDB
-// path refers to the REST API URL to be accessed from at e.g. path = users is at localhost:8080/users
-@RepositoryRestResource(collectionResourceRel = "users", path = "user")
 
 public interface UserRepository extends MongoRepository<User, String> {
-    List<User> findByFirstName(@Param("firstName") String firstName);
+    Optional<User> findByUsername(String username);
+
+    Boolean existsByUsername(String username);
+
+    Boolean existsByEmail(String email);
 }
