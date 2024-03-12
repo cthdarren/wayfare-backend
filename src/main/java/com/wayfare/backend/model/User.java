@@ -1,6 +1,5 @@
 package com.wayfare.backend.model;
 
-import com.wayfare.backend.exception.InvalidInputException;
 import com.wayfare.backend.validator.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
