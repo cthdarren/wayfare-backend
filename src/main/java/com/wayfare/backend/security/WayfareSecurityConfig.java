@@ -15,6 +15,12 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class WayfareSecurityConfig {
 
+//    @bean
+//    public userdetailsservice userdetailsservice() {
+//        inmemoryuserdetailsmanager manager = new inmemoryuserdetailsmanager();
+//        manager.createuser(user.withdefaultpasswordencoder().username("user").password("password").roles("user").build());
+//        return manager;
+//    }
 
     @Bean
     SecurityFilterChain web(HttpSecurity http) throws Exception {
@@ -23,7 +29,8 @@ public class WayfareSecurityConfig {
                 .csrf().disable()
                 .authorizeHttpRequests((authorize) -> authorize
                         .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
-                        .requestMatchers("/api/**").permitAll()
+                        .requestMatchers("/user/**").permitAll()
+                        .requestMatchers("/login").permitAll()
                         .anyRequest().authenticated()
                 );
         // ...
