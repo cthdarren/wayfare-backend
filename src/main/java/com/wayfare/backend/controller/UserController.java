@@ -20,6 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api/v1/user")
 public class UserController {
 
     @Autowired
@@ -27,9 +28,8 @@ public class UserController {
 
     ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/{id}")
     public ResponseObject getUser(@PathVariable("id") String id){
-        System.out.println("what the fuck");
         ResponseObject result;
         // Optional classes https://www.baeldung.com/java-optional
         Optional<User> test = userRepo.findById(id);
@@ -50,8 +50,9 @@ public class UserController {
         return result;
 
     }
-    @PostMapping(value = "/user/create", consumes = "application/json; charset=UTF-8", produces = "application/json; charset=UTF-8")
+    @PostMapping(value = "/create", consumes = "application/json; charset=UTF-8", produces = "application/json; charset=UTF-8")
     public ResponseObject createUser(@RequestBody User user){
+        System.out.println("test");
 //        // purely for debugging and seeing output in console REMOVE FOR PROD
 //        try{
 //            String json = mapper.writeValueAsString(user);
@@ -62,7 +63,7 @@ public class UserController {
 //        }
         try{
             User inserted = userRepo.insert(user);
-            return new ResponseObject(true, "lol");//inserted.getUsername());
+            return new ResponseObject(true, inserted.getUsername());//inserted.getUsername());
 
         }
         catch (IllegalArgumentException e){
