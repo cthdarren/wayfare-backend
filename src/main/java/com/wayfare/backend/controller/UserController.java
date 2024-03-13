@@ -11,8 +11,12 @@ import com.wayfare.backend.ResponseObject;
 import com.wayfare.backend.model.User;
 import com.wayfare.backend.repository.UserRepository;
 
+import jakarta.servlet.DispatcherType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,6 +29,7 @@ public class UserController {
 
     @GetMapping("/user/{id}")
     public ResponseObject getUser(@PathVariable("id") String id){
+        System.out.println("what the fuck");
         ResponseObject result;
         // Optional classes https://www.baeldung.com/java-optional
         Optional<User> test = userRepo.findById(id);
@@ -71,4 +76,6 @@ public class UserController {
         }
 
     }
+
+
 }
