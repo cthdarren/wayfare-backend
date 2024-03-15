@@ -33,6 +33,13 @@ public class User {
     private String username;
 
     @NotBlank
+    @Email
+    private String email;
+
+    @NotBlank
+    private String phoneNumber;
+
+    @NotBlank
     @Size(max = 120)
     private String password;
 
@@ -66,4 +73,7 @@ public class User {
     public String getRole() {
         return roles;
     }
+
+    public String getEmail() {return email; }
+    public String getPhoneNumber() {return phoneNumber; }
 }
