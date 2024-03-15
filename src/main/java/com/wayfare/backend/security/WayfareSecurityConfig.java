@@ -27,10 +27,14 @@ public class WayfareSecurityConfig {
         http
                 //REMOVE FOR PRODUCTION
                 .csrf().disable()
+//                .formLogin(form -> form
+//                        .loginPage("/login")
+//                        .permitAll()
+//                )
                 .authorizeHttpRequests((authorize) -> authorize
                         .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
                         .requestMatchers("/user/**").permitAll()
-                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/**").permitAll()
                         .anyRequest().authenticated()
                 );
         // ...
