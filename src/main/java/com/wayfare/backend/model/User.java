@@ -43,14 +43,16 @@ public class User {
     @Size(max = 120)
     private String password;
 
-    @DBRef
     private String roles;
 
     public User() {
     }
 
-    public User(String username, String roles) {
+    public User(String username, String password, String email, String phoneNumber, String roles) {
         this.username = username;
+        this.phoneNumber = phoneNumber;
+        this.password = password;
+        this.email = email;
         this.roles = roles;
     }
 

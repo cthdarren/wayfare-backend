@@ -5,6 +5,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.wayfare.backend.ResponseObject;
 import com.wayfare.backend.model.User;
 import com.wayfare.backend.repository.UserRepository;
+import com.wayfare.backend.security.WayfareUserDetailService;
+import com.wayfare.backend.security.WayfareUserDetails;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -16,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -27,10 +30,47 @@ public class LoginController {
 
     private final AuthenticationManager authenticationManager;
 
+
+    private WayfareUserDetails wayfareUserDetails;
+    @Autowired
+    private WayfareUserDetailService wayfareUserDetailsService;
+
+    @Autowired
+    private UserRepository userRepo;
+
     public LoginController(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }
 
+    @PostMapping(value = "/register", consumes = "application/json; charset=UTF-8", produces = "application/json; charset=UTF-8")
+    public ResponseObject wayfareRegister(@RequestBody RegisterRequest registerRequest){
+        System.out.println("test");
+//        // purely for debugging and seeing output in console REMOVE FOR PROD
+//        try{
+//            String json = mapper.writeValueAsString(user);
+//            System.out.println(json);
+//        }
+//        catch (JsonProcessingException e){
+//            e.printStackTrace();
+//        }
+
+        User toInsert = new User(registerRequest.username, registerRequest.password, registerRequest.email, registerRequest.phoneNumber, registerRequest.roles);
+        wayfareUserDetailsService.registerUser(toInsert);
+        try{
+            return new ResponseObject(true,"bruh");//inserted.getUsername());
+
+        }
+        catch (IllegalArgumentException e){
+            return new ResponseObject(false, e.getMessage());
+        }
+        catch(DuplicateKeyException e){
+            return new ResponseObject(false, "Username already exists");
+        }
+        catch (Exception e){
+            return new ResponseObject(false, e.getMessage());
+        }
+
+    }
     @PostMapping("/login")
     public ResponseObject wayfareLogin(@RequestBody LoginRequest loginRequest) {
         Authentication authenticationRequest =
@@ -44,4 +84,6 @@ public class LoginController {
     public record LoginRequest(String username, String password) {
     }
 
+    public record RegisterRequest(String username, String password, String email, String phoneNumber, String roles) {
+    }
 }

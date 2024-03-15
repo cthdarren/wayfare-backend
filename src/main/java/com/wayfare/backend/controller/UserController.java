@@ -50,33 +50,7 @@ public class UserController {
         return result;
 
     }
-    @PostMapping(value = "/create", consumes = "application/json; charset=UTF-8", produces = "application/json; charset=UTF-8")
-    public ResponseObject createUser(@RequestBody User user){
-        System.out.println("test");
-//        // purely for debugging and seeing output in console REMOVE FOR PROD
-//        try{
-//            String json = mapper.writeValueAsString(user);
-//            System.out.println(json);
-//        }
-//        catch (JsonProcessingException e){
-//            e.printStackTrace();
-//        }
-        try{
-            User inserted = userRepo.insert(user);
-            return new ResponseObject(true, inserted.getUsername());//inserted.getUsername());
 
-        }
-        catch (IllegalArgumentException e){
-            return new ResponseObject(false, e.getMessage());
-        }
-        catch(DuplicateKeyException e){
-            return new ResponseObject(false, "Username already exists");
-        }
-        catch (Exception e){
-            return new ResponseObject(false, e.getMessage());
-        }
-
-    }
 
 
 }
