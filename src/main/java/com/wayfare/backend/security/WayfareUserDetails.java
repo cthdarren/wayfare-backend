@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 
+//The UserDetails interface by Spring manages authentication.
 public class WayfareUserDetails implements UserDetails {
     private User user;
     public WayfareUserDetails(User user){

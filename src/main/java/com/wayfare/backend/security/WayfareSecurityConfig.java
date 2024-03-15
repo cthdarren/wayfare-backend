@@ -48,7 +48,7 @@ public class WayfareSecurityConfig {
                 .formLogin(withDefaults())
                 .csrf((csrf) -> csrf.disable())
                         .authorizeHttpRequests((authorize) -> authorize
-                                .requestMatchers("/api/auth/login")
+                                .requestMatchers("/api/**")
                                 .permitAll()
                                 .anyRequest().authenticated()
                         );
