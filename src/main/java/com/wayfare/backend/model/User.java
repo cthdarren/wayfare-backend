@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Size;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
@@ -31,24 +33,18 @@ public class User {
     private String username;
 
     @NotBlank
-    @Size(max = 50)
-    @Email
-    private String email;
-
-    @NotBlank
     @Size(max = 120)
     private String password;
 
     @DBRef
-    private Set<Role> roles = new HashSet<>();
+    private String roles;
 
     public User() {
     }
 
-    public User(String username, String email, String password) {
+    public User(String username, String roles) {
         this.username = username;
-        this.email = email;
-        this.password = password;
+        this.roles = roles;
     }
 
     public String getId() {
@@ -63,31 +59,11 @@ public class User {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Set<Role> getRoles() {
+    public String getRole() {
         return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
     }
 }
