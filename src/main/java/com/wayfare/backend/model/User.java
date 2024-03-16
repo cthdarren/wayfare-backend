@@ -1,5 +1,6 @@
 package com.wayfare.backend.model;
 
+import com.wayfare.backend.security.WayfareUserDetailService;
 import com.wayfare.backend.validator.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -9,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
@@ -23,25 +25,19 @@ import static com.wayfare.backend.helper.helper.hashPassword;
 
 // Regex guide for validation https://www.w3schools.com/java/java_regex.asp
 
+
 @Document(collection = "users")
-public class User {
-    @Id
+public class User{
+    private WayfareUserDetailService wayfareUserDetailService;
     private String id;
 
-    @NotBlank
-    @Size(max = 20)
     private String username;
 
-    @NotBlank
-    @Email
     private String email;
 
-    @NotBlank
     private String phoneNumber;
 
-    @NotBlank
-    @Size(max = 120)
-    private String password;
+    private String encryptedPassword;
 
     private String roles;
 
@@ -49,11 +45,12 @@ public class User {
     }
 
     public User(String username, String password, String email, String phoneNumber, String roles) {
-        this.username = username;
-        this.phoneNumber = phoneNumber;
-        this.password = password;
-        this.email = email;
-        this.roles = roles;
+        super();
+        setUsername(username);
+        setEncryptedPassword(password);
+        setEmail(email);
+        setPhoneNumber(phoneNumber);
+        setRoles(roles);
     }
 
     public String getId() {
@@ -68,8 +65,8 @@ public class User {
         return username;
     }
 
-    public String getPassword() {
-        return password;
+    public String getEncryptedPassword() {
+        return encryptedPassword;
     }
 
     public String getRole() {
@@ -78,4 +75,26 @@ public class User {
 
     public String getEmail() {return email; }
     public String getPhoneNumber() {return phoneNumber; }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setEncryptedPassword(String password) {
+        BCryptPasswordEncoder test = new BCryptPasswordEncoder();
+        this.encryptedPassword = test.encode(password);
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setRoles(String roles) {
+        this.roles = roles;
+    }
+
 }

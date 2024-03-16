@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.wayfare.backend.ResponseObject;
 import com.wayfare.backend.model.User;
+import com.wayfare.backend.model.UserCreationDTO;
 import com.wayfare.backend.repository.UserRepository;
 import com.wayfare.backend.security.WayfareUserDetailService;
 import com.wayfare.backend.security.WayfareUserDetails;
@@ -45,20 +46,11 @@ public class LoginController {
     @PostMapping(value = "/register", consumes = "application/json; charset=UTF-8", produces = "application/json; charset=UTF-8")
     public ResponseObject wayfareRegister(@RequestBody RegisterRequest registerRequest){
         System.out.println("test");
-//        // purely for debugging and seeing output in console REMOVE FOR PROD
-//        try{
-//            String json = mapper.writeValueAsString(user);
-//            System.out.println(json);
-//        }
-//        catch (JsonProcessingException e){
-//            e.printStackTrace();
-//        }
 
-        User toInsert = new User(registerRequest.username, registerRequest.password, registerRequest.email, registerRequest.phoneNumber, registerRequest.roles);
-        wayfareUserDetailsService.registerUser(toInsert);
         try{
+            UserCreationDTO toInsert = new UserCreationDTO(registerRequest.username,  registerRequest.password, registerRequest.verifypassword, registerRequest.email, registerRequest.phoneNumber);
+            wayfareUserDetailsService.registerUser(toInsert);
             return new ResponseObject(true,"bruh");//inserted.getUsername());
-
         }
         catch (IllegalArgumentException e){
             return new ResponseObject(false, e.getMessage());
@@ -84,6 +76,6 @@ public class LoginController {
     public record LoginRequest(String username, String password) {
     }
 
-    public record RegisterRequest(String username, String password, String email, String phoneNumber, String roles) {
+    public record RegisterRequest(String username, String password, String verifypassword, String email, String phoneNumber, String roles) {
     }
 }

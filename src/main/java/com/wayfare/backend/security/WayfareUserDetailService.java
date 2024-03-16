@@ -1,13 +1,22 @@
 package com.wayfare.backend.security;
 
+import com.wayfare.backend.helper.Mapper;
 import com.wayfare.backend.model.User;
+import com.wayfare.backend.model.UserCreationDTO;
 import com.wayfare.backend.repository.UserRepository;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
+import java.util.Set;
 
 //This service provides all the functionality to view and manipulate data going into and out of the database
 @Service
@@ -23,8 +32,13 @@ public class WayfareUserDetailService implements UserDetailsService {
         return new WayfareUserDetails(user);
     }
 
-    public void registerUser(User user) throws DuplicateKeyException{
-        User newUser = user;
-        userRepo.save(newUser);
+    public void registerUser(UserCreationDTO userCreationDto) throws IllegalArgumentException{
+        userCreationDto.validate();
+        if (userCreationDto.hasErrors())
+            throw new IllegalArgumentException(userCreationDto.getErrors().toString());
+        else
+        {
+            userRepo.save(new Mapper().toUser(userCreationDto));
+        }
     }
 }
