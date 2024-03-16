@@ -1,5 +1,6 @@
 package com.wayfare.backend.security;
 
+import com.wayfare.backend.exception.FormatException;
 import com.wayfare.backend.helper.Mapper;
 import com.wayfare.backend.model.User;
 import com.wayfare.backend.model.UserCreationDTO;
@@ -32,17 +33,14 @@ public class WayfareUserDetailService implements UserDetailsService {
         return new WayfareUserDetails(user);
     }
 
-    public void registerUser(UserCreationDTO userCreationDto) throws IllegalArgumentException{
+    public void registerUser(UserCreationDTO userCreationDto) throws FormatException{
         userCreationDto.validate();
+        if (userRepo.existsByUsername(userCreationDto.getUsername()))
+            userCreationDto.addErrors("Username already exists");
+        if (userRepo.existsByEmail(userCreationDto.getEmail()))
+            userCreationDto.addErrors("Email already exists");
         if (userCreationDto.hasErrors())
-            throw new IllegalArgumentException(userCreationDto.getErrors().toString());
-        else
-        {
-            if (userRepo.existsByUsername(userCreationDto.getUsername()))
-                throw new IllegalArgumentException("Username already exists");
-            else if (userRepo.existsByEmail(userCreationDto.getEmail()))
-                throw new IllegalArgumentException("Email already exists");
-            userRepo.save(new Mapper().toUser(userCreationDto));
-        }
+            throw new FormatException(userCreationDto.getErrors());
+        userRepo.save(new Mapper().toUser(userCreationDto));
     }
 }

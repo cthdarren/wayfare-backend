@@ -2,9 +2,9 @@ package com.wayfare.backend.exception;
 
 import java.util.Set;
 
-public class RegistrationFormatException extends Exception{
+public class FormatException extends Exception{
     private Set<String> errors;
-    public RegistrationFormatException(Set<String> errors){
+    public FormatException(Set<String> errors){
         super();
         this.errors = errors;
     }

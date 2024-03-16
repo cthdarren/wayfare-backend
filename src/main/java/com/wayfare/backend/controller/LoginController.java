@@ -3,6 +3,7 @@ package com.wayfare.backend.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.wayfare.backend.ResponseObject;
+import com.wayfare.backend.exception.FormatException;
 import com.wayfare.backend.model.User;
 import com.wayfare.backend.model.UserCreationDTO;
 import com.wayfare.backend.repository.UserRepository;
@@ -19,13 +20,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 import java.util.Set;
 
 import static com.wayfare.backend.model.RoleEnum.ROLE_USER;
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -34,9 +39,10 @@ public class LoginController {
     private final AuthenticationManager authenticationManager;
 
 
-    private WayfareUserDetails wayfareUserDetails;
     @Autowired
     private WayfareUserDetailService wayfareUserDetailsService;
+    private SecurityContextRepository securityContextRepository =
+            new HttpSessionSecurityContextRepository();
 
     @Autowired
     private UserRepository userRepo;
@@ -52,16 +58,16 @@ public class LoginController {
         try{
             UserCreationDTO toInsert = new UserCreationDTO(registerRequest.username,  registerRequest.password, registerRequest.verifypassword, registerRequest.email, registerRequest.phoneNumber, ROLE_USER);
             wayfareUserDetailsService.registerUser(toInsert);
-            return new ResponseObject(true,"bruh");//inserted.getUsername());
+            return new ResponseObject(true, registerRequest.username);//inserted.getUsername());
         }
-        catch (IllegalArgumentException e){
-            return new ResponseObject(false, e.getMessage());
+        catch (FormatException e){
+            return new ResponseObject(false, e.getErrors());
         }
         catch(DuplicateKeyException e){
             return new ResponseObject(false, "Username already exists");
         }
         catch (Exception e){
-            return new ResponseObject(false, e.getMessage());
+            return new ResponseObject(false, "Internal Server Error");
         }
 
     }
@@ -72,12 +78,12 @@ public class LoginController {
         Authentication authenticationResponse =
                 this.authenticationManager.authenticate(authenticationRequest);
         // ...
-        return new ResponseObject(true, authenticationResponse);
+        return new ResponseObject(true, authenticationResponse.getName());
     }
 
     public record LoginRequest(String username, String password) {
     }
 
-    public record RegisterRequest(String username, String password, String verifypassword, String email, String phoneNumber, String roles) {
+    public record RegisterRequest(String username, String password, String verifypassword, String email, String phoneNumber) {
     }
 }
