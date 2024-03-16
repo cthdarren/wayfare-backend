@@ -9,6 +9,7 @@ import com.wayfare.backend.model.UserCreationDTO;
 import com.wayfare.backend.repository.UserRepository;
 import com.wayfare.backend.security.WayfareUserDetailService;
 import com.wayfare.backend.security.WayfareUserDetails;
+import com.wayfare.backend.security.jwt.AuthService;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -37,6 +38,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class LoginController {
 
     private final AuthenticationManager authenticationManager;
+    private final AuthService authService;
 
 
     @Autowired
@@ -47,8 +49,9 @@ public class LoginController {
     @Autowired
     private UserRepository userRepo;
 
-    public LoginController(AuthenticationManager authenticationManager) {
+    public LoginController(AuthenticationManager authenticationManager, AuthService authService) {
         this.authenticationManager = authenticationManager;
+        this.authService = authService;
     }
 
     @PostMapping(value = "/register", consumes = "application/json; charset=UTF-8", produces = "application/json; charset=UTF-8")
@@ -85,5 +88,14 @@ public class LoginController {
     }
 
     public record RegisterRequest(String username, String password, String verifypassword, String email, String phoneNumber) {
+    }
+
+    @PostMapping("/jwtLogin")
+    public ResponseObject jwlogin(@RequestBody LoginRequest request){
+        return new ResponseObject(true, authService.authenticate(request));
+    }
+    @PostMapping("/jwtRegister")
+    public ResponseObject reg(@RequestBody RegisterRequest request){
+        return new ResponseObject(true, authService.register(request));
     }
 }
