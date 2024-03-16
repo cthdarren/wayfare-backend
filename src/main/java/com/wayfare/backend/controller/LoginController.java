@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 import java.util.Set;
 
+import static com.wayfare.backend.model.RoleEnum.ROLE_USER;
+
 @RestController
 @RequestMapping("/api/auth")
 public class LoginController {
@@ -48,7 +50,7 @@ public class LoginController {
         System.out.println("test");
 
         try{
-            UserCreationDTO toInsert = new UserCreationDTO(registerRequest.username,  registerRequest.password, registerRequest.verifypassword, registerRequest.email, registerRequest.phoneNumber);
+            UserCreationDTO toInsert = new UserCreationDTO(registerRequest.username,  registerRequest.password, registerRequest.verifypassword, registerRequest.email, registerRequest.phoneNumber, ROLE_USER);
             wayfareUserDetailsService.registerUser(toInsert);
             return new ResponseObject(true,"bruh");//inserted.getUsername());
         }

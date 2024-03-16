@@ -24,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
+import static com.wayfare.backend.model.RoleEnum.ROLE_USER;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
@@ -45,11 +46,12 @@ public class WayfareSecurityConfig {
     @Bean
     public SecurityFilterChain wayfareFilterChain(HttpSecurity http) throws Exception{
         http
-                .formLogin(withDefaults())
                 .csrf((csrf) -> csrf.disable())
                         .authorizeHttpRequests((authorize) -> authorize
                                 .requestMatchers("/api/**")
                                 .permitAll()
+                                .requestMatchers("/home")
+                                .hasAuthority(ROLE_USER.name())
                                 .anyRequest().authenticated()
                         );
 

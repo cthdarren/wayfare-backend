@@ -38,6 +38,10 @@ public class WayfareUserDetailService implements UserDetailsService {
             throw new IllegalArgumentException(userCreationDto.getErrors().toString());
         else
         {
+            if (userRepo.existsByUsername(userCreationDto.getUsername()))
+                throw new IllegalArgumentException("Username already exists");
+            else if (userRepo.existsByEmail(userCreationDto.getEmail()))
+                throw new IllegalArgumentException("Email already exists");
             userRepo.save(new Mapper().toUser(userCreationDto));
         }
     }

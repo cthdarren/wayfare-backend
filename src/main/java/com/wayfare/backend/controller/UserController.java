@@ -28,6 +28,7 @@ public class UserController {
 
     ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
+
     @GetMapping("/{id}")
     public ResponseObject getUser(@PathVariable("id") String id){
         ResponseObject result;
@@ -51,6 +52,10 @@ public class UserController {
 
     }
 
+    @GetMapping("/home")
+    public ResponseObject home(){
+        return new ResponseObject(true, "poggers");
+    }
 
 
 }
