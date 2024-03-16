@@ -39,18 +39,18 @@ public class User{
 
     private String encryptedPassword;
 
-    private String roles;
+    private RoleEnum role;
 
     public User() {
     }
 
-    public User(String username, String password, String email, String phoneNumber, String roles) {
+    public User(String username, String password, String email, String phoneNumber, RoleEnum role) {
         super();
         setUsername(username);
         setEncryptedPassword(password);
         setEmail(email);
         setPhoneNumber(phoneNumber);
-        setRoles(roles);
+        setRole(role);
     }
 
     public String getId() {
@@ -69,8 +69,8 @@ public class User{
         return encryptedPassword;
     }
 
-    public String getRole() {
-        return roles;
+    public RoleEnum getRole() {
+        return role;
     }
 
     public String getEmail() {return email; }
@@ -93,8 +93,8 @@ public class User{
         this.email = email;
     }
 
-    public void setRoles(String roles) {
-        this.roles = roles;
+    public void setRole(RoleEnum role) {
+        this.role = role;
     }
 
 }

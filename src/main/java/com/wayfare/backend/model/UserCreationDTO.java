@@ -13,7 +13,7 @@ public class UserCreationDTO extends ValidateClass{
     private String verifyPassword;
     private String email;
     private String phoneNumber;
-    public UserCreationDTO(String username, String plainPassword, String verifyPassword, String email, String phoneNumber){
+    public UserCreationDTO(String username, String plainPassword, String verifyPassword, String email, String phoneNumber, RoleEnum role){
         setUsername(username);
         setPlainPassword(plainPassword);
         verifyPassword = verifyPassword;
