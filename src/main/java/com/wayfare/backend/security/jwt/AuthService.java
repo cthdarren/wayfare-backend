@@ -36,7 +36,7 @@ public class AuthService {
     }
 
     public ResponseObject authenticate(LoginController.LoginRequest request){
-        authenticationManager.authenticate(
+    authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.username(), request.password())
         );
 

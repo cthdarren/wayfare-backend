@@ -28,6 +28,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static com.wayfare.backend.model.RoleEnum.ROLE_USER;
+import static com.wayfare.backend.model.RoleEnum.ROLE_WAYFARER;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
@@ -59,8 +60,8 @@ public class WayfareSecurityConfig {
                         .authorizeHttpRequests((authorize) -> authorize
                                 .requestMatchers("/api/auth/**")
                                 .permitAll()
-                                .requestMatchers("/home")
-                                .hasAuthority(ROLE_USER.name())
+                                .requestMatchers("/user/home")
+                                .hasAuthority(ROLE_WAYFARER.name())
                                 .anyRequest().authenticated()
                         ).userDetailsService(wayfareUserDetailService)
                 .sessionManagement(session -> session
