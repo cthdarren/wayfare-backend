@@ -13,10 +13,14 @@ public class BaseValidator {
         this.input = input;
     }
     public String validateRegex(){
+        if (this.input == null){
+            return "Missing input in field";
+        }
         Matcher matcher = this.pattern.matcher(this.input);
         if (!matcher.find()) {
             return errMsg;
         }
         return null;
     }
+
 }
