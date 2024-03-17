@@ -61,6 +61,8 @@ public class WayfareSecurityConfig {
                                 .permitAll()
                                 .requestMatchers("/user/home")
                                 .hasAuthority(ROLE_USER.name())
+                                .requestMatchers("/user/wayfarer")
+                                .hasAuthority(ROLE_WAYFARER.name())
                                 .anyRequest().authenticated()
                         ).userDetailsService(wayfareUserDetailService)
                 .sessionManagement(session -> session

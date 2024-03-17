@@ -21,6 +21,7 @@ import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 
 import static com.wayfare.backend.model.RoleEnum.ROLE_USER;
+import static com.wayfare.backend.model.RoleEnum.ROLE_WAYFARER;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -84,6 +85,23 @@ public class LoginController {
         return new ResponseObject(true, token);
         // ...
 //        return new ResponseObject(true, authenticationResponse.getName());
+    }
+
+    @PostMapping("/wayfarersignup")
+    public ResponseObject wayfarerSignUp(@RequestBody LoginRequest loginRequest) {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password())
+            );
+        } catch (BadCredentialsException e) {
+            return new ResponseObject(false, "Invalid credentials");
+        }
+
+        User user = userRepo.findByUsername(loginRequest.username());
+        user.setRole(ROLE_WAYFARER);
+        userRepo.save(user);
+
+        return new ResponseObject(true, "you are now a wayfarer!");
     }
 
 

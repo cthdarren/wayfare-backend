@@ -54,8 +54,12 @@ public class UserController {
 
     @GetMapping("/home")
     public ResponseObject home(){
-        return new ResponseObject(true, "poggers");
+        return new ResponseObject(true, "you are a user!");
     }
 
+    @GetMapping("/wayfarer")
+    public ResponseObject wayfarer(){
+        return new ResponseObject(true, "you are a wayfarer!");
+    }
 
 }
