@@ -27,3 +27,50 @@ git checkout branchname
 chmod +x ./gradlew
 ./gradlew bootRun
 ```
+
+
+
+# API Calls
+
+
+
+
+ ```/api/auth/login```  
+
+> API for logging a user in.   
+
+✅ **Accepts** 
+*application/json* with parameters ``username`` and ``password``
+
+↩️ **Returns** 
+*application/json* with parameters ``success`` and ``data`` which is the jwt token associated with the user  
+or "Invalid Credentials" if false.
+
+
+
+
+
+```/api/auth/register```  
+  
+> API for registering a new user.
+  
+✅ **Accepts**
+*application/json* with parameters ``username``, ``password``, ``verifyPassword``, ``email``, ``phoneNumber``
+
+↩️ **Returns**
+*application/json* with parameters ``success`` and ``data`` which is the jwt token associated with the user  
+or "Invalid Credentials" if false.
+
+
+
+
+
+```/api/auth/wayfarersignup```  
+  
+> API for making a regular user into a WayFarer.
+
+✅ **Accepts**
+Accepts *application/json* with parameters ``username`` and ``password``
+
+↩️ **Returns**
+*application/json* with parameters ``success`` and ``data`` with string "you are now a wayfarer!"
