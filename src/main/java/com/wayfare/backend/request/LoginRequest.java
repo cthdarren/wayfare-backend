@@ -1,2 +1,4 @@
-package com.wayfare.backend.request;public class LoginRequest {
+package com.wayfare.backend.request;
+
+public record LoginRequest(String username, String password) {
 }

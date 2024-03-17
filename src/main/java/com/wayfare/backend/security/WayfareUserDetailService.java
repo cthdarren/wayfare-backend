@@ -5,6 +5,7 @@ import com.wayfare.backend.helper.Mapper;
 import com.wayfare.backend.model.User;
 import com.wayfare.backend.model.UserCreationDTO;
 import com.wayfare.backend.repository.UserRepository;
+import com.wayfare.backend.security.jwt.JwtService;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -23,8 +24,12 @@ import java.util.Set;
 @Service
 public class WayfareUserDetailService implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepo;
+    private final UserRepository userRepo;
+
+    public WayfareUserDetailService(UserRepository userRepo, JwtService jwtService) {
+        this.userRepo = userRepo;
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepo.findByUsername(username);
@@ -33,7 +38,7 @@ public class WayfareUserDetailService implements UserDetailsService {
         return new WayfareUserDetails(user);
     }
 
-    public void registerUser(UserCreationDTO userCreationDto) throws FormatException{
+    public User registerUser(UserCreationDTO userCreationDto) throws FormatException{
         userCreationDto.validate();
         if (userRepo.existsByUsername(userCreationDto.getUsername()))
             userCreationDto.addErrors("Username already exists");
@@ -41,6 +46,8 @@ public class WayfareUserDetailService implements UserDetailsService {
             userCreationDto.addErrors("Email already exists");
         if (userCreationDto.hasErrors())
             throw new FormatException(userCreationDto.getErrors());
-        userRepo.save(new Mapper().toUser(userCreationDto));
+        User toAdd = new Mapper().toUser(userCreationDto);
+        userRepo.save(toAdd);
+        return toAdd;
     }
 }

@@ -35,10 +35,9 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class WayfareSecurityConfig {
 
-    @Autowired
-    private WayfareUserDetailService wayfareUserDetailService;
+    private final WayfareUserDetailService wayfareUserDetailService;
 
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     public WayfareSecurityConfig(WayfareUserDetailService wayfareUserDetailService, JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.wayfareUserDetailService = wayfareUserDetailService;
@@ -61,7 +60,7 @@ public class WayfareSecurityConfig {
                                 .requestMatchers("/api/auth/**")
                                 .permitAll()
                                 .requestMatchers("/user/home")
-                                .hasAuthority(ROLE_WAYFARER.name())
+                                .hasAuthority(ROLE_USER.name())
                                 .anyRequest().authenticated()
                         ).userDetailsService(wayfareUserDetailService)
                 .sessionManagement(session -> session
