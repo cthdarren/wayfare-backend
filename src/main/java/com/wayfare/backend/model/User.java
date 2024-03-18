@@ -44,11 +44,12 @@ public class User{
 
     private RoleEnum role;
     private Boolean isVerified;
+    private Instant dateModified;
+    private Instant dateCreated;
 
-    public User() {
-    }
+    public User(){}
 
-    public User(String username, String firstName, String lastName, String password, String email, String phoneNumber, RoleEnum role, Boolean isVerified) {
+    public User(String username, String firstName, String lastName, String password, String email, String phoneNumber, RoleEnum role, Boolean isVerified, Instant dateModified, Instant dateCreated) {
         super();
         setUsername(username);
         setFirstName(firstName);
@@ -58,6 +59,8 @@ public class User{
         setPhoneNumber(phoneNumber);
         setRole(role);
         setIsVerified(isVerified);
+        setDateModified(dateModified);
+        this.dateCreated = dateCreated;
     }
 
     public String getId() {
@@ -126,5 +129,17 @@ public class User{
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public Instant getDateModified() {
+        return dateModified;
+    }
+
+    public void setDateModified(Instant dateModified) {
+        this.dateModified = dateModified;
+    }
+
+    public Instant getDateCreated() {
+        return dateCreated;
     }
 }

@@ -19,6 +19,8 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
+
 import static com.wayfare.backend.model.RoleEnum.ROLE_USER;
 import static com.wayfare.backend.model.RoleEnum.ROLE_WAYFARER;
 
@@ -119,6 +121,7 @@ public class AuthController {
 
         User toVerify = userRepo.findByUsername(test.getUsername());
         toVerify.setIsVerified(true);
+        toVerify.setDateModified(Instant.now());
         userRepo.save(toVerify);
 
         return new ResponseObject(toVerify.getIsVerified(), test.getUsername());
