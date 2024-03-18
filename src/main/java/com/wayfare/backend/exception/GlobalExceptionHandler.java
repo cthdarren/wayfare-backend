@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.wayfare.backend.ResponseObject;
+import com.wayfare.backend.response.ResponseObject;
 
 // This file handles exception of all requests when and exception is thrown from spring instead
 // an example is the HttpMessageNotReadableException which is thrown when spring detects an

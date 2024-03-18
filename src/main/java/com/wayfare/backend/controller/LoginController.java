@@ -1,8 +1,7 @@
 package com.wayfare.backend.controller;
 
-import com.wayfare.backend.ResponseObject;
+import com.wayfare.backend.response.ResponseObject;
 import com.wayfare.backend.exception.FormatException;
-import com.wayfare.backend.model.RoleEnum;
 import com.wayfare.backend.model.User;
 import com.wayfare.backend.model.UserCreationDTO;
 import com.wayfare.backend.repository.UserRepository;
@@ -10,12 +9,10 @@ import com.wayfare.backend.request.LoginRequest;
 import com.wayfare.backend.request.RegisterRequest;
 import com.wayfare.backend.security.WayfareUserDetailService;
 import com.wayfare.backend.security.jwt.JwtService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.bind.annotation.*;

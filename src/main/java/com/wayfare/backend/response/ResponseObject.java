@@ -1,4 +1,4 @@
-package com.wayfare.backend;
+package com.wayfare.backend.response;
 
 public class ResponseObject {
     public boolean success;
