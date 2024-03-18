@@ -22,7 +22,7 @@ import static com.wayfare.backend.model.RoleEnum.ROLE_WAYFARER;
 
 @RestController
 @RequestMapping("/api/auth")
-public class LoginController {
+public class AuthController {
 
     private final AuthenticationManager authenticationManager;
 
@@ -35,7 +35,7 @@ public class LoginController {
 
     private final JwtService jwtService;
 
-    public LoginController(AuthenticationManager authenticationManager, WayfareUserDetailService wayfareUserDetailsService, UserRepository userRepo, JwtService jwtService) {
+    public AuthController(AuthenticationManager authenticationManager, WayfareUserDetailService wayfareUserDetailsService, UserRepository userRepo, JwtService jwtService) {
         this.authenticationManager = authenticationManager;
         this.wayfareUserDetailsService = wayfareUserDetailsService;
         this.userRepo = userRepo;
@@ -52,8 +52,7 @@ public class LoginController {
                     registerRequest.password(),
                     registerRequest.verifyPassword(),
                     registerRequest.email(),
-                    registerRequest.phoneNumber(),
-                    ROLE_USER
+                    registerRequest.phoneNumber()
             );
 
             User newUser = wayfareUserDetailsService.registerUser(toInsert);
@@ -109,6 +108,12 @@ public class LoginController {
         userRepo.save(user);
 
         return new ResponseObject(true, "you are now a wayfarer!");
+    }
+
+    // TODO email verification using one time link
+    @PostMapping("/verify")
+    public ResponseObject verifyUser(){
+        return new ResponseObject(true, "test");
     }
 
 
