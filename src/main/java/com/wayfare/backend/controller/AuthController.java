@@ -115,7 +115,7 @@ public class AuthController {
     }
 
     // TODO email verification using one time link
-    @PostMapping("/verify")
+    @GetMapping("/verify")
     public ResponseObject verifyUser(){
         WayfareUserDetails test = (WayfareUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
