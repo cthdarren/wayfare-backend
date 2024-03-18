@@ -5,66 +5,49 @@ import com.wayfare.backend.validator.*;
 
 import java.util.Objects;
 
+import static com.wayfare.backend.model.RoleEnum.ROLE_USER;
+
+//only used for the creation of new users
 public class UserCreationDTO extends ValidateClass{
-    private String username;
-    private String firstName;
-    private String lastName;
-    private String plainPassword;
-    private String verifyPassword;
-    private String email;
-    private String phoneNumber;
-    public UserCreationDTO(String username, String firstName, String lastName, String plainPassword, String verifyPassword, String email, String phoneNumber, RoleEnum role){
-        setUsername(username);
-        setFirstName(firstName);
-        setLastName(lastName);
-        setPlainPassword(plainPassword);
-        setVerifyPassword(verifyPassword);
-        setEmail(email);
-        setPhoneNumber(phoneNumber);
-    }
-
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
+    private final String username;
+    private final String firstName;
+    private final String lastName;
+    private final String plainPassword;
+    private final String verifyPassword;
+    private final String email;
+    private final String phoneNumber;
+    private final RoleEnum role;
+    private final Boolean isVerified;
+    public UserCreationDTO(String username, String firstName, String lastName, String plainPassword, String verifyPassword, String email, String phoneNumber ){
         this.username = username;
-    }
-
-    public String getPlainPassword() {
-        return plainPassword;
-    }
-
-    public void setPlainPassword(String password) {
-        this.plainPassword = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getVerifyPassword() {
-        return verifyPassword;
-    }
-
-    public void setVerifyPassword(String verifyPassword) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.plainPassword = plainPassword;
         this.verifyPassword = verifyPassword;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.role = ROLE_USER;
+        this.isVerified = false;
     }
 
-    @Override
+    public String getUsername() {return username;}
+
+    public String getFirstName() {return firstName;}
+
+    public String getLastName() {return lastName;}
+
+    public String getPlainPassword() {return plainPassword;}
+
+    public String getVerifyPassword() {return verifyPassword;}
+
+    public String getEmail() {return email;}
+
+    public String getPhoneNumber() {return phoneNumber;}
+
+    public RoleEnum getRole() {return role;}
+    public Boolean getIsVerified() {return isVerified;}
+
+
     public void validate(){
         if (!Objects.equals(getVerifyPassword(), getPlainPassword())) {
             addErrors("Passwords do not match");
@@ -78,19 +61,5 @@ public class UserCreationDTO extends ValidateClass{
         getErrors().remove(null);
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
 }

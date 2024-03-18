@@ -8,6 +8,6 @@ import static com.wayfare.backend.model.RoleEnum.ROLE_USER;
 public class Mapper {
     public User toUser(UserCreationDTO userCreationDTO)
     {
-        return new User(userCreationDTO.getUsername(), userCreationDTO.getPlainPassword(), userCreationDTO.getEmail(), userCreationDTO.getPhoneNumber(), ROLE_USER);
+        return new User(userCreationDTO.getUsername(), userCreationDTO.getFirstName(), userCreationDTO.getLastName(), userCreationDTO.getPlainPassword(), userCreationDTO.getEmail(), userCreationDTO.getPhoneNumber(), userCreationDTO.getRole(), userCreationDTO.getIsVerified());
     }
 }

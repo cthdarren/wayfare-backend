@@ -33,6 +33,9 @@ public class User{
 
     private String username;
 
+    private String firstName;
+    private String lastName;
+
     private String email;
 
     private String phoneNumber;
@@ -45,13 +48,16 @@ public class User{
     public User() {
     }
 
-    public User(String username, String password, String email, String phoneNumber, RoleEnum role) {
+    public User(String username, String firstName, String lastName, String password, String email, String phoneNumber, RoleEnum role, Boolean isVerified) {
         super();
         setUsername(username);
+        setFirstName(firstName);
+        setLastName(lastName);
         setEncryptedPassword(password);
         setEmail(email);
         setPhoneNumber(phoneNumber);
         setRole(role);
+        setIsVerified(isVerified);
     }
 
     public String getId() {
@@ -98,11 +104,27 @@ public class User{
         this.role = role;
     }
 
-    public Boolean getVerified() {
+    public Boolean getIsVerified() {
         return isVerified;
     }
 
-    public void setVerified(Boolean verified) {
+    public void setIsVerified(Boolean verified) {
         isVerified = verified;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }
