@@ -22,16 +22,16 @@ public class UserController {
     ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
 
-    @GetMapping("/{id}")
-    public ResponseObject getUser(@PathVariable("id") String id){
+    @GetMapping("/{username}")
+    public ResponseObject getUser(@PathVariable("username") String username){
         ResponseObject result;
         // Optional classes https://www.baeldung.com/java-optional
-        Optional<User> test = userRepo.findById(id);
-        if (test.isPresent())
-            result = new ResponseObject(true, test.get());
+        User test = userRepo.findByUsername(username);
+        if (test != null)
+            result = new ResponseObject(true, test);
         else
             result = new ResponseObject(false, "User not found");
-        
+
 //        //purely for debugging purposes and seeing results in console
 //        try{
 //            String json = mapper.writeValueAsString(result);
