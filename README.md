@@ -55,7 +55,7 @@ or "Invalid Credentials" if false.
 > API for registering a new user.
   
 ✅ **Accepts**
-*application/json* with parameters ``username``, ``password``, ``verifyPassword``, ``email``, ``phoneNumber``
+*application/json* with parameters ``username``, ``firstName``, ``lastName``, ``password``, ``verifyPassword``, ``email``, ``phoneNumber``
 
 ↩️ **Returns**
 *application/json* with parameters ``success`` and ``data`` which is the jwt token associated with the user  
