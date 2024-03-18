@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 //The UserDetails interface by Spring manages authentication.
+// Contains information that Spring uses to authenticate and load users into the security context
 public class WayfareUserDetails implements UserDetails {
     private User user;
     public WayfareUserDetails(User user){

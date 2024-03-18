@@ -8,11 +8,13 @@ import com.wayfare.backend.repository.UserRepository;
 import com.wayfare.backend.request.LoginRequest;
 import com.wayfare.backend.request.RegisterRequest;
 import com.wayfare.backend.security.WayfareUserDetailService;
+import com.wayfare.backend.security.WayfareUserDetails;
 import com.wayfare.backend.security.jwt.JwtService;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
@@ -113,7 +115,13 @@ public class AuthController {
     // TODO email verification using one time link
     @PostMapping("/verify")
     public ResponseObject verifyUser(){
-        return new ResponseObject(true, "test");
+        WayfareUserDetails test = (WayfareUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        User toVerify = userRepo.findByUsername(test.getUsername());
+        toVerify.setIsVerified(true);
+        userRepo.save(toVerify);
+
+        return new ResponseObject(toVerify.getIsVerified(), test.getUsername());
     }
 
 

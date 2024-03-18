@@ -60,7 +60,7 @@ public class WayfareSecurityConfig {
                                 .requestMatchers("/api/auth/**")
                                 .permitAll()
                                 .requestMatchers("/user/home")
-                                .hasAuthority(ROLE_USER.name())
+                                .hasAnyAuthority(ROLE_USER.name(), ROLE_WAYFARER.name())
                                 .requestMatchers("/user/wayfarer")
                                 .hasAuthority(ROLE_WAYFARER.name())
                                 .anyRequest().authenticated()
