@@ -40,6 +40,7 @@ public class User{
     private String encryptedPassword;
 
     private RoleEnum role;
+    private Boolean isVerified;
 
     public User() {
     }
@@ -97,4 +98,11 @@ public class User{
         this.role = role;
     }
 
+    public Boolean getVerified() {
+        return isVerified;
+    }
+
+    public void setVerified(Boolean verified) {
+        isVerified = verified;
+    }
 }

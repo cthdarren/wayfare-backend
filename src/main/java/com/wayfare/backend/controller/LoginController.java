@@ -48,7 +48,17 @@ public class LoginController {
     @PostMapping(value = "/register", consumes = "application/json; charset=UTF-8", produces = "application/json; charset=UTF-8")
     public ResponseObject wayfareRegister(@RequestBody RegisterRequest registerRequest){
         try{
-            UserCreationDTO toInsert = new UserCreationDTO(registerRequest.username(),  registerRequest.password(), registerRequest.verifyPassword(), registerRequest.email(), registerRequest.phoneNumber(), ROLE_USER);
+            UserCreationDTO toInsert = new UserCreationDTO(
+                    registerRequest.username(),
+                    registerRequest.firstName(),
+                    registerRequest.lastName(),
+                    registerRequest.password(),
+                    registerRequest.verifyPassword(),
+                    registerRequest.email(),
+                    registerRequest.phoneNumber(),
+                    ROLE_USER
+            );
+
             User newUser = wayfareUserDetailsService.registerUser(toInsert);
             String token = jwtService.generateToken(newUser);
             return new ResponseObject(true, token);//inserted.getUsername());

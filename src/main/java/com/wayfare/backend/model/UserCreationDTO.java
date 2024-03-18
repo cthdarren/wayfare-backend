@@ -1,21 +1,22 @@
 package com.wayfare.backend.model;
 
 import com.wayfare.backend.exception.FormatException;
-import com.wayfare.backend.validator.AlphanumericValidator;
-import com.wayfare.backend.validator.EmailValidator;
-import com.wayfare.backend.validator.PasswordValidator;
-import com.wayfare.backend.validator.PhoneNumberValidator;
+import com.wayfare.backend.validator.*;
 
 import java.util.Objects;
 
 public class UserCreationDTO extends ValidateClass{
     private String username;
+    private String firstName;
+    private String lastName;
     private String plainPassword;
     private String verifyPassword;
     private String email;
     private String phoneNumber;
-    public UserCreationDTO(String username, String plainPassword, String verifyPassword, String email, String phoneNumber, RoleEnum role){
+    public UserCreationDTO(String username, String firstName, String lastName, String plainPassword, String verifyPassword, String email, String phoneNumber, RoleEnum role){
         setUsername(username);
+        setFirstName(firstName);
+        setLastName(lastName);
         setPlainPassword(plainPassword);
         setVerifyPassword(verifyPassword);
         setEmail(email);
@@ -69,9 +70,27 @@ public class UserCreationDTO extends ValidateClass{
             addErrors("Passwords do not match");
         }
         addErrors(new AlphanumericValidator(getUsername(), "Wrong username format").validateRegex());
+        addErrors(new AlphabeticalValidator(getFirstName(), "First name can only accept alphabetical characters").validateRegex());
+        addErrors(new AlphabeticalValidator(getLastName(), "Last name can only accept alphabetical characters").validateRegex());
         addErrors(new EmailValidator(getEmail()).validateRegex());
         addErrors(new PhoneNumberValidator(getPhoneNumber()).validateRegex());
         addErrors(new PasswordValidator(getPlainPassword()).validateRegex());
         getErrors().remove(null);
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }
