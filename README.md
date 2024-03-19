@@ -35,7 +35,7 @@ chmod +x ./gradlew
 
 
 
- ```/api/auth/login```  
+ POST ```/api/auth/login```  
 
 > API for logging a user in.   
 
@@ -50,7 +50,7 @@ or "Invalid Credentials" if false.
 
 
 
-```/api/auth/register```  
+POST ```/api/auth/register```  
   
 > API for registering a new user.
   
@@ -61,11 +61,19 @@ or "Invalid Credentials" if false.
 *application/json* with parameters ``success`` and ``data`` which is the jwt token associated with the user  
 or "Invalid Credentials" if false.
 
+GET ```/api/auth/verify```  
+  
+> API for verifying a user.
+  
+✅ **Accepts**
+Bearer token to authenticate user in the Authorization headers.
+
+↩️ **Returns**
+*application/json* with parameters ``success`` and ``data`` which is username of the newly verified account.
 
 
 
-
-```/api/auth/wayfarersignup```  
+POST ```/api/auth/wayfarersignup```  
   
 > API for making a regular user into a WayFarer.
 
