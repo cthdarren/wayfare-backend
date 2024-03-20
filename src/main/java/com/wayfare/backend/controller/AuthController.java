@@ -1,5 +1,13 @@
 package com.wayfare.backend.controller;
 
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.request.HttpRequest;
+import com.mashape.unirest.request.HttpRequestWithBody;
+import com.mashape.unirest.request.body.Body;
+import com.wayfare.backend.model.VerifyURL;
+import com.wayfare.backend.repository.VerifyURLRepository;
 import com.wayfare.backend.response.ResponseObject;
 import com.wayfare.backend.exception.FormatException;
 import com.wayfare.backend.model.User;
@@ -10,18 +18,23 @@ import com.wayfare.backend.request.RegisterRequest;
 import com.wayfare.backend.security.WayfareUserDetailService;
 import com.wayfare.backend.security.WayfareUserDetails;
 import com.wayfare.backend.security.jwt.JwtService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+import java.net.http.HttpClient;
 import java.time.Instant;
+import java.util.Base64;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
-import static com.wayfare.backend.model.RoleEnum.ROLE_USER;
+import static com.wayfare.backend.helper.helper.getCurrentUserDetails;
 import static com.wayfare.backend.model.RoleEnum.ROLE_WAYFARER;
 
 @RestController
@@ -30,19 +43,26 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
 
+    @Value("${MAIL_DOMAIN_NAME}")
+    private String MAIL_DOMAIN_NAME;
+
+    @Value("${MAIL_API_KEY}")
+    private String MAIL_API_KEY;
 
     private final WayfareUserDetailService wayfareUserDetailsService;
     private final SecurityContextRepository securityContextRepository =
             new HttpSessionSecurityContextRepository();
 
     private final UserRepository userRepo;
+    private final VerifyURLRepository verifyRepo;
 
     private final JwtService jwtService;
 
-    public AuthController(AuthenticationManager authenticationManager, WayfareUserDetailService wayfareUserDetailsService, UserRepository userRepo, JwtService jwtService) {
+    public AuthController(AuthenticationManager authenticationManager, WayfareUserDetailService wayfareUserDetailsService, UserRepository userRepo, VerifyURLRepository verifyRepo, JwtService jwtService) {
         this.authenticationManager = authenticationManager;
         this.wayfareUserDetailsService = wayfareUserDetailsService;
         this.userRepo = userRepo;
+        this.verifyRepo = verifyRepo;
         this.jwtService = jwtService;
     }
 
@@ -115,18 +135,59 @@ public class AuthController {
     }
 
     // TODO email verification using one time link
-    @GetMapping("/verify")
-    public ResponseObject verifyUser(){
-        WayfareUserDetails test = (WayfareUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    @GetMapping("/verify/{oneTimeURL}")
+    public ResponseObject verifyUser(@PathVariable String oneTimeURL){
+        VerifyURL checkURL = verifyRepo.findByUrl(oneTimeURL);
+        if (checkURL != null){
+            User toVerify = userRepo.findByUsername(checkURL.getUsername());
+            toVerify.setIsVerified(true);
+            toVerify.setDateModified(Instant.now());
+            userRepo.save(toVerify);
+            verifyRepo.delete(checkURL);
 
-        User toVerify = userRepo.findByUsername(test.getUsername());
-        toVerify.setIsVerified(true);
-        toVerify.setDateModified(Instant.now());
-        userRepo.save(toVerify);
-
-        return new ResponseObject(toVerify.getIsVerified(), test.getUsername());
+            return new ResponseObject(toVerify.getIsVerified(), toVerify.getUsername());
+        }
+        return new ResponseObject(false, "Verify link expired");
     }
 
+    @GetMapping("/generateVerifyLink")
+    public ResponseObject generateVerifyLink(){
+        WayfareUserDetails currUser = getCurrentUserDetails();
+
+        if (currUser.getIsVerified()){
+            return new ResponseObject(false, "User is already verified");
+        }
+        String userEmail = currUser.getEmail();
+
+        HttpClient httpClient = HttpClient.newHttpClient();
+        String postURL = "https://api.mailgun.net/v3/" + MAIL_DOMAIN_NAME + "/messages.mime";
+
+        String randomGUID = UUID.randomUUID().toString();
+
+        try {
+            // Had to use unirest here because the normal HttpClient library has problems with multipart forms
+            HttpResponse<JsonNode> response = Unirest.post("https://api.mailgun.net/v3/" + MAIL_DOMAIN_NAME + "/messages")
+                    .basicAuth("api", MAIL_API_KEY)
+                    .queryString("from", "noreply@" + MAIL_DOMAIN_NAME)
+                    .queryString("to", userEmail)
+                    .queryString("subject", "WayFare Email Verification")
+                    .queryString("text", "verify your email by clicking this link below!\n\nhttp://localhost:8080/api/auth/verify/" + randomGUID)
+                    .asJson();
+
+            if (response.getStatus() == 200) {
+                VerifyURL newURL = new VerifyURL(randomGUID, currUser.getUsername());
+                verifyRepo.save(newURL);
+                return new ResponseObject(true, userEmail);
+            }
+
+            return new ResponseObject(false, "Sending email failed");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return new ResponseObject(false, "Server error");
+        }
+
+    }
 
 
 

@@ -1,5 +1,8 @@
 package com.wayfare.backend.helper;
 
+import com.wayfare.backend.security.WayfareUserDetails;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -18,6 +21,10 @@ public class helper{
         MessageDigest md = MessageDigest.getInstance("SHA-512");
         md.update(salt);
         return md.digest(secret.getBytes(StandardCharsets.UTF_8));
+    }
+
+    public static WayfareUserDetails getCurrentUserDetails(){
+        return (WayfareUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 }
 
