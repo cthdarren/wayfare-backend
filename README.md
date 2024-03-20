@@ -90,6 +90,7 @@ Accepts *application/json* with parameters ``username`` and ``password``
 GET ```/api/auth/generateVerifyLink```  
   
 > API for generating a one time verification link for the user
+
 ✅ **Accepts**
 Bearer token to authenticate user in the Authorization headers.
 
