@@ -61,6 +61,8 @@ POST ```/api/auth/register```
 *application/json* with parameters ``success`` and ``data`` which is the jwt token associated with the user  
 or "Invalid Credentials" if false.
 
+
+
 GET ```/api/auth/verify```  
   
 > API for verifying a user.
@@ -81,4 +83,25 @@ POST ```/api/auth/wayfarersignup```
 Accepts *application/json* with parameters ``username`` and ``password``
 
 ↩️ **Returns**
-*application/json* with parameters ``success`` and ``data`` with string "you are now a wayfarer!"
+*application/json* with parameters ``success`` and ``data`` with string "you are now a wayfarer!".
+
+
+
+GET ```/api/auth/generateVerifyLink```  
+  
+> API for generating a one time verification link for the user
+✅ **Accepts**
+Bearer token to authenticate user in the Authorization headers.
+
+↩️ **Returns**
+*application/json* with parameters ``success`` and ``data`` containing the email that the link was sent to.
+
+
+
+GET ```/api/auth/verify/{GUID}```  
+  
+> API verifying a users email. Upon visiting, the link expires and the user is verified
+
+↩️ **Returns**
+*application/json* with parameters ``success`` and ``data`` containing the username of the user that was just verified.
+
