@@ -1,12 +1,14 @@
 package com.wayfare.backend.model;
 
 public class VerifyURL {
-    private String url;
-    private String userID;
 
-    public VerifyURL(String url, String userID){
+    private String id;
+    private String url;
+    private String username;
+
+    public VerifyURL(String url, String username){
         this.url = url;
-        this.userID = userID;
+        this.username = username;
     }
     public String getUrl() {
         return url;
@@ -16,11 +18,11 @@ public class VerifyURL {
         this.url = url;
     }
 
-    public String getUserID() {
-        return userID;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserID(String userID) {
-        this.userID = userID;
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

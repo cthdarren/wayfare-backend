@@ -32,6 +32,13 @@ public class WayfareUserDetails implements UserDetails {
         return user.getUsername();
     }
 
+    public String getEmail() {
+        return user.getEmail();
+    }
+
+    public boolean getIsVerified(){
+        return user.getIsVerified();
+    }
     @Override
     public boolean isAccountNonExpired() {
         return true;
