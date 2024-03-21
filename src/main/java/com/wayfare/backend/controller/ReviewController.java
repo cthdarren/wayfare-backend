@@ -5,16 +5,11 @@ import com.wayfare.backend.model.Review;
 import com.wayfare.backend.model.dto.ReviewDTO;
 import com.wayfare.backend.repository.ReviewRepository;
 import com.wayfare.backend.repository.UserRepository;
-import com.wayfare.backend.request.CreateReviewRequest;
 import com.wayfare.backend.request.ReviewsByListingRequest;
 import com.wayfare.backend.response.ResponseObject;
 import com.wayfare.backend.security.WayfareUserDetails;
-import org.apache.coyote.Response;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.http.HttpResponse;
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +26,7 @@ public class ReviewController {
         this.userRepo = userRepo;
     }
 
-    @GetMapping("/api/review/{id}")
+    @GetMapping("/api/v1/review/{id}")
     public ResponseObject getReview(@PathVariable String id) {
         Optional<Review> review = reviewRepo.findById(id);
         if (review.isEmpty()) {
@@ -41,7 +36,7 @@ public class ReviewController {
         }
     }
 
-    @PostMapping("/api/listing/reviews")
+    @PostMapping("/api/v1/listing/reviews")
     public ResponseObject getReviewsByListing(@RequestBody ReviewsByListingRequest request){
         List<Review> reviewList = reviewRepo.findAllByListingId(request.listingId());
 

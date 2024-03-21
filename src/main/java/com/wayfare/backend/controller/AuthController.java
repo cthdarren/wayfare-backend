@@ -37,7 +37,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/auth")
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
@@ -65,7 +64,7 @@ public class AuthController {
         this.jwtService = jwtService;
     }
 
-    @PostMapping(value = "/register", consumes = "application/json; charset=UTF-8", produces = "application/json; charset=UTF-8")
+    @PostMapping(value = "/api/v1/auth/register", consumes = "application/json; charset=UTF-8", produces = "application/json; charset=UTF-8")
     public ResponseObject wayfareRegister(@RequestBody UserDTO dto){
         try{
             dto.validate();
@@ -94,7 +93,7 @@ public class AuthController {
         }
 
     }
-    @PostMapping("/login")
+    @PostMapping("/api/v1/auth/login")
     public ResponseObject wayfareLogin(@RequestBody LoginRequest loginRequest) {
         try {
             authenticationManager.authenticate(

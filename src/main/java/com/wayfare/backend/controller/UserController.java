@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user")
 public class UserController {
 
     private final UserRepository userRepo;
@@ -24,7 +23,7 @@ public class UserController {
         this.userRepo = userRepo;
     }
 
-    @GetMapping("/{username}")
+    @GetMapping("/api/v1/user/{username}")
     public ResponseObject getUser(@PathVariable("username") String username){
         ResponseObject result;
         User test = userRepo.findByUsername(username);
@@ -34,10 +33,9 @@ public class UserController {
             result = new ResponseObject(false, "User not found");
 
         return result;
-
     }
 
-    @GetMapping("/home")
+    @GetMapping("/user")
     public ResponseObject home(){
         return new ResponseObject(true, "you are a user!");
     }
