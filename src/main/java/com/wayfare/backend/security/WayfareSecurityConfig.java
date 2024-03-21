@@ -57,7 +57,7 @@ public class WayfareSecurityConfig {
         return http
                 .csrf((csrf) -> csrf.disable())
                         .authorizeHttpRequests((authorize) -> authorize
-                                .requestMatchers("/api/auth/**")
+                                .requestMatchers("/api/auth/**","/user/**")
                                 .permitAll()
                                 .requestMatchers("/user/home")
                                 .hasAnyAuthority(ROLE_USER.name(), ROLE_WAYFARER.name())
