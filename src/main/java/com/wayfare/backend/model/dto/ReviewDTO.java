@@ -13,10 +13,11 @@ public class ReviewDTO extends ValidateClass {
     private String reviewContent;
     private String listingId;
 
-    public ReviewDTO(String title, int score, String reviewContent){
+    public ReviewDTO(String title, int score, String reviewContent, String listingId){
         this.title = title;
         this.score = score;
         this.reviewContent = reviewContent;
+        this.listingId = listingId;
     }
 
     public String getTitle() {

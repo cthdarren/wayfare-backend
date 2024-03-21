@@ -68,24 +68,23 @@ public class AuthController {
 
     @PostMapping(value = "/api/v1/auth/register", consumes = "application/json; charset=UTF-8", produces = "application/json; charset=UTF-8")
     public ResponseObject wayfareRegister(@RequestBody UserDTO dto){
-        try{
             dto.validate();
             if (userRepo.existsByUsername(dto.getUsername()))
                 dto.addErrors("Username already exists");
             if (userRepo.existsByEmail(dto.getEmail()))
                 dto.addErrors("Email already exists");
-            if (dto.hasErrors())
-                throw new FormatException(dto.getErrors());
 
+            if (dto.hasErrors()) {
+                return new ResponseObject(false, dto.getErrors());
+            }
+
+        try{
             User newUser = new Mapper().toUser(dto);
             userRepo.save(newUser);
 
             String token = jwtService.generateToken(newUser);
 
             return new ResponseObject(true, token);//inserted.getUsername());
-        }
-        catch (FormatException e){
-            return new ResponseObject(false, e.getErrors());
         }
         catch(DuplicateKeyException e){
             return new ResponseObject(false, "Username already exists");
@@ -112,6 +111,14 @@ public class AuthController {
         return new ResponseObject(true, token);
     }
 
+    /// MUST BE AUTHORISED AS USER
+    // *** POST ***
+    // Used for users to sign up as a Wayfarer. Should only be able to be done when user
+    // is logged in to the app. Takes in Bearer token through headers, and requests the user
+    // for his password one more time for verification.
+
+    // Accepts application/json
+    // {"password": USERPASSWORD}
     @PostMapping("/wayfarersignup")
     public ResponseObject wayfarerSignUp(@RequestBody PasswordForWayfarerSignUpRequest request) {
 
@@ -151,6 +158,11 @@ public class AuthController {
         return new ResponseObject(false, "Verify link expired");
     }
 
+    /// MUST BE AUTHORISED AS USER
+    // *** GET ***
+    // Generates verify link for the specified user. Needs the user to be logged in and pass
+    // the users Bearer token through the headers. On success, returns the user email to be
+    // displayed in the front end ( can use a message similar to please check your email at {email} )
     @GetMapping("/generateVerifyLink")
     public ResponseObject generateVerifyLink(){
         WayfareUserDetails currUser = getCurrentUserDetails();
@@ -190,30 +202,4 @@ public class AuthController {
         }
 
     }
-
-
-
-
-//    @PostMapping("/jwtLogin")
-//    public ResponseObject jwlogin(@RequestBody LoginRequest request){
-//        authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(request.username(), request.password())
-//        );
-//
-//        User user = userRepo.findByUsername(request.username());
-//        String token = jwtService.generateToken(user);
-//
-//        return new ResponseObject(true, token);
-//    }
-//    @PostMapping("/jwtRegister")
-//
-//    public ResponseObject reg(@RequestBody RegisterRequest request){
-//        User user = new User(request.username(), request.password(), request.email(), request.phoneNumber(), RoleEnum.ROLE_USER);
-//
-//        user = userRepo.save(user);
-//
-//        String token = jwtService.generateToken(user);
-//
-//        return new ResponseObject(true, token);
-//    }
 }
