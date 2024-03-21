@@ -32,6 +32,8 @@ public class WayfareUserDetails implements UserDetails {
         return user.getUsername();
     }
 
+    public String getId() {return user.getId();}
+
     public String getEmail() {
         return user.getEmail();
     }
