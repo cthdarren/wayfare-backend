@@ -128,7 +128,7 @@ public class AuthController {
     }
 
     // TODO email verification using one time link
-    @GetMapping("/verify/{oneTimeURL}")
+    @GetMapping("/api/v1/verify/{oneTimeURL}")
     public ResponseObject verifyUser(@PathVariable String oneTimeURL){
         VerifyURL checkURL = verifyRepo.findByUrl(oneTimeURL);
         if (checkURL != null){
