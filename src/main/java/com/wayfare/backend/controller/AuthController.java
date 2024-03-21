@@ -1,23 +1,12 @@
 package com.wayfare.backend.controller;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.request.HttpRequest;
-import com.mashape.unirest.request.HttpRequestWithBody;
-import com.mashape.unirest.request.body.Body;
-import com.wayfare.backend.model.VerifyURL;
-import com.wayfare.backend.repository.VerifyURLRepository;
-import com.wayfare.backend.response.ResponseObject;
-import com.wayfare.backend.exception.FormatException;
-import com.wayfare.backend.model.User;
-import com.wayfare.backend.model.UserCreationDTO;
-import com.wayfare.backend.repository.UserRepository;
-import com.wayfare.backend.request.LoginRequest;
-import com.wayfare.backend.request.RegisterRequest;
-import com.wayfare.backend.security.WayfareUserDetailService;
-import com.wayfare.backend.security.WayfareUserDetails;
-import com.wayfare.backend.security.jwt.JwtService;
+import static com.wayfare.backend.helper.helper.getCurrentUserDetails;
+import static com.wayfare.backend.model.RoleEnum.ROLE_WAYFARER;
+
+import java.net.http.HttpClient;
+import java.time.Instant;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,17 +14,28 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.time.Instant;
-import java.util.Base64;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-
-import static com.wayfare.backend.helper.helper.getCurrentUserDetails;
-import static com.wayfare.backend.model.RoleEnum.ROLE_WAYFARER;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
+import com.wayfare.backend.exception.FormatException;
+import com.wayfare.backend.model.User;
+import com.wayfare.backend.model.UserCreationDTO;
+import com.wayfare.backend.model.VerifyURL;
+import com.wayfare.backend.repository.UserRepository;
+import com.wayfare.backend.repository.VerifyURLRepository;
+import com.wayfare.backend.request.LoginRequest;
+import com.wayfare.backend.request.RegisterRequest;
+import com.wayfare.backend.response.ResponseObject;
+import com.wayfare.backend.security.WayfareUserDetailService;
+import com.wayfare.backend.security.WayfareUserDetails;
+import com.wayfare.backend.security.jwt.JwtService;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -165,7 +165,8 @@ public class AuthController {
                     .queryString("from", "noreply@" + MAIL_DOMAIN_NAME)
                     .queryString("to", userEmail)
                     .queryString("subject", "WayFare Email Verification")
-                    .queryString("text", "verify your email by clicking this link below!\n\nhttp://localhost:8080/api/auth/verify/" + randomGUID)
+                    // .queryString("text", "verify your email by clicking this link below!\n\nhttp://localhost:8080/api/auth/verify/" + randomGUID)
+                    .queryString("text", "verify your email by clicking this link below!\n\nhttp://143.198.223.202/api/auth/verify/" + randomGUID)
                     .asJson();
 
             if (response.getStatus() == 200) {
