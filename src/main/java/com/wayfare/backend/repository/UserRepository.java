@@ -1,5 +1,6 @@
 package com.wayfare.backend.repository;
 
+import com.mongodb.lang.Nullable;
 import com.wayfare.backend.model.Role;
 import com.wayfare.backend.model.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -13,6 +14,8 @@ import java.util.Set;
 
 
 public interface UserRepository extends MongoRepository<User, String> {
+
+    @Nullable
     User findByUsername(String username);
 
     Boolean existsByUsername(String username);
