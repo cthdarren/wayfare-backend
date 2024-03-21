@@ -33,7 +33,7 @@ chmod +x ./gradlew
 # API Calls
 
 
-
+<br />
 
  POST ```/api/auth/login```  
 
@@ -46,9 +46,7 @@ chmod +x ./gradlew
 *application/json* with parameters ``success`` and ``data`` which is the jwt token associated with the user  
 or "Invalid Credentials" if false.
 
-
-
-
+<br /><br />
 
 POST ```/api/auth/register```  
   
@@ -61,7 +59,7 @@ POST ```/api/auth/register```
 *application/json* with parameters ``success`` and ``data`` which is the jwt token associated with the user  
 or "Invalid Credentials" if false.
 
-
+<br /><br />
 
 GET ```/api/auth/verify```  
   
@@ -73,7 +71,7 @@ Bearer token to authenticate user in the Authorization headers.
 ↩️ **Returns**
 *application/json* with parameters ``success`` and ``data`` which is username of the newly verified account.
 
-
+<br /><br />
 
 POST ```/api/auth/wayfarersignup```  
   
@@ -85,7 +83,7 @@ Accepts *application/json* with parameters ``username`` and ``password``
 ↩️ **Returns**
 *application/json* with parameters ``success`` and ``data`` with string "you are now a wayfarer!".
 
-
+<br /><br />
 
 GET ```/api/auth/generateVerifyLink```  
   
@@ -97,7 +95,7 @@ Bearer token to authenticate user in the Authorization headers.
 ↩️ **Returns**
 *application/json* with parameters ``success`` and ``data`` containing the email that the link was sent to.
 
-
+<br /><br />
 
 GET ```/api/auth/verify/{GUID}```  
   
