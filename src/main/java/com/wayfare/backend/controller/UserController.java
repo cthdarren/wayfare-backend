@@ -24,25 +24,14 @@ public class UserController {
         this.userRepo = userRepo;
     }
 
-
     @GetMapping("/{username}")
     public ResponseObject getUser(@PathVariable("username") String username){
         ResponseObject result;
-        // Optional classes https://www.baeldung.com/java-optional
         User test = userRepo.findByUsername(username);
         if (test != null)
             result = new ResponseObject(true, test);
         else
             result = new ResponseObject(false, "User not found");
-
-//        //purely for debugging purposes and seeing results in console
-//        try{
-//            String json = mapper.writeValueAsString(result);
-//            System.out.println(json);
-//        }
-//        catch (JsonProcessingException e){
-//            e.printStackTrace();
-//        }
 
         return result;
 
