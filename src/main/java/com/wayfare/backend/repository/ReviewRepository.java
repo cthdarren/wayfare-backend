@@ -14,7 +14,7 @@ public interface ReviewRepository extends MongoRepository<Review, String> {
 
     List<Review> findAllByUserId(String userId);
     List<Review> findAllByListingId(String listingId);
-    List<Review> findFirst5ByListingIdOrderByDateCreatedAsc(String listingId);
+    List<Review> findFirst5ByListingIdOrderByDateCreatedDesc(String listingId);
 
     @Nullable
     Review findByUserIdAndListingId(String userId, String listingId);

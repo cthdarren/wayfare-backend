@@ -43,6 +43,13 @@ public class ReviewController {
         return new ResponseObject(true, reviewList);
     }
 
+    @PostMapping("/api/v1/listing/newest-five-reviews")
+    public ResponseObject getFirstFiveReviewsByListing(@RequestBody ReviewsByListingRequest request){
+        List<Review> reviewList = reviewRepo.findFirst5ByListingIdOrderByDateCreatedDesc(request.listingId());
+
+        return new ResponseObject(true, reviewList);
+    }
+
     // MUST BE AUTHORISED AS USER
     @GetMapping("/reviews")
     public ResponseObject getReviewsByUser(){
