@@ -10,15 +10,15 @@ public class Review {
     private final Instant dateCreated;
     private Instant dateModified;
 
-    private final String userId;
-    private final String listingId;
+    private String userId;
+    private String listingId;
 
-    public Review(String title, int score, String reviewContent, String userId, String listingId) {
+    public Review(String title, int score, String reviewContent, Instant dateCreated, Instant dateModified, String userId,  String listingId) {
         this.title = title;
         this.score = score;
         this.reviewContent = reviewContent;
-        this.dateCreated = Instant.now();
-        this.dateModified = Instant.now();
+        this.dateCreated = dateModified;
+        this.dateModified = dateCreated;
         this.userId = userId;
         this.listingId = listingId;
     }
@@ -70,4 +70,6 @@ public class Review {
     public String getListingId() {
         return listingId;
     }
+
+
 }

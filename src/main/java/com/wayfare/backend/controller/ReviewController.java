@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.http.HttpResponse;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,13 +55,15 @@ public class ReviewController {
     }
 
     // MUST BE AUTHORISED AS USER
-    @PostMapping("/create")
+    @PostMapping("/review/create")
     public ResponseObject createReview(@RequestBody CreateReviewRequest request){
         WayfareUserDetails user = getCurrentUserDetails();
         Review toAdd = new Review(
                 request.title(),
                 request.score(),
                 request.reviewContent(),
+                Instant.now(),
+                Instant.now(),
                 user.getId(),
                 request.listingId()
         );
