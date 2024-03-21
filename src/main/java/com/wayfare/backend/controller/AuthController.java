@@ -6,6 +6,7 @@ import com.mashape.unirest.http.Unirest;
 import com.wayfare.backend.helper.Mapper;
 import com.wayfare.backend.model.VerifyURL;
 import com.wayfare.backend.repository.VerifyURLRepository;
+import com.wayfare.backend.request.PasswordForWayfarerSignUpRequest;
 import com.wayfare.backend.response.ResponseObject;
 import com.wayfare.backend.exception.FormatException;
 import com.wayfare.backend.model.User;
@@ -24,6 +25,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpMessage;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -111,20 +113,26 @@ public class AuthController {
     }
 
     @PostMapping("/wayfarersignup")
-    public ResponseObject wayfarerSignUp(@RequestBody LoginRequest loginRequest) {
+    public ResponseObject wayfarerSignUp(@RequestBody PasswordForWayfarerSignUpRequest request) {
+
+        WayfareUserDetails currUser = getCurrentUserDetails();
         try {
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password())
+                    new UsernamePasswordAuthenticationToken(currUser.getUsername(), request.password())
             );
         } catch (BadCredentialsException e) {
             return new ResponseObject(false, "Invalid credentials");
         }
 
-        User user = userRepo.findByUsername(loginRequest.username());
-        user.setRole(ROLE_WAYFARER);
-        userRepo.save(user);
+        User user = userRepo.findByUsername(currUser.getUsername());
+        if (user != null) {
+            user.setRole(ROLE_WAYFARER);
+            userRepo.save(user);
 
-        return new ResponseObject(true, "you are now a wayfarer!");
+            return new ResponseObject(true, "You are now a wayfarer!");
+        }
+        return new ResponseObject(false, "Your session has expired, please log in again.");
+
     }
 
     // TODO email verification using one time link
