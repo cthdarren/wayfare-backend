@@ -16,10 +16,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user")
 public class UserController {
 
-    @Autowired
-    UserRepository userRepo;
+    private final UserRepository userRepo;
 
     ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
+
+    public UserController(UserRepository userRepo) {
+        this.userRepo = userRepo;
+    }
 
 
     @GetMapping("/{username}")
