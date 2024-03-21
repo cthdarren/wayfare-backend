@@ -96,10 +96,6 @@ public class AuthController {
     }
     @PostMapping("/login")
     public ResponseObject wayfareLogin(@RequestBody LoginRequest loginRequest) {
-//        Authentication authenticationRequest =
-//                UsernamePasswordAuthenticationToken.unauthenticated(loginRequest.username(), loginRequest.password());
-//        Authentication authenticationResponse =
-//                this.authenticationManager.authenticate(authenticationRequest);
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password())
@@ -113,8 +109,6 @@ public class AuthController {
         String token = jwtService.generateToken(user);
 
         return new ResponseObject(true, token);
-        // ...
-//        return new ResponseObject(true, authenticationResponse.getName());
     }
 
     @PostMapping("/wayfarersignup")
