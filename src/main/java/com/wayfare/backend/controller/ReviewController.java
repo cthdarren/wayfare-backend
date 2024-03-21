@@ -1,6 +1,8 @@
 package com.wayfare.backend.controller;
 
+import com.wayfare.backend.helper.Mapper;
 import com.wayfare.backend.model.Review;
+import com.wayfare.backend.model.dto.ReviewDTO;
 import com.wayfare.backend.repository.ReviewRepository;
 import com.wayfare.backend.repository.UserRepository;
 import com.wayfare.backend.request.CreateReviewRequest;
@@ -56,17 +58,11 @@ public class ReviewController {
 
     // MUST BE AUTHORISED AS USER
     @PostMapping("/review/create")
-    public ResponseObject createReview(@RequestBody CreateReviewRequest request){
+    public ResponseObject createReview(@RequestBody ReviewDTO dto){
         WayfareUserDetails user = getCurrentUserDetails();
-        Review toAdd = new Review(
-                request.title(),
-                request.score(),
-                request.reviewContent(),
-                Instant.now(),
-                Instant.now(),
-                user.getId(),
-                request.listingId()
-        );
+        Review toAdd = new Mapper().toReview(dto, user.getId());
+        if(reviewRepo.existsByUserIdAndListingId(user.getId(), dto.getListingId()))
+            return new ResponseObject(false, "Review already exists");
         reviewRepo.save(toAdd);
         return new ResponseObject(true, "Review added");
     }
