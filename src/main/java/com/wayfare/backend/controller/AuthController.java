@@ -1,6 +1,5 @@
 package com.wayfare.backend.controller;
 
-<<<<<<< HEAD
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -16,7 +15,6 @@ import com.wayfare.backend.request.LoginRequest;
 import com.wayfare.backend.security.WayfareUserDetailService;
 import com.wayfare.backend.security.WayfareUserDetails;
 import com.wayfare.backend.security.jwt.JwtService;
-=======
 import static com.wayfare.backend.helper.helper.getCurrentUserDetails;
 import static com.wayfare.backend.model.RoleEnum.ROLE_WAYFARER;
 
@@ -24,7 +22,6 @@ import java.net.http.HttpClient;
 import java.time.Instant;
 import java.util.UUID;
 
->>>>>>> b9c5201aa0f5e98f6d14141439383d6cfde55861
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,22 +35,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-import com.wayfare.backend.exception.FormatException;
-import com.wayfare.backend.model.User;
-import com.wayfare.backend.model.UserCreationDTO;
-import com.wayfare.backend.model.VerifyURL;
-import com.wayfare.backend.repository.UserRepository;
-import com.wayfare.backend.repository.VerifyURLRepository;
-import com.wayfare.backend.request.LoginRequest;
-import com.wayfare.backend.request.RegisterRequest;
-import com.wayfare.backend.response.ResponseObject;
-import com.wayfare.backend.security.WayfareUserDetailService;
-import com.wayfare.backend.security.WayfareUserDetails;
-import com.wayfare.backend.security.jwt.JwtService;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -87,17 +68,6 @@ public class AuthController {
     @PostMapping(value = "/register", consumes = "application/json; charset=UTF-8", produces = "application/json; charset=UTF-8")
     public ResponseObject wayfareRegister(@RequestBody UserDTO dto){
         try{
-//            UserDTO toInsert = new UserDTO(
-//                    registerRequest.username(),
-//                    registerRequest.firstName(),
-//                    registerRequest.lastName(),
-//                    registerRequest.password(),
-//                    registerRequest.verifyPassword(),
-//                    registerRequest.email(),
-//                    registerRequest.phoneNumber()
-//            );
-
-
             dto.validate();
             if (userRepo.existsByUsername(dto.getUsername()))
                 dto.addErrors("Username already exists");
