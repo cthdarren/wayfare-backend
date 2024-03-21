@@ -1,6 +1,7 @@
 package com.wayfare.backend.helper;
 
 import com.wayfare.backend.model.*;
+import com.wayfare.backend.model.dto.ReviewDTO;
 import com.wayfare.backend.model.dto.UserDTO;
 
 import java.time.Instant;
@@ -21,9 +22,15 @@ public class Mapper {
                 Instant.now());
     }
 
-//    public Review toReview(ReviewDTO reviewCreationDTO){
-//        return new Review(
-//
-//        )
-//    }
+    public Review toReview(ReviewDTO reviewCreationDTO, String userId){
+        return new Review(
+                reviewCreationDTO.getTitle(),
+                reviewCreationDTO.getScore(),
+                reviewCreationDTO.getReviewContent(),
+                Instant.now(),
+                Instant.now(),
+                userId,
+                reviewCreationDTO.getListingId()
+        );
+    }
 }

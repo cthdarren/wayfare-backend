@@ -11,6 +11,7 @@ public class ReviewDTO extends ValidateClass {
     private String title;
     private int score;
     private String reviewContent;
+    private String listingId;
 
     public ReviewDTO(String title, int score, String reviewContent){
         this.title = title;
@@ -30,6 +31,9 @@ public class ReviewDTO extends ValidateClass {
         return score;
     }
 
+    public String getListingId() {
+        return listingId;
+    }
     @Override
     public void validate() {
         if(this.score < 0 || this.score > 5){addErrors("Score must be between 1-5 inclusive");}
