@@ -57,13 +57,19 @@ public class WayfareSecurityConfig {
         return http
                 .csrf((csrf) -> csrf.disable())
                         .authorizeHttpRequests((authorize) -> authorize
+
+                                // PUBLIC APIS ALL GO THROUGH API
                                 .requestMatchers("/api/**")
                                 .permitAll()
-                                .requestMatchers("/user/home")
-                                .hasAnyAuthority(ROLE_USER.name(), ROLE_WAYFARER.name())
-                                .requestMatchers("/user/wayfarer")
+
+                                // WAYFARER SPECIFIC REQUESTS GO THROUGH /WAYFARER
+                                .requestMatchers("/wayfarer")
                                 .hasAuthority(ROLE_WAYFARER.name())
-                                .anyRequest().authenticated()
+
+                                // ANY OTHER REQUESTS REQUIRE AN AUTHENTICATED USER
+                                .anyRequest()
+                                .hasAnyAuthority(ROLE_USER.name(), ROLE_WAYFARER.name())
+
                         ).userDetailsService(wayfareUserDetailService)
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
