@@ -13,13 +13,25 @@ public class TourListingDTO extends ValidateClass {
     private String address;
     private Instant tourStartDateTime;
     private Instant tourEndDateTime;
+    private String tourName;
+    private String country;
 
-    public TourListingDTO(String id, String username, String address, Instant tourStartDateTime, Instant tourEndDateTime) {
+    public TourListingDTO(String id, String username, String address, Instant tourStartDateTime, Instant tourEndDateTime, String tourName, String country) {
         this.id = id;
         this.username = username;
         this.address = address;
         this.tourStartDateTime = tourStartDateTime;
         this.tourEndDateTime = tourEndDateTime;
+        this.tourName = tourName;
+        this.country = country;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public String getId() {
@@ -36,6 +48,14 @@ public class TourListingDTO extends ValidateClass {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getTourName() {
+        return tourName;
+    }
+
+    public void setTourName(String tourName) {
+        this.tourName = tourName;
     }
 
     public String getAddress() {

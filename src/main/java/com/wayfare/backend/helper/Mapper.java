@@ -44,7 +44,9 @@ public class Mapper {
                 tourListingCreationDTO.getTourEndDateTime(),
                 Instant.now(),
                 Instant.now(),
-                tourListingCreationDTO.getUsername()
+                tourListingCreationDTO.getUsername(),
+                tourListingCreationDTO.getTourName(),
+                tourListingCreationDTO.getCountry()
         );
     }
 }

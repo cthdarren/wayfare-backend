@@ -28,8 +28,10 @@ public class TourListing {
     private Instant dateCreated;
     private Instant dateModified;
     private String userID;
+    private String tourName;
+    private String country;
 
-    public TourListing(String id, String userID, String address, Instant tourStartDateTime, Instant tourEndDateTime, Instant dateCreated, Instant dateModified, String username) {
+    public TourListing(String id, String userID, String address, Instant tourStartDateTime, Instant tourEndDateTime, Instant dateCreated, Instant dateModified, String username, String tourName, String country) {
         this.id = id;
         this.username = username;
         this.address = address;
@@ -38,6 +40,16 @@ public class TourListing {
         this.dateCreated = dateCreated;
         this.dateModified = dateModified;
         this.userID = userID;
+        this.tourName = tourName;
+        this.country = country;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public String getId() {
@@ -46,6 +58,14 @@ public class TourListing {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getTourName() {
+        return tourName;
+    }
+
+    public void setTourName(String tourName) {
+        this.tourName = tourName;
     }
 
     public void setUsername(String username) {
