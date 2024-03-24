@@ -1,23 +1,6 @@
 package com.wayfare.backend.model;
 
-import com.wayfare.backend.security.WayfareUserDetailService;
-import com.wayfare.backend.validator.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
 
 public class TourListing {
     private String id;
@@ -27,11 +10,11 @@ public class TourListing {
     private Instant tourEndDateTime;
     private Instant dateCreated;
     private Instant dateModified;
-    private String userID;
+    private String userId;
     private String tourName;
     private String country;
 
-    public TourListing(String id, String userID, String address, Instant tourStartDateTime, Instant tourEndDateTime, Instant dateCreated, Instant dateModified, String username, String tourName, String country) {
+    public TourListing(String id, String userId, String address, Instant tourStartDateTime, Instant tourEndDateTime, Instant dateCreated, Instant dateModified, String username, String tourName, String country) {
         this.id = id;
         this.username = username;
         this.address = address;
@@ -39,7 +22,7 @@ public class TourListing {
         this.tourStartDateTime = tourStartDateTime;
         this.dateCreated = dateCreated;
         this.dateModified = dateModified;
-        this.userID = userID;
+        this.userId = userId;
         this.tourName = tourName;
         this.country = country;
     }
@@ -76,12 +59,12 @@ public class TourListing {
         this.id = id;
     }
 
-    public String getUserID() {
-        return userID;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUserID(String userID) {
-        this.userID = userID;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getAddress() {

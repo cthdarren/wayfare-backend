@@ -14,10 +14,10 @@ import java.time.Instant;
 
 public interface TourRepository extends MongoRepository<TourListing, String> {
     List<TourListing> findAllByUserId(String userId);
-    List<TourListing> findByStartDate(Instant startDate);
-    List<TourListing> findByEndDate(Instant endDate);
-    List<TourListing> findByDateRange(Instant startDate, Instant endDate);
+    List<TourListing> findByTourStartDateTime(Instant startDate);
+    List<TourListing> findByTourEndDateTime(Instant endDate);
+//    List<TourListing> findByDateRange(Instant startDate, Instant endDate);
     List<TourListing> findByTourName(String tourName);
     List<TourListing> findAllByCountry(String countryName);
-    boolean existsByTourIdAndUserId(String tourId, String userId);
+    boolean existsByIdAndUserId(String tourId, String userId);
 }

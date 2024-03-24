@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.wayfare.backend.model.dto.TourListingDTO;
 import com.wayfare.backend.request.TourListingsByCountry;
-import com.wayfare.backend.request.TourListingsByRequest;
 import com.wayfare.backend.request.TourListingsByUser;
 import com.wayfare.backend.response.ResponseObject;
 import com.wayfare.backend.model.TourListing;
@@ -60,7 +59,7 @@ public class TourController {
         WayfareUserDetails user = getCurrentUserDetails();
         TourListing toAdd = new Mapper().toTourListing(dto, user.getId());
 
-        if (tourRepo.existsByTourIdAndUserId(dto.getId(), user.getId())) {
+        if (tourRepo.existsByIdAndUserId(dto.getId(), user.getId())) {
             return new ResponseObject(false, "Listing already exists");
         }
         tourRepo.save(toAdd);
