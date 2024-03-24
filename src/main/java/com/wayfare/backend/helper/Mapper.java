@@ -2,6 +2,7 @@ package com.wayfare.backend.helper;
 
 import com.wayfare.backend.model.*;
 import com.wayfare.backend.model.dto.ReviewDTO;
+import com.wayfare.backend.model.dto.TourListingDTO;
 import com.wayfare.backend.model.dto.UserDTO;
 
 import java.time.Instant;
@@ -31,6 +32,21 @@ public class Mapper {
                 Instant.now(),
                 userId,
                 reviewCreationDTO.getListingId()
+        );
+    }
+
+    public TourListing toTourListing(TourListingDTO tourListingCreationDTO, String userId){
+        return new TourListing(
+                tourListingCreationDTO.getId(),
+                userId,
+                tourListingCreationDTO.getAddress(),
+                tourListingCreationDTO.getTourStartDateTime(),
+                tourListingCreationDTO.getTourEndDateTime(),
+                Instant.now(),
+                Instant.now(),
+                tourListingCreationDTO.getUsername(),
+                tourListingCreationDTO.getTourName(),
+                tourListingCreationDTO.getCountry()
         );
     }
 }
