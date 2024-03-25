@@ -6,16 +6,16 @@ import java.util.List;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.wayfare.backend.model.dto.TourListingDTO;
-import com.wayfare.backend.request.TestReq;
-import com.wayfare.backend.request.TourListingsByCountry;
-import com.wayfare.backend.request.TourListingsByUser;
+import com.wayfare.backend.request.LocationRequest;
 import com.wayfare.backend.response.ResponseObject;
 import com.wayfare.backend.model.TourListing;
 import com.wayfare.backend.repository.TourRepository;
 import com.wayfare.backend.security.WayfareUserDetails;
 import com.wayfare.backend.helper.Mapper;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.geo.Distance;
+import org.springframework.data.geo.Metrics;
+import org.springframework.data.geo.Point;
 import org.springframework.web.bind.annotation.*;
 
 import static com.wayfare.backend.helper.helper.getCurrentUserDetails;
@@ -41,8 +41,8 @@ public class TourController {
     }
 
     @PostMapping("/api/v1/listing/search")
-    public ResponseObject getListingsByCountry(@RequestBody TestReq request) {
-        List<TourListing> listByCountry = tourRepo.findByLocationNearOrderByRating(request.location(), request.distance());
+    public ResponseObject getListingsByLocation(@RequestBody LocationRequest request) {
+        List<TourListing> listByCountry = tourRepo.findByLocationNearOrderByRating(new Point(request.longitude(), request.latitude()), new Distance(request.kmdistance(), Metrics.KILOMETERS));
         return new ResponseObject(true, listByCountry);
     }
 

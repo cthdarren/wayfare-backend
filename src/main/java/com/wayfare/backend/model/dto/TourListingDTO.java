@@ -7,33 +7,34 @@ import org.springframework.data.geo.Point;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.List;
 
 public class TourListingDTO extends ValidateClass {
     private final String title;
     private final String description;
+    private ArrayList<String> thumbnailUrls;
     private final Point location;
     private ArrayList<TimeRange> timeRangeList;
-    private final Double adultPrice;
-    private final Double childPrice;
+    private final double price;
     private final Integer maxPax;
     private final Integer minPax;
 
     public TourListingDTO(
             String title,
             String description,
+            ArrayList<String> thumbnailUrls,
             Point location,
             ArrayList<TimeRange> timeRangeList,
-            Double adultPrice,
-            Double childPrice,
+            Double price,
             Integer maxPax,
             Integer minPax
     ){
         this.title = title;
         this.description = description;
+        this.thumbnailUrls = thumbnailUrls;
         this.location = location;
         setTimeRangeList(timeRangeList);
-        this.adultPrice = adultPrice;
-        this.childPrice = childPrice;
+        this.price = price;
         this.maxPax = maxPax;
         this.minPax = minPax;
     }
@@ -46,6 +47,14 @@ public class TourListingDTO extends ValidateClass {
         return description;
     }
 
+    public void setThumbnailUrls(ArrayList<String> thumbnailUrls) {
+        if (thumbnailUrls.isEmpty()){
+            this.thumbnailUrls = new ArrayList<String>();
+        }
+        else{
+            this.timeRangeList = timeRangeList;
+        }
+    }
     public Point getLocation() {
         return location;
     }
@@ -53,7 +62,6 @@ public class TourListingDTO extends ValidateClass {
     public ArrayList<TimeRange> getTimeRangeList() {
         return timeRangeList;
     }
-
     public void setTimeRangeList(ArrayList<TimeRange> timeRangeList) {
         if (timeRangeList == null){
             addErrors("timeRangeList is null");
@@ -67,12 +75,8 @@ public class TourListingDTO extends ValidateClass {
         //TODO validate when time ranges overlap
     }
 
-    public Double getAdultPrice() {
-        return adultPrice;
-    }
-
-    public Double getChildPrice() {
-        return childPrice;
+    public Double getPrice() {
+        return price;
     }
 
     public Integer getMaxPax() {
@@ -85,7 +89,7 @@ public class TourListingDTO extends ValidateClass {
 
     @Override
     public void validate() {
-        if (getTitle() == null || getDescription() ==null || getLocation() == null || getTimeRangeList() == null || getAdultPrice() == null || getChildPrice() == null || getMinPax() == null || getMaxPax() == null)
+        if (getTitle() == null || getDescription() ==null || getLocation() == null || getTimeRangeList() == null || getPrice() == null || getMinPax() == null || getMaxPax() == null)
             addErrors("Missing fields in json");
         getErrors().remove(null);
     }

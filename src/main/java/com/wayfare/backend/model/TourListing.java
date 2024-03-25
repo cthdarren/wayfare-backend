@@ -18,8 +18,9 @@ public class TourListing {
     private double childPrice;
     private int maxPax;
     private int minPax;
+    private double rating;
+    private int reviewCount;
     private String userId;
-    private Double rating;
 
     public TourListing(
             String title,
@@ -30,8 +31,10 @@ public class TourListing {
             double childPrice,
             int maxPax,
             int minPax,
-            String userId,
-            Double rating
+            double rating,
+            int reviewCount,
+            String userId
+
     ) {
         this.title = title;
         this.description = description;
@@ -43,6 +46,7 @@ public class TourListing {
         this.minPax = minPax;
         this.userId = userId;
         this.rating = rating;
+        this.reviewCount = reviewCount;
     }
 
     public String getId() {
@@ -85,7 +89,11 @@ public class TourListing {
         return userId;
     }
 
-    public Double getRating() {
+    public double getRating() {
         return rating;
+    }
+
+    public int getReviewCount() {
+        return reviewCount;
     }
 }
