@@ -37,16 +37,15 @@ public class Mapper {
 
     public TourListing toTourListing(TourListingDTO tourListingCreationDTO, String userId){
         return new TourListing(
-                tourListingCreationDTO.getId(),
-                userId,
-                tourListingCreationDTO.getAddress(),
-                tourListingCreationDTO.getTourStartDateTime(),
-                tourListingCreationDTO.getTourEndDateTime(),
-                Instant.now(),
-                Instant.now(),
-                tourListingCreationDTO.getUsername(),
-                tourListingCreationDTO.getTourName(),
-                tourListingCreationDTO.getCountry()
+                tourListingCreationDTO.getTitle(),
+                tourListingCreationDTO.getDescription(),
+                tourListingCreationDTO.getLocation(),
+                tourListingCreationDTO.getTimeRangeList(),
+                tourListingCreationDTO.getAdultPrice(),
+                tourListingCreationDTO.getChildPrice(),
+                tourListingCreationDTO.getMaxPax(),
+                tourListingCreationDTO.getMinPax(),
+                userId
         );
     }
 }

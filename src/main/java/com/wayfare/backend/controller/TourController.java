@@ -6,6 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.wayfare.backend.model.dto.TourListingDTO;
+import com.wayfare.backend.request.TestReq;
 import com.wayfare.backend.request.TourListingsByCountry;
 import com.wayfare.backend.request.TourListingsByUser;
 import com.wayfare.backend.response.ResponseObject;
@@ -39,17 +40,17 @@ public class TourController {
         }
     }
 
-    @GetMapping("/api/v1/listing/country")
-    public ResponseObject getListingsByCountry(@RequestBody TourListingsByCountry request) {
-        List<TourListing> listByCountry = tourRepo.findAllByCountry(request.countryName());
+    @PostMapping("/api/v1/listing/search")
+    public ResponseObject getListingsByCountry(@RequestBody TestReq request) {
+        List<TourListing> listByCountry = tourRepo.findByLocationNearOrderByRating(request.location(), request.distance());
         return new ResponseObject(true, listByCountry);
     }
 
-    @GetMapping("/api/v1/listing/user")
-    public ResponseObject getListingsByUserId(@RequestBody TourListingsByUser request) {
-        List<TourListing> listByUserId = tourRepo.findAllByUserId(request.userId());
-        return new ResponseObject(true, listByUserId);
-    }
+//    @GetMapping("/api/v1/listing/user")
+//    public ResponseObject getListingsByUserId(@RequestBody TourListingsByUser request) {
+//        List<TourListing> listByUserId = tourRepo.findAllByUserId(request.userId());
+//        return new ResponseObject(true, listByUserId);
+//    }
 
     //POST METHODS
     @PostMapping("/listing/create")
@@ -59,9 +60,6 @@ public class TourController {
         WayfareUserDetails user = getCurrentUserDetails();
         TourListing toAdd = new Mapper().toTourListing(dto, user.getId());
 
-        if (tourRepo.existsByIdAndUserId(dto.getId(), user.getId())) {
-            return new ResponseObject(false, "Listing already exists");
-        }
         tourRepo.save(toAdd);
         return new ResponseObject(true, "Listing added");
     }

@@ -1,93 +1,92 @@
 package com.wayfare.backend.model.dto;
 
+
+import com.wayfare.backend.model.object.TimeRange;
 import com.wayfare.backend.model.ValidateClass;
-import com.wayfare.backend.validator.*;
+import org.springframework.data.geo.Point;
 
 import java.time.Instant;
-import java.util.Objects;
-
+import java.util.ArrayList;
 
 public class TourListingDTO extends ValidateClass {
-    private String id;
-    private String username;
-    private String address;
-    private Instant tourStartDateTime;
-    private Instant tourEndDateTime;
-    private String tourName;
-    private String country;
+    private final String title;
+    private final String description;
+    private final Point location;
+    private ArrayList<TimeRange> timeRangeList;
+    private final Double adultPrice;
+    private final Double childPrice;
+    private final Integer maxPax;
+    private final Integer minPax;
 
-    public TourListingDTO(String id, String username, String address, Instant tourStartDateTime, Instant tourEndDateTime, String tourName, String country) {
-        this.id = id;
-        this.username = username;
-        this.address = address;
-        this.tourStartDateTime = tourStartDateTime;
-        this.tourEndDateTime = tourEndDateTime;
-        this.tourName = tourName;
-        this.country = country;
+    public TourListingDTO(
+            String title,
+            String description,
+            Point location,
+            ArrayList<TimeRange> timeRangeList,
+            Double adultPrice,
+            Double childPrice,
+            Integer maxPax,
+            Integer minPax
+    ){
+        this.title = title;
+        this.description = description;
+        this.location = location;
+        setTimeRangeList(timeRangeList);
+        this.adultPrice = adultPrice;
+        this.childPrice = childPrice;
+        this.maxPax = maxPax;
+        this.minPax = minPax;
     }
 
-    public String getCountry() {
-        return country;
+    public String getTitle() {
+        return title;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public String getDescription() {
+        return description;
     }
 
-    public String getId() {
-        return id;
+    public Point getLocation() {
+        return location;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public ArrayList<TimeRange> getTimeRangeList() {
+        return timeRangeList;
     }
 
-    public String getUsername() {
-        return username;
+    public void setTimeRangeList(ArrayList<TimeRange> timeRangeList) {
+        if (timeRangeList == null){
+            addErrors("timeRangeList is null");
+        }
+        else if (timeRangeList.isEmpty()){
+            addErrors("Minimum 1 time slot required");
+        }
+        else{
+            this.timeRangeList = timeRangeList;
+        }
+        //TODO validate when time ranges overlap
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public Double getAdultPrice() {
+        return adultPrice;
     }
 
-    public String getTourName() {
-        return tourName;
+    public Double getChildPrice() {
+        return childPrice;
     }
 
-    public void setTourName(String tourName) {
-        this.tourName = tourName;
+    public Integer getMaxPax() {
+        return maxPax;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public Instant getTourStartDateTime() {
-        return tourStartDateTime;
-    }
-
-    public void setTourStartDateTime(Instant tourStartDateTime) {
-        this.tourStartDateTime = tourStartDateTime;
-    }
-
-    public Instant getTourEndDateTime() {
-        return tourEndDateTime;
-    }
-
-    public void setTourEndDateTime(Instant tourEndDateTime) {
-        this.tourEndDateTime = tourEndDateTime;
+    public Integer getMinPax() {
+        return minPax;
     }
 
     @Override
     public void validate() {
-        // TODO Validate that user exists
-
-        if (this.tourEndDateTime.isBefore(tourStartDateTime)) {
-            addErrors("End of tour cannot be before start of tour");
-        }
+        if (getTitle() == null || getDescription() ==null || getLocation() == null || getTimeRangeList() == null || getAdultPrice() == null || getChildPrice() == null || getMinPax() == null || getMaxPax() == null)
+            addErrors("Missing fields in json");
+        getErrors().remove(null);
     }
 }
