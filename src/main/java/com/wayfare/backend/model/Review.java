@@ -8,7 +8,7 @@ import java.time.Instant;
 public class Review {
     private String id;
     private String title;
-    private int score;
+    private Integer score;
     private String reviewContent;
     private final Instant dateCreated;
     private Instant dateModified;
@@ -16,12 +16,12 @@ public class Review {
     private String userId;
     private String listingId;
 
-    public Review(String title, int score, String reviewContent, Instant dateCreated, Instant dateModified, String userId,  String listingId) {
+    public Review(String title, Integer score, String reviewContent, Instant dateCreated, Instant dateModified, String userId,  String listingId) {
         this.title = title;
         this.score = score;
         this.reviewContent = reviewContent;
-        this.dateCreated = dateModified;
-        this.dateModified = dateCreated;
+        this.dateCreated = dateCreated;
+        this.dateModified = dateModified;
         this.userId = userId;
         this.listingId = listingId;
     }
@@ -38,7 +38,7 @@ public class Review {
         this.title = title;
     }
 
-    public int getScore() {
+    public Integer getScore() {
         return score;
     }
 

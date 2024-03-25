@@ -9,11 +9,11 @@ import java.util.Objects;
 //only used for the creation of new users
 public class ReviewDTO extends ValidateClass {
     private final String title;
-    private final int score;
+    private final Integer score;
     private final String reviewContent;
     private final String listingId;
 
-    public ReviewDTO(String title, int score, String reviewContent, String listingId){
+    public ReviewDTO(String title, Integer score, String reviewContent, String listingId){
         this.title = title;
         this.score = score;
         this.reviewContent = reviewContent;
@@ -28,7 +28,7 @@ public class ReviewDTO extends ValidateClass {
         return reviewContent;
     }
 
-    public int getScore() {
+    public Integer getScore() {
         return score;
     }
 
