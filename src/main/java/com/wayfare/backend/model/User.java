@@ -4,17 +4,20 @@ import com.wayfare.backend.validator.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 
 // Regex guide for validation https://www.w3schools.com/java/java_regex.asp
 
 
 @Document(collection = "users")
-public class User extends ValidateClass{
+public class User{
     private String id;
 
     private String pictureUrl;
     private String aboutMe;
+    private ArrayList<BadgeEnum> badges;
     private String username;
 
     private String firstName;
@@ -33,6 +36,7 @@ public class User extends ValidateClass{
 
     public User(String pictureUrl,
                 String aboutMe,
+                ArrayList<BadgeEnum> badges,
                 String username,
                 String firstName,
                 String lastName,
@@ -47,6 +51,7 @@ public class User extends ValidateClass{
         super();
         setPictureUrl(pictureUrl);
         setAboutMe(aboutMe);
+        setBadges(badges);
         setUsername(username);
         setFirstName(firstName);
         setLastName(lastName);
@@ -77,6 +82,14 @@ public class User extends ValidateClass{
 
     public void setAboutMe(String aboutMe) {
         this.aboutMe = aboutMe;
+    }
+
+    public ArrayList<BadgeEnum> getBadges() {
+        return badges;
+    }
+
+    public void setBadges(ArrayList<BadgeEnum> badges) {
+        this.badges = badges;
     }
     public String getUsername() {
         return username;
@@ -150,13 +163,4 @@ public class User extends ValidateClass{
     }
 
 
-    @Override
-    public void validate() {
-        addErrors(new UsernameValidator(getUsername()).validateRegex());
-        addErrors(new AlphabeticalValidator(getFirstName(), "First name can only accept alphabetical characters").validateRegex());
-        addErrors(new AlphabeticalValidator(getLastName(), "Last name can only accept alphabetical characters").validateRegex());
-        addErrors(new EmailValidator(getEmail()).validateRegex());
-        addErrors(new PhoneNumberValidator(getPhoneNumber()).validateRegex());
-        getErrors().remove(null);
-    }
 }

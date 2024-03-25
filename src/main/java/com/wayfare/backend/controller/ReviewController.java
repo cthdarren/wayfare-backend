@@ -84,7 +84,7 @@ public class ReviewController {
         if (dto.hasErrors()){return new ResponseObject(false, dto.getErrors());}
 
         WayfareUserDetails user = getCurrentUserDetails();
-        Review toAdd = new Mapper().toReview(dto, user.getId());
+        Review toAdd = new Mapper(tourRepo).toReview(dto, user.getId());
         String listingId = dto.getListingId();
         TourListing listing = tourRepo.findById(dto.getListingId()).orElseThrow();
 
@@ -127,7 +127,7 @@ public class ReviewController {
         WayfareUserDetails user = getCurrentUserDetails();
         Review toDelete = reviewRepo.findById(request.reviewId()).orElseThrow();
 
-        TourListing listing = tourRepo.findById(toDelete.getListingId()).orElseThrow();
+        TourListing listing = tourRepo.findById(toDelete.getListing().getId()).orElseThrow();
 
         if (!Objects.equals(toDelete.getUserId(), user.getId()))
             return new ResponseObject(false, "User does not own review");

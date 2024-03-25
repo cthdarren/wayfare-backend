@@ -14,16 +14,16 @@ public class Review {
     private Instant dateModified;
 
     private String userId;
-    private String listingId;
+    private TourListing listing;
 
-    public Review(String title, Integer score, String reviewContent, Instant dateCreated, Instant dateModified, String userId,  String listingId) {
+    public Review(String title, Integer score, String reviewContent, Instant dateCreated, Instant dateModified, String userId,  TourListing listing) {
         this.title = title;
         this.score = score;
         this.reviewContent = reviewContent;
         this.dateCreated = dateCreated;
         this.dateModified = dateModified;
         this.userId = userId;
-        this.listingId = listingId;
+        this.listing = listing;
     }
 
     public String getId() {
@@ -70,8 +70,8 @@ public class Review {
         return userId;
     }
 
-    public String getListingId() {
-        return listingId;
+    public TourListing getListing() {
+        return listing;
     }
 
 
