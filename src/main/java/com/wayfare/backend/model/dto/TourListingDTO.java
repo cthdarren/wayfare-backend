@@ -102,7 +102,7 @@ public class TourListingDTO extends ValidateClass {
 
     @Override
     public void validate() {
-        if (getTitle() == null || getDescription() ==null || getLocation() == null || getTimeRangeList() == null || getPrice() == null || getMinPax() == null || getMaxPax() == null)
+        if (getTitle() == null || getDescription() ==null || getCategory() == null || getLocation() == null || getTimeRangeList() == null || getPrice() == null || getMinPax() == null || getMaxPax() == null)
             addErrors("Missing fields in json");
         getErrors().remove(null);
     }

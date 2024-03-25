@@ -9,7 +9,6 @@ import com.wayfare.backend.model.User;
 import com.wayfare.backend.model.dto.TourListingDTO;
 import com.wayfare.backend.repository.UserRepository;
 import com.wayfare.backend.request.LocationRequest;
-import com.wayfare.backend.request.TourListingsByUser;
 import com.wayfare.backend.response.ResponseObject;
 import com.wayfare.backend.model.TourListing;
 import com.wayfare.backend.repository.TourRepository;
@@ -47,7 +46,7 @@ public class TourController {
 
     @PostMapping("/api/v1/listing/search")
     public ResponseObject getListingsByLocation(@RequestBody LocationRequest request) {
-        List<TourListing> listByCountry = tourRepo.findByLocationNearOrderByRating(new Point(request.longitude(), request.latitude()), new Distance(request.kmdistance(), Metrics.KILOMETERS));
+        List<TourListing> listByCountry = tourRepo.findByLocationNearOrderByRatingDesc(new Point(request.longitude(), request.latitude()), new Distance(request.kmdistance(), Metrics.KILOMETERS));
         return new ResponseObject(true, listByCountry);
     }
 
@@ -62,7 +61,7 @@ public class TourController {
     }
 
     //POST METHODS
-    @PostMapping("/listing/create")
+    @PostMapping("/wayfarer/listing/create")
     public ResponseObject createTourListing(@RequestBody TourListingDTO dto) {
         dto.validate();
         if (dto.hasErrors()){return new ResponseObject(false, dto.getErrors());}

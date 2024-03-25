@@ -16,10 +16,10 @@ public class TourListing {
     private Point location;
     private ArrayList<TimeRange> timeRangeList;
     private Double price;
-    private int maxPax;
-    private int minPax;
-    private double rating;
-    private int reviewCount;
+    private Integer maxPax;
+    private Integer minPax;
+    private Double rating;
+    private Integer reviewCount;
     private String userId;
 
     public TourListing(
@@ -75,11 +75,11 @@ public class TourListing {
         return price;
     }
 
-    public int getMaxPax() {
+    public Integer getMaxPax() {
         return maxPax;
     }
 
-    public int getMinPax() {
+    public Integer getMinPax() {
         return minPax;
     }
 
@@ -87,12 +87,19 @@ public class TourListing {
         return userId;
     }
 
-    public double getRating() {
+    public Double getRating() {
         return rating;
     }
+    public void setRating(Double value){
+        this.rating = value;
+    }
 
-    public int getReviewCount() {
+    public Integer getReviewCount() {
         return reviewCount;
+    }
+
+    public void setReviewCount(Integer value){
+        this.reviewCount = value;
     }
 
     public ArrayList<String> getThumbnailUrls() {
