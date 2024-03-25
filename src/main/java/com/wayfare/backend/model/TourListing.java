@@ -19,6 +19,7 @@ public class TourListing {
     private int maxPax;
     private int minPax;
     private String userId;
+    private Double rating;
 
     public TourListing(
             String title,
@@ -29,7 +30,8 @@ public class TourListing {
             double childPrice,
             int maxPax,
             int minPax,
-            String userId
+            String userId,
+            Double rating
     ) {
         this.title = title;
         this.description = description;
@@ -40,6 +42,7 @@ public class TourListing {
         this.maxPax = maxPax;
         this.minPax = minPax;
         this.userId = userId;
+        this.rating = rating;
     }
 
     public String getId() {
@@ -80,5 +83,9 @@ public class TourListing {
 
     public String getUserId() {
         return userId;
+    }
+
+    public Double getRating() {
+        return rating;
     }
 }

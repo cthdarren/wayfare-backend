@@ -45,7 +45,7 @@ public class Mapper {
                 tourListingCreationDTO.getChildPrice(),
                 tourListingCreationDTO.getMaxPax(),
                 tourListingCreationDTO.getMinPax(),
-                userId
+                userId, null
         );
     }
 }

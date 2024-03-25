@@ -7,7 +7,6 @@ import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
-import org.springframework.data.mongodb.core.aggregation.LookupOperation;
 
 import java.util.List;
 
@@ -22,12 +21,27 @@ class CustomTourRepositoryImpl implements CustomTourRepository{
 
     @Override
     public List<TourListing> findByLocationNearOrderByRating(Point location, Distance distance) {
+     class test{
+        final String $toString;
+        test(){$toString = "$_id";}
+    }
         Aggregation aggregation = newAggregation(
-                lookup("reviews", "id", "listingId", "reviews"),
-                unwind("reviews"),
-                group("id").avg("reviews.score").as("averageReviewScore"),
-                sort(Sort.Direction.DESC, "averageReviewScore"),
-                project("_id").and("averageReviewScore").as("averageReviewScore")
+                addFields().addField("listingId").withValue(new test()).build(),
+                lookup("review", "listingId", "listingId", "result"),
+                unwind("result"),
+                group("$listingId")
+                        .avg("$result.score").as("rating")
+                        .first("id").as("id")
+                        .first("title").as("title")
+                        .first("description").as("description")
+                        .first("location").as("location")
+                        .first("timeRangeList").as("timeRangeList")
+                        .first("adultPrice").as("adultPrice")
+                        .first("childPrice").as("childPrice")
+                        .first("maxPax").as("maxPax")
+                        .first("minPax").as("minPax")
+                        .first("userId").as("userId"),
+                sort(Sort.Direction.DESC, "rating")
         );
         AggregationResults<TourListing> results = mongoTemplate.aggregate(aggregation, "tourListings", TourListing.class);
         return results.getMappedResults();

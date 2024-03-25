@@ -1,11 +1,6 @@
 package com.wayfare.backend.repository;
 
-import com.mongodb.lang.Nullable;
 import com.wayfare.backend.model.TourListing;
-import org.springframework.data.domain.Limit;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.repository.MongoRepository;
