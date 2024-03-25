@@ -61,7 +61,7 @@ public class TourController {
     }
 
     //POST METHODS
-    @PostMapping("/listing/create")
+    @PostMapping("/wayfarer/listing/create")
     public ResponseObject createTourListing(@RequestBody TourListingDTO dto) {
         dto.validate();
         if (dto.hasErrors()){return new ResponseObject(false, dto.getErrors());}
