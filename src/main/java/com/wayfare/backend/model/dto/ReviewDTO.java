@@ -8,10 +8,10 @@ import java.util.Objects;
 
 //only used for the creation of new users
 public class ReviewDTO extends ValidateClass {
-    private String title;
-    private int score;
-    private String reviewContent;
-    private String listingId;
+    private final String title;
+    private final int score;
+    private final String reviewContent;
+    private final String listingId;
 
     public ReviewDTO(String title, int score, String reviewContent, String listingId){
         this.title = title;

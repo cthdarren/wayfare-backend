@@ -1,93 +1,117 @@
 package com.wayfare.backend.model.dto;
 
+
+import com.wayfare.backend.model.CategoryEnum;
+import com.wayfare.backend.model.object.TimeRange;
 import com.wayfare.backend.model.ValidateClass;
-import com.wayfare.backend.validator.*;
+import org.springframework.data.geo.Point;
 
-import java.time.Instant;
-import java.util.Objects;
-
+import java.util.ArrayList;
 
 public class TourListingDTO extends ValidateClass {
-    private String id;
-    private String username;
-    private String address;
-    private Instant tourStartDateTime;
-    private Instant tourEndDateTime;
-    private String tourName;
-    private String country;
+    private final String title;
+    private final String description;
+    private ArrayList<String> thumbnailUrls;
+    private final CategoryEnum category;
+    private final Point location;
+    private ArrayList<TimeRange> timeRangeList;
+    private double price;
+    private final Integer maxPax;
+    private final Integer minPax;
 
-    public TourListingDTO(String id, String username, String address, Instant tourStartDateTime, Instant tourEndDateTime, String tourName, String country) {
-        this.id = id;
-        this.username = username;
-        this.address = address;
-        this.tourStartDateTime = tourStartDateTime;
-        this.tourEndDateTime = tourEndDateTime;
-        this.tourName = tourName;
-        this.country = country;
+    public TourListingDTO(
+            String title,
+            String description,
+            ArrayList<String> thumbnailUrls,
+            CategoryEnum category,
+            Point location,
+            ArrayList<TimeRange> timeRangeList,
+            Double price,
+            Integer maxPax,
+            Integer minPax
+    ){
+        this.title = title;
+        this.description = description;
+        this.thumbnailUrls = thumbnailUrls;
+        this.location = location;
+        this.category = category;
+        setTimeRangeList(timeRangeList);
+        setPrice(price);
+        this.maxPax = maxPax;
+        this.minPax = minPax;
     }
 
-    public String getCountry() {
-        return country;
+    public String getTitle() {
+        return title;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public String getDescription() {
+        return description;
     }
 
-    public String getId() {
-        return id;
+    public void setThumbnailUrls(ArrayList<String> thumbnailUrls) {
+        if (thumbnailUrls.isEmpty()){
+            this.thumbnailUrls = new ArrayList<String>();
+        }
+        else{
+            this.thumbnailUrls = thumbnailUrls;
+        }
+    }
+    public Point getLocation() {
+        return location;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public ArrayList<TimeRange> getTimeRangeList() {
+        return timeRangeList;
+    }
+    public void setTimeRangeList(ArrayList<TimeRange> timeRangeList) {
+        if (timeRangeList == null){
+            addErrors("timeRangeList is null");
+        }
+        else if (timeRangeList.isEmpty()){
+            addErrors("Minimum 1 time slot required");
+        }
+        else{
+            this.timeRangeList = timeRangeList;
+        }
+        //TODO validate when time ranges overlap
     }
 
-    public String getUsername() {
-        return username;
+    public Double getPrice() {
+        return price;
+    }
+    public void setPrice(Double value) {
+        if (value == null){
+            addErrors("Price cannot be null");
+        }
+        else if(value <= 0){
+            addErrors("Price must be more than 0");
+        }
+        else{
+            this.price = value;
+        }
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public Integer getMaxPax() {
+        return maxPax;
     }
 
-    public String getTourName() {
-        return tourName;
-    }
-
-    public void setTourName(String tourName) {
-        this.tourName = tourName;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public Instant getTourStartDateTime() {
-        return tourStartDateTime;
-    }
-
-    public void setTourStartDateTime(Instant tourStartDateTime) {
-        this.tourStartDateTime = tourStartDateTime;
-    }
-
-    public Instant getTourEndDateTime() {
-        return tourEndDateTime;
-    }
-
-    public void setTourEndDateTime(Instant tourEndDateTime) {
-        this.tourEndDateTime = tourEndDateTime;
+    public Integer getMinPax() {
+        return minPax;
     }
 
     @Override
     public void validate() {
-        // TODO Validate that user exists
+        if (getTitle() == null || getDescription() ==null || getLocation() == null || getTimeRangeList() == null || getPrice() == null || getMinPax() == null || getMaxPax() == null)
+            addErrors("Missing fields in json");
+        getErrors().remove(null);
+    }
 
-        if (this.tourEndDateTime.isBefore(tourStartDateTime)) {
-            addErrors("End of tour cannot be before start of tour");
-        }
+    public ArrayList<String> getThumbnailUrls() {
+        return thumbnailUrls;
+    }
+
+    public CategoryEnum getCategory() {
+        return category;
     }
 }

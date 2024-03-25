@@ -1,109 +1,105 @@
 package com.wayfare.backend.model;
 
-import java.time.Instant;
+import com.wayfare.backend.model.object.TimeRange;
+import org.springframework.data.geo.Point;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
+
+@Document(collection = "tourListings")
 public class TourListing {
     private String id;
-    private String username;
-    private String address;
-    private Instant tourStartDateTime;
-    private Instant tourEndDateTime;
-    private Instant dateCreated;
-    private Instant dateModified;
+    private String title;
+    private String description;
+    private ArrayList<String> thumbnailUrls;
+    private CategoryEnum category;
+    private Point location;
+    private ArrayList<TimeRange> timeRangeList;
+    private Double price;
+    private int maxPax;
+    private int minPax;
+    private double rating;
+    private int reviewCount;
     private String userId;
-    private String tourName;
-    private String country;
 
-    public TourListing(String id, String userId, String address, Instant tourStartDateTime, Instant tourEndDateTime, Instant dateCreated, Instant dateModified, String username, String tourName, String country) {
-        this.id = id;
-        this.username = username;
-        this.address = address;
-        this.tourEndDateTime = tourEndDateTime;
-        this.tourStartDateTime = tourStartDateTime;
-        this.dateCreated = dateCreated;
-        this.dateModified = dateModified;
+    public TourListing(
+            String title,
+            String description,
+            ArrayList<String> thumbnailUrls,
+            CategoryEnum category,
+            Point location,
+            ArrayList<TimeRange> timeRangeList,
+            Double price,
+            int maxPax,
+            int minPax,
+            double rating,
+            int reviewCount,
+            String userId
+
+    ) {
+        this.title = title;
+        this.description = description;
+        this.thumbnailUrls = thumbnailUrls;
+        this.category = category;
+        this.location = location;
+        this.timeRangeList = timeRangeList;
+        this.price = price;
+        this.maxPax = maxPax;
+        this.minPax = minPax;
         this.userId = userId;
-        this.tourName = tourName;
-        this.country = country;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
+        this.rating = rating;
+        this.reviewCount = reviewCount;
     }
 
     public String getId() {
         return id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getTitle() {
+        return title;
     }
 
-    public String getTourName() {
-        return tourName;
+    public String getDescription() {
+        return description;
     }
 
-    public void setTourName(String tourName) {
-        this.tourName = tourName;
+    public Point getLocation() {
+        return location;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public ArrayList<TimeRange> getTimeRangeList() {
+        return timeRangeList;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public Double getPrice() {
+        return price;
+    }
+
+    public int getMaxPax() {
+        return maxPax;
+    }
+
+    public int getMinPax() {
+        return minPax;
     }
 
     public String getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public double getRating() {
+        return rating;
     }
 
-    public String getAddress() {
-        return address;
+    public int getReviewCount() {
+        return reviewCount;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public ArrayList<String> getThumbnailUrls() {
+        return thumbnailUrls;
     }
 
-    public Instant getTourStartDateTime() {
-        return tourStartDateTime;
-    }
-
-    public void setTourStartDateTime(Instant tourStartDateTime) {
-        this.tourStartDateTime = tourStartDateTime;
-    }
-
-    public Instant getTourEndDateTime() {
-        return tourEndDateTime;
-    }
-
-    public void setTourEndDateTime(Instant tourEndDateTime) {
-        this.tourEndDateTime = tourEndDateTime;
-    }
-
-    public Instant getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(Instant dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public Instant getDateModified() {
-        return dateModified;
-    }
-
-    public void setDateModified(Instant dateModified) {
-        this.dateModified = dateModified;
+    public CategoryEnum getCategory() {
+        return category;
     }
 }

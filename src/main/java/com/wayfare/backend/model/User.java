@@ -28,7 +28,6 @@ import static com.wayfare.backend.helper.helper.hashPassword;
 
 @Document(collection = "users")
 public class User{
-    private WayfareUserDetailService wayfareUserDetailService;
     private String id;
 
     private String username;

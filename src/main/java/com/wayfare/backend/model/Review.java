@@ -1,7 +1,10 @@
 package com.wayfare.backend.model;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.time.Instant;
 
+@Document(collection = "reviews")
 public class Review {
     private String id;
     private String title;
