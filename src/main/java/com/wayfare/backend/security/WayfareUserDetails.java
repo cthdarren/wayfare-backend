@@ -24,7 +24,7 @@ public class WayfareUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return user.getEncryptedPassword();
+        return user.getPassword();
     }
 
     @Override

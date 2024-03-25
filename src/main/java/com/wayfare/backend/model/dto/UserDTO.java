@@ -9,6 +9,8 @@ import static com.wayfare.backend.model.RoleEnum.ROLE_USER;
 
 //only used for the creation of new users
 public class UserDTO extends ValidateClass {
+    private final String pictureUrl;
+    private final String aboutMe;
     private final String username;
     private final String firstName;
     private final String lastName;
@@ -16,7 +18,9 @@ public class UserDTO extends ValidateClass {
     private final String verifyPassword;
     private final String email;
     private final String phoneNumber;
-    public UserDTO(String username, String firstName, String lastName, String password, String verifyPassword, String email, String phoneNumber){
+    public UserDTO(String pictureUrl,String aboutMe, String username, String firstName, String lastName, String password, String verifyPassword, String email, String phoneNumber){
+        this.pictureUrl = pictureUrl;
+        this.aboutMe = aboutMe;
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -26,6 +30,12 @@ public class UserDTO extends ValidateClass {
         this.phoneNumber = phoneNumber;
     }
 
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+    public String getAboutMe() {
+        return aboutMe;
+    }
     public String getUsername() {return username;}
     public String getFirstName() {return firstName;}
     public String getLastName() {return lastName;}
@@ -37,7 +47,7 @@ public class UserDTO extends ValidateClass {
         if (!Objects.equals(getVerifyPassword(), getPlainPassword())) {
             addErrors("Passwords do not match");
         }
-        addErrors(new AlphanumericValidator(getUsername(), "Wrong username format").validateRegex());
+        addErrors(new UsernameValidator(getUsername()).validateRegex());
         addErrors(new AlphabeticalValidator(getFirstName(), "First name can only accept alphabetical characters").validateRegex());
         addErrors(new AlphabeticalValidator(getLastName(), "Last name can only accept alphabetical characters").validateRegex());
         addErrors(new EmailValidator(getEmail()).validateRegex());
@@ -45,7 +55,6 @@ public class UserDTO extends ValidateClass {
         addErrors(new PasswordValidator(getPlainPassword()).validateRegex());
         getErrors().remove(null);
     }
-
 
 
 }

@@ -4,17 +4,22 @@ import com.wayfare.backend.model.*;
 import com.wayfare.backend.model.dto.ReviewDTO;
 import com.wayfare.backend.model.dto.TourListingDTO;
 import com.wayfare.backend.model.dto.UserDTO;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.Instant;
 
 public class Mapper {
     public User toUser(UserDTO userCreationDTO)
     {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String encryptedPassword = encoder.encode(userCreationDTO.getPlainPassword());
         return new User(
+                userCreationDTO.getPictureUrl(),
+                userCreationDTO.getAboutMe(),
                 userCreationDTO.getUsername(),
                 userCreationDTO.getFirstName(),
                 userCreationDTO.getLastName(),
-                userCreationDTO.getPlainPassword(),
+                encryptedPassword,
                 userCreationDTO.getEmail(),
                 userCreationDTO.getPhoneNumber(),
                 RoleEnum.ROLE_USER,

@@ -1,35 +1,20 @@
 package com.wayfare.backend.model;
 
-import com.wayfare.backend.security.WayfareUserDetailService;
 import com.wayfare.backend.validator.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
-
-import static com.wayfare.backend.helper.helper.generateSalt;
-import static com.wayfare.backend.helper.helper.hashPassword;
 
 
 // Regex guide for validation https://www.w3schools.com/java/java_regex.asp
 
 
 @Document(collection = "users")
-public class User{
+public class User extends ValidateClass{
     private String id;
 
+    private String pictureUrl;
+    private String aboutMe;
     private String username;
 
     private String firstName;
@@ -39,21 +24,33 @@ public class User{
 
     private String phoneNumber;
 
-    private String encryptedPassword;
+    private String password;
 
     private RoleEnum role;
     private Boolean isVerified;
     private Instant dateModified;
     private Instant dateCreated;
 
-    public User(){}
-
-    public User(String username, String firstName, String lastName, String password, String email, String phoneNumber, RoleEnum role, Boolean isVerified, Instant dateModified, Instant dateCreated) {
+    public User(String pictureUrl,
+                String aboutMe,
+                String username,
+                String firstName,
+                String lastName,
+                String password,
+                String email,
+                String phoneNumber,
+                RoleEnum role,
+                Boolean isVerified,
+                Instant dateModified,
+                Instant dateCreated
+    ) {
         super();
+        setPictureUrl(pictureUrl);
+        setAboutMe(aboutMe);
         setUsername(username);
         setFirstName(firstName);
         setLastName(lastName);
-        setEncryptedPassword(password);
+        setPassword(password);
         setEmail(email);
         setPhoneNumber(phoneNumber);
         setRole(role);
@@ -66,12 +63,27 @@ public class User{
         return id;
     }
 
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
+    }
+
+    public String getAboutMe() {
+        return aboutMe;
+    }
+
+    public void setAboutMe(String aboutMe) {
+        this.aboutMe = aboutMe;
+    }
     public String getUsername() {
         return username;
     }
 
-    public String getEncryptedPassword() {
-        return encryptedPassword;
+    public String getPassword() {
+        return password;
     }
 
     public RoleEnum getRole() {
@@ -85,9 +97,8 @@ public class User{
         this.username = username;
     }
 
-    public void setEncryptedPassword(String password) {
-        BCryptPasswordEncoder test = new BCryptPasswordEncoder();
-        this.encryptedPassword = test.encode(password);
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public void setPhoneNumber(String phoneNumber) {
@@ -136,5 +147,16 @@ public class User{
 
     public Instant getDateCreated() {
         return dateCreated;
+    }
+
+
+    @Override
+    public void validate() {
+        addErrors(new UsernameValidator(getUsername()).validateRegex());
+        addErrors(new AlphabeticalValidator(getFirstName(), "First name can only accept alphabetical characters").validateRegex());
+        addErrors(new AlphabeticalValidator(getLastName(), "Last name can only accept alphabetical characters").validateRegex());
+        addErrors(new EmailValidator(getEmail()).validateRegex());
+        addErrors(new PhoneNumberValidator(getPhoneNumber()).validateRegex());
+        getErrors().remove(null);
     }
 }
