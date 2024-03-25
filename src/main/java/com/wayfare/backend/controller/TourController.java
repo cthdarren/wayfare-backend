@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.wayfare.backend.model.dto.TourListingDTO;
 import com.wayfare.backend.request.LocationRequest;
+import com.wayfare.backend.request.TourListingsByUser;
 import com.wayfare.backend.response.ResponseObject;
 import com.wayfare.backend.model.TourListing;
 import com.wayfare.backend.repository.TourRepository;
@@ -46,11 +47,11 @@ public class TourController {
         return new ResponseObject(true, listByCountry);
     }
 
-//    @GetMapping("/api/v1/listing/user")
-//    public ResponseObject getListingsByUserId(@RequestBody TourListingsByUser request) {
-//        List<TourListing> listByUserId = tourRepo.findAllByUserId(request.userId());
-//        return new ResponseObject(true, listByUserId);
-//    }
+    @GetMapping("/api/v1/listing/user")
+    public ResponseObject getListingsByUserId(@RequestBody TourListingsByUser request) {
+        List<TourListing> listByUserId = tourRepo.findAllByUserId(request.userId());
+        return new ResponseObject(true, listByUserId);
+    }
 
     //POST METHODS
     @PostMapping("/listing/create")

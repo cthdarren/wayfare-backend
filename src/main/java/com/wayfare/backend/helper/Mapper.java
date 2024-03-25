@@ -39,10 +39,11 @@ public class Mapper {
         return new TourListing(
                 tourListingCreationDTO.getTitle(),
                 tourListingCreationDTO.getDescription(),
+                tourListingCreationDTO.getThumbnailUrls(),
+                tourListingCreationDTO.getCategory(),
                 tourListingCreationDTO.getLocation(),
                 tourListingCreationDTO.getTimeRangeList(),
-                tourListingCreationDTO.getAdultPrice(),
-                tourListingCreationDTO.getChildPrice(),
+                tourListingCreationDTO.getPrice(),
                 tourListingCreationDTO.getMaxPax(),
                 tourListingCreationDTO.getMinPax(),
                 0,

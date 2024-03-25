@@ -1,21 +1,21 @@
 package com.wayfare.backend.model.dto;
 
 
+import com.wayfare.backend.model.CategoryEnum;
 import com.wayfare.backend.model.object.TimeRange;
 import com.wayfare.backend.model.ValidateClass;
 import org.springframework.data.geo.Point;
 
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.List;
 
 public class TourListingDTO extends ValidateClass {
     private final String title;
     private final String description;
     private ArrayList<String> thumbnailUrls;
+    private final CategoryEnum category;
     private final Point location;
     private ArrayList<TimeRange> timeRangeList;
-    private final double price;
+    private double price;
     private final Integer maxPax;
     private final Integer minPax;
 
@@ -23,6 +23,7 @@ public class TourListingDTO extends ValidateClass {
             String title,
             String description,
             ArrayList<String> thumbnailUrls,
+            CategoryEnum category,
             Point location,
             ArrayList<TimeRange> timeRangeList,
             Double price,
@@ -33,8 +34,9 @@ public class TourListingDTO extends ValidateClass {
         this.description = description;
         this.thumbnailUrls = thumbnailUrls;
         this.location = location;
+        this.category = category;
         setTimeRangeList(timeRangeList);
-        this.price = price;
+        setPrice(price);
         this.maxPax = maxPax;
         this.minPax = minPax;
     }
@@ -52,7 +54,7 @@ public class TourListingDTO extends ValidateClass {
             this.thumbnailUrls = new ArrayList<String>();
         }
         else{
-            this.timeRangeList = timeRangeList;
+            this.thumbnailUrls = thumbnailUrls;
         }
     }
     public Point getLocation() {
@@ -78,6 +80,17 @@ public class TourListingDTO extends ValidateClass {
     public Double getPrice() {
         return price;
     }
+    public void setPrice(Double value) {
+        if (value == null){
+            addErrors("Price cannot be null");
+        }
+        else if(value <= 0){
+            addErrors("Price must be more than 0");
+        }
+        else{
+            this.price = value;
+        }
+    }
 
     public Integer getMaxPax() {
         return maxPax;
@@ -92,5 +105,13 @@ public class TourListingDTO extends ValidateClass {
         if (getTitle() == null || getDescription() ==null || getLocation() == null || getTimeRangeList() == null || getPrice() == null || getMinPax() == null || getMaxPax() == null)
             addErrors("Missing fields in json");
         getErrors().remove(null);
+    }
+
+    public ArrayList<String> getThumbnailUrls() {
+        return thumbnailUrls;
+    }
+
+    public CategoryEnum getCategory() {
+        return category;
     }
 }
