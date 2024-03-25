@@ -33,3 +33,60 @@ class CustomTourRepositoryImpl implements CustomTourRepository{
         return results.getMappedResults();
     }
 }
+
+//[
+//        {
+//$addFields:
+//        /**
+//         * newField: The new field name.
+//         * expression: The new field expression.
+//         */
+//        {
+//listingId: {
+//$toString: "$_id",
+//        },
+//        },
+//        },
+//        {
+//$lookup:
+//        /**
+//         * from: The target collection.
+//         * localField: The local join field.
+//         * foreignField: The target join field.
+//         * as: The name for the results.
+//         * pipeline: Optional pipeline to run on the foreign collection.
+//         * let: Optional variables to use in the pipeline field stages.
+//         */
+//        {
+//from: "review",
+//localField: "listingId",
+//foreignField: "listingId",
+//as: "reviews",
+//        },
+//        },
+//        {
+//$unwind:
+//        /**
+//         * path: Path to the array field.
+//         * includeArrayIndex: Optional name for index.
+//         * preserveNullAndEmptyArrays: Optional
+//         *   toggle to unwind null and empty values.
+//         */
+//        {
+//path: "$reviews",
+//        },
+//        },
+//        {
+//$group:
+//        /**
+//         * _id: The id of the group.
+//         * fieldN: The first field name.
+//         */
+//        {
+//_id: "$listingId",
+//averageReviewScore: {
+//$avg: "$reviews.score",
+//        },
+//        },
+//        },
+//        ]
