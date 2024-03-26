@@ -2,6 +2,7 @@ package com.wayfare.backend.helper;
 
 import com.wayfare.backend.security.WayfareUserDetails;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -23,7 +24,8 @@ public class helper{
         return md.digest(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public static WayfareUserDetails getCurrentUserDetails(){
+    //TODO VALIDATE THIS EXCEPTION GLOBALLY
+    public static WayfareUserDetails getCurrentUserDetails() throws UsernameNotFoundException {
         return (WayfareUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 }

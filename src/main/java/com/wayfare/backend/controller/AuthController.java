@@ -6,9 +6,8 @@ import com.mashape.unirest.http.Unirest;
 import com.wayfare.backend.helper.Mapper;
 import com.wayfare.backend.model.VerifyURL;
 import com.wayfare.backend.repository.VerifyURLRepository;
-import com.wayfare.backend.request.PasswordForWayfarerSignUpRequest;
+import com.wayfare.backend.request.PasswordRequest;
 import com.wayfare.backend.response.ResponseObject;
-import com.wayfare.backend.exception.FormatException;
 import com.wayfare.backend.model.User;
 import com.wayfare.backend.model.dto.UserDTO;
 import com.wayfare.backend.repository.UserRepository;
@@ -120,7 +119,7 @@ public class AuthController {
     // Accepts application/json
     // {"password": USERPASSWORD}
     @PostMapping("/wayfarersignup")
-    public ResponseObject wayfarerSignUp(@RequestBody PasswordForWayfarerSignUpRequest request) {
+    public ResponseObject wayfarerSignUp(@RequestBody PasswordRequest request) {
 
         WayfareUserDetails currUser = getCurrentUserDetails();
         try {
