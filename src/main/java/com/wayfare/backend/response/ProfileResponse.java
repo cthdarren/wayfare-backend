@@ -12,8 +12,8 @@ public class ProfileResponse {
     private final String aboutMe;
     private final String pictureUrl;
     private final List<BadgeEnum> badges;
-    private final double avgScore;
-    private final int reviewCount;
+    private final Double avgScore;
+    private final Integer reviewCount;
     private final List<Review> reviews;
     private final List<TourListing> tours;
 
@@ -59,7 +59,11 @@ public class ProfileResponse {
         return badges;
     }
 
-    public double getAvgScore() {
+    public Double getAvgScore() {
         return avgScore;
+    }
+
+    public Integer getReviewCount() {
+        return reviewCount;
     }
 }

@@ -105,10 +105,15 @@ public class UserController {
         }
         List<Review> userReviews = reviewRepo.findFirst5ByListingUserIdOrderByDateCreatedDesc(toView.getId());
         List<TourListing> userTours = tourRepo.findAllByUserId(toView.getId());
-        double avgScore = tourRepo.avgScoreByUserId(toView.getId());
-        int reviewCount = tourRepo.findNumberOfReviewsByCustomers(toView.getId());
-        toView.getAboutMe();
-        toView.getPictureUrl();
+        Double avgScore = tourRepo.avgScoreByUserId(toView.getId());
+        Integer reviewCount = reviewRepo.findNumberOfReviewsByCustomers(toView.getId());
+
+        if (avgScore == null)
+            avgScore = 0.0;
+
+        if (reviewCount == null)
+            reviewCount = 0;
+
         ProfileResponse response = new ProfileResponse(
                 username,
                 toView.getAboutMe(),
