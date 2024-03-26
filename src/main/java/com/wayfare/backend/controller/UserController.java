@@ -96,6 +96,7 @@ public class UserController {
         return new ResponseObject(true, "Account deleted");
     }
 
+    //TODO GET AVERAGE REVIEWS FROM ALL AVERAGE REVIEW LISTINGS
     @GetMapping("/api/v1/profile/{username}")
     public ResponseObject getUserProfile(@PathVariable String username){
         User toView = userRepo.findByUsername(username);
@@ -104,16 +105,20 @@ public class UserController {
         }
         List<Review> userReviews = reviewRepo.findFirst5ByListingUserIdOrderByDateCreatedDesc(toView.getId());
         List<TourListing> userTours = tourRepo.findAllByUserId(toView.getId());
+        double avgScore = tourRepo.avgScoreByUserId(toView.getId());
+        int reviewCount = tourRepo.findNumberOfReviewsByCustomers(toView.getId());
         toView.getAboutMe();
         toView.getPictureUrl();
         ProfileResponse response = new ProfileResponse(
                 username,
                 toView.getAboutMe(),
                 toView.getPictureUrl(),
-                toView.getDateCreated(),
+                toView.getBadges(),
+                avgScore,
+                reviewCount,
                 userReviews,
                 userTours,
-                toView.getBadges()
+                toView.getDateCreated()
         );
 
         return new ResponseObject(true, response);

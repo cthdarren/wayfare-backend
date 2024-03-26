@@ -11,19 +11,24 @@ public class ProfileResponse {
     private final String username;
     private final String aboutMe;
     private final String pictureUrl;
-    private final Instant dateCreated;
+    private final List<BadgeEnum> badges;
+    private final double avgScore;
+    private final int reviewCount;
     private final List<Review> reviews;
     private final List<TourListing> tours;
-    private final List<BadgeEnum> badges;
 
-    public ProfileResponse(String username, String aboutMe, String pictureUrl, Instant dateCreated, List<Review> reviews, List<TourListing> tours, List<BadgeEnum> badges) {
+    private final Instant dateCreated;
+
+    public ProfileResponse(String username, String aboutMe, String pictureUrl, List<BadgeEnum> badges, double avgScore, int reviewCount, List<Review> reviews, List<TourListing> tours, Instant dateCreated) {
         this.username = username;
         this.aboutMe = aboutMe;
         this.pictureUrl = pictureUrl;
-        this.dateCreated = dateCreated;
+        this.badges = badges;
+        this.avgScore = avgScore;
+        this.reviewCount = reviewCount;
         this.reviews = reviews;
         this.tours = tours;
-        this.badges = badges;
+        this.dateCreated = dateCreated;
     }
 
     public String getUsername() {
@@ -52,5 +57,9 @@ public class ProfileResponse {
 
     public List<BadgeEnum> getBadges() {
         return badges;
+    }
+
+    public double getAvgScore() {
+        return avgScore;
     }
 }

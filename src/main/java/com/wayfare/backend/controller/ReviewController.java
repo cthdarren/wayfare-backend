@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -46,16 +47,16 @@ public class ReviewController {
         }
     }
 
-    @PostMapping("/api/v1/listing/reviews")
-    public ResponseObject getReviewsByListing(@RequestBody ReviewsByListingRequest request){
-        List<Review> reviewList = reviewRepo.findAllByListingId(request.listingId());
+    @GetMapping("/api/v1/listing/{id}/reviews")
+    public ResponseObject getReviewsByListing(@PathVariable String id){
+        List<Review> reviewList = reviewRepo.findAllByListingIdOrderByDateCreatedDesc(id);
 
         return new ResponseObject(true, reviewList);
     }
 
-    @PostMapping("/api/v1/listing/newest-five-reviews")
-    public ResponseObject getFirstFiveReviewsByListing(@RequestBody ReviewsByListingRequest request){
-        List<Review> reviewList = reviewRepo.findFirst5ByListingIdOrderByDateCreatedDesc(request.listingId());
+    @GetMapping("/api/v1/listing/{id}/firstfivereviews")
+    public ResponseObject getFirstFiveReviewsByListing(@PathVariable String id){
+        List<Review> reviewList = reviewRepo.findFirst5ByListingIdOrderByDateCreatedDesc(id);
 
         return new ResponseObject(true, reviewList);
     }
@@ -80,15 +81,25 @@ public class ReviewController {
     // {"title": TITLE, "score":INTEGER SCORE, "reviewContent" CONTENT, "listingId": LISTINGID}
     @PostMapping("/review/create")
     public ResponseObject createReview(@RequestBody ReviewDTO dto){
+        Review toAdd;
         dto.validate();
         if (dto.hasErrors()){return new ResponseObject(false, dto.getErrors());}
 
         WayfareUserDetails user = getCurrentUserDetails();
-        Review toAdd = new Mapper(tourRepo).toReview(dto, user.getId());
-        String listingId = dto.getListingId();
-        TourListing listing = tourRepo.findById(dto.getListingId()).orElseThrow();
+        try {
+            toAdd = new Mapper(tourRepo).toReview(dto, user.getId());
+        }
+        catch (NoSuchElementException e){
+            return new ResponseObject(false,"No such listing");
+        }
 
-        if(Objects.equals(user.getId(), listing.getUserId()))
+        String listingId = dto.getListingId();
+        Optional<TourListing> listing = tourRepo.findById(dto.getListingId());
+
+        if (listing.isEmpty())
+            return new ResponseObject(false,"No such listing");
+
+        if(Objects.equals(user.getId(), listing.get().getUserId()))
             return new ResponseObject(false, "You cannot leave a review on your own listing");
 
         if(!tourRepo.existsById(listingId))
@@ -97,9 +108,12 @@ public class ReviewController {
         if(reviewRepo.existsByUserIdAndListingId(user.getId(), dto.getListingId()))
             return new ResponseObject(false, "Review already exists");
 
+        if (toAdd == null)
+            return new ResponseObject(false, "Server error");
+
         reviewRepo.save(toAdd);
 
-        updateListingRatings(listing);
+        updateListingRatings(listing.get());
 
         return new ResponseObject(true, "Review added");
     }

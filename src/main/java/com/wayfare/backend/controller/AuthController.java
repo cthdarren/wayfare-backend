@@ -163,7 +163,7 @@ public class AuthController {
     // Generates verify link for the specified user. Needs the user to be logged in and pass
     // the users Bearer token through the headers. On success, returns the user email to be
     // displayed in the front end ( can use a message similar to please check your email at {email} )
-    @GetMapping("/generateVerifyLink")
+    @GetMapping("/generateverifylink")
     public ResponseObject generateVerifyLink(){
         WayfareUserDetails currUser = getCurrentUserDetails();
 

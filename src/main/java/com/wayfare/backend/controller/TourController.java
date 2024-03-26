@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.mongodb.MongoQueryException;
 import com.wayfare.backend.model.User;
 import com.wayfare.backend.model.dto.TourListingDTO;
 import com.wayfare.backend.repository.UserRepository;
@@ -44,10 +45,30 @@ public class TourController {
         }
     }
 
-    @PostMapping("/api/v1/listing/search")
-    public ResponseObject getListingsByLocation(@RequestBody LocationRequest request) {
-        List<TourListing> listByCountry = tourRepo.findByLocationNearOrderByRatingDesc(new Point(request.longitude(), request.latitude()), new Distance(request.kmdistance(), Metrics.KILOMETERS));
-        return new ResponseObject(true, listByCountry);
+    @GetMapping("/api/v1/listing/search")
+    public ResponseObject getListingsByLocation(@RequestParam String longitude, @RequestParam String latitude, @RequestParam String kmdistance, @RequestParam String numberPax) {
+        try {
+            double dLong = Double.parseDouble(longitude);
+            double dLat = Double.parseDouble(latitude);
+            double dDist = Double.parseDouble(kmdistance);
+            Integer iNumberPax = Integer.parseInt(numberPax);
+            if (dLong < -180 || dLong > 180 || dLat < -90 || dLat > 90){
+                return new ResponseObject(false, "Invalid coordinates");
+            }
+            List<TourListing> listByLocation = tourRepo.findByLocationNearAndMaxPaxGreaterThanEqualAndMinPaxLessThanEqualOrderByRatingDesc(
+                    new Point(dLong,dLat),
+                    new Distance(dDist, Metrics.KILOMETERS),
+                    iNumberPax,
+                    iNumberPax
+            );
+
+            return new ResponseObject(true, listByLocation);
+        }
+        catch (NumberFormatException e) {
+            System.out.println(e.getMessage());
+            return new ResponseObject(false, "Invalid parameters");
+        }
+
     }
 
     @GetMapping("/api/v1/user/listing/{username}")
