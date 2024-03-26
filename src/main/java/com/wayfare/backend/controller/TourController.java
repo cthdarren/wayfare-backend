@@ -1,5 +1,6 @@
 package com.wayfare.backend.controller;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import com.wayfare.backend.repository.TourRepository;
 import com.wayfare.backend.security.WayfareUserDetails;
 import com.wayfare.backend.helper.Mapper;
 
+import org.apache.coyote.Response;
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Metrics;
 import org.springframework.data.geo.Point;
@@ -92,4 +94,49 @@ public class TourController {
         tourRepo.save(toAdd);
         return new ResponseObject(true, "Listing added");
     }
+
+
+    // Delete Listing
+    @DeleteMapping("/wayfarer/listing/delete/{id}")
+    public ResponseObject deleteListing(@PathVariable String id) {
+        Optional<TourListing> tourListing = tourRepo.findById(id);
+
+        if (tourListing.isEmpty()){
+            return new ResponseObject(false, "No such listing");
+        }
+
+        if (!Objects.equals(getCurrentUserDetails().getId(), tourListing.get().getUserId())){
+            return new ResponseObject(false, "You cannot delete a listing that you do not own!");
+        }
+
+        tourRepo.delete(tourListing.get());
+        return new ResponseObject(true, "Listing successfully deleted");
+
+    }
+
+
+    // Edit Listing
+
+    @PutMapping("/wayfarer/listing/edit/{id}")
+    public ResponseObject editListing(@PathVariable String id) {
+        Optional<TourListing> tourListing = tourRepo.findById(id);
+
+        if (tourListing.isEmpty()){
+            return new ResponseObject(false, "No such listing");
+        }
+
+        if (!Objects.equals(getCurrentUserDetails().getId(), tourListing.get().getUserId())){
+            return new ResponseObject(false, "You cannot edit a listing that you do not own!");
+        }
+
+        //editing here
+
+        tourRepo.save(tourListing.get());
+        return new ResponseObject(true, "Listing updated");
+
+    }
+
+
+
+
 }
