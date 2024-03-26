@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.mongodb.MongoQueryException;
 import com.wayfare.backend.model.User;
 import com.wayfare.backend.model.dto.TourListingDTO;
 import com.wayfare.backend.repository.UserRepository;
@@ -45,22 +46,29 @@ public class TourController {
     }
 
     @GetMapping("/api/v1/listing/search")
-    public ResponseObject getListingsByLocation(@RequestParam String longitude, @RequestParam String latitude, @RequestParam String kmdistance) {
+    public ResponseObject getListingsByLocation(@RequestParam String longitude, @RequestParam String latitude, @RequestParam String kmdistance, @RequestParam String numberPax) {
         try {
             double dLong = Double.parseDouble(longitude);
             double dLat = Double.parseDouble(latitude);
             double dDist = Double.parseDouble(kmdistance);
-
-            List<TourListing> listByCountry = tourRepo.findByLocationNearOrderByRatingDesc(
-                new Point(dLong,dLat),
-                new Distance(dDist, Metrics.KILOMETERS)
+            Integer iNumberPax = Integer.parseInt(numberPax);
+            if (dLong < -180 || dLong > 180 || dLat < -90 || dLat > 90){
+                return new ResponseObject(false, "Invalid coordinates");
+            }
+            List<TourListing> listByLocation = tourRepo.findByLocationNearAndMaxPaxGreaterThanEqualAndMinPaxLessThanEqualOrderByRatingDesc(
+                    new Point(dLong,dLat),
+                    new Distance(dDist, Metrics.KILOMETERS),
+                    iNumberPax,
+                    iNumberPax
             );
 
-            return new ResponseObject(true, listByCountry);
+            return new ResponseObject(true, listByLocation);
         }
         catch (NumberFormatException e) {
-            return new ResponseObject(false, "invalid parameters");
+            System.out.println(e.getMessage());
+            return new ResponseObject(false, "Invalid parameters");
         }
+
     }
 
     @GetMapping("/api/v1/user/listing/{username}")
