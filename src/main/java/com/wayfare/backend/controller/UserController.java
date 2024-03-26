@@ -105,7 +105,7 @@ public class UserController {
         }
         List<Review> userReviews = reviewRepo.findFirst5ByListingUserIdOrderByDateCreatedDesc(toView.getId());
         List<TourListing> userTours = tourRepo.findAllByUserId(toView.getId());
-        double avgScore = tourRepo.avgScoreByUserId(toView.getId());
+        Double avgScore = tourRepo.avgScoreByUserId(toView.getId());
         int reviewCount = reviewRepo.findNumberOfReviewsByCustomers(toView.getId());
         toView.getAboutMe();
         toView.getPictureUrl();
