@@ -59,21 +59,35 @@ public class TourListing {
         return title;
     }
 
+    public void setTitle(String title){this.title = title;}
+
     public String getDescription() {
         return description;
     }
+
+    public void setDescription(String description){this.description = description;}
 
     public Point getLocation() {
         return location;
     }
 
+    public void setLocation(Point location) {this.location = location;}
+
     public ArrayList<TimeRange> getTimeRangeList() {
         return timeRangeList;
     }
 
+    public void setTimeRangeList(ArrayList<TimeRange> timeRangeList) {this.timeRangeList = timeRangeList;}
+
     public Double getPrice() {
         return price;
     }
+
+    public void setPrice(Double price) {this.price = price;}
+
+    public void setMaxPax(Integer maxPax) {this.maxPax = maxPax;}
+
+    public void setMinPax(Integer minPax) {this.minPax = minPax;}
 
     public Integer getMaxPax() {
         return maxPax;
@@ -106,7 +120,11 @@ public class TourListing {
         return thumbnailUrls;
     }
 
+    public void setThumbnailUrls(ArrayList<String> thumbnailUrls) {this.thumbnailUrls = thumbnailUrls;}
+
     public CategoryEnum getCategory() {
         return category;
     }
+
+    public void setCategory(CategoryEnum category) {this.category = category;}
 }

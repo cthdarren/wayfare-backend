@@ -118,7 +118,8 @@ public class TourController {
     // Edit Listing
 
     @PutMapping("/wayfarer/listing/edit/{id}")
-    public ResponseObject editListing(@PathVariable String id) {
+    public ResponseObject editListing(@PathVariable String id, @RequestBody TourListingDTO dto) {
+
         Optional<TourListing> tourListing = tourRepo.findById(id);
 
         if (tourListing.isEmpty()){
@@ -129,9 +130,19 @@ public class TourController {
             return new ResponseObject(false, "You cannot edit a listing that you do not own!");
         }
 
-        //editing here
+        TourListing listingToUpdate = tourListing.get();
+        listingToUpdate.setTitle(dto.getTitle());
+        listingToUpdate.setDescription(dto.getDescription());
+        listingToUpdate.setLocation(dto.getLocation());
+        listingToUpdate.setTimeRangeList(dto.getTimeRangeList());
+        listingToUpdate.setPrice(dto.getPrice());
+        listingToUpdate.setMinPax(dto.getMinPax());
+        listingToUpdate.setMaxPax(dto.getMaxPax());
+        listingToUpdate.setThumbnailUrls(dto.getThumbnailUrls());
+        listingToUpdate.setCategory(dto.getCategory());
 
-        tourRepo.save(tourListing.get());
+        //save editing
+        tourRepo.save(listingToUpdate);
         return new ResponseObject(true, "Listing updated");
 
     }
