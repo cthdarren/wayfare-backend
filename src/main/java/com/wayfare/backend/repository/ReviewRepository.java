@@ -22,7 +22,7 @@ public interface ReviewRepository extends MongoRepository<Review, String> {
             "{ $match : { \"listing.userId\": ?0} }",
             "{ $group : { _id : null, total: { $count: {} } } }",
     })
-    int findNumberOfReviewsByCustomers(String userId);
+    Integer findNumberOfReviewsByCustomers(String userId);
 
     @Nullable
     Review findByUserIdAndListingId(String userId, String listingId);
