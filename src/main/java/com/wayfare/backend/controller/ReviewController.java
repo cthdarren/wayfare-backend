@@ -46,9 +46,9 @@ public class ReviewController {
         }
     }
 
-    @PostMapping("/api/v1/listing/reviews")
-    public ResponseObject getReviewsByListing(@RequestBody ReviewsByListingRequest request){
-        List<Review> reviewList = reviewRepo.findAllByListingId(request.listingId());
+    @GetMapping("/api/v1/listing/{id}/reviews")
+    public ResponseObject getReviewsByListing(@PathVariable String id){
+        List<Review> reviewList = reviewRepo.findAllByListingId(id);
 
         return new ResponseObject(true, reviewList);
     }
