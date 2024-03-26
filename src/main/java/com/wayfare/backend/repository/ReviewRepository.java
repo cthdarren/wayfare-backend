@@ -18,6 +18,11 @@ public interface ReviewRepository extends MongoRepository<Review, String> {
     List<Review> findAllByListingIdOrderByDateCreatedDesc(String listingId);
     List<Review> findFirst5ByListingIdOrderByDateCreatedDesc(String listingId);
     List<Review> findFirst5ByListingUserIdOrderByDateCreatedDesc(String UserId);
+    @Aggregation(pipeline = {
+            "{ $match : { \"listing.userId\": ?0} }",
+            "{ $group : { _id : null, total: { $count: {} } } }",
+    })
+    int findNumberOfReviewsByCustomers(String userId);
 
     @Nullable
     Review findByUserIdAndListingId(String userId, String listingId);
