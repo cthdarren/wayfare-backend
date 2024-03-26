@@ -44,10 +44,23 @@ public class TourController {
         }
     }
 
-    @PostMapping("/api/v1/listing/search")
-    public ResponseObject getListingsByLocation(@RequestBody LocationRequest request) {
-        List<TourListing> listByCountry = tourRepo.findByLocationNearOrderByRatingDesc(new Point(request.longitude(), request.latitude()), new Distance(request.kmdistance(), Metrics.KILOMETERS));
-        return new ResponseObject(true, listByCountry);
+    @GetMapping("/api/v1/listing/search")
+    public ResponseObject getListingsByLocation(@RequestParam String longitude, @RequestParam String latitude, @RequestParam String kmdistance) {
+        try {
+            double dLong = Double.parseDouble(longitude);
+            double dLat = Double.parseDouble(latitude);
+            double dDist = Double.parseDouble(kmdistance);
+
+            List<TourListing> listByCountry = tourRepo.findByLocationNearOrderByRatingDesc(
+                new Point(dLong,dLat),
+                new Distance(dDist, Metrics.KILOMETERS)
+            );
+
+            return new ResponseObject(true, listByCountry);
+        }
+        catch (NumberFormatException e) {
+            return new ResponseObject(false, "invalid parameters");
+        }
     }
 
     @GetMapping("/api/v1/user/listing/{username}")

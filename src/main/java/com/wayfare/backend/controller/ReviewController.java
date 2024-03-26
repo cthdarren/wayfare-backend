@@ -53,9 +53,9 @@ public class ReviewController {
         return new ResponseObject(true, reviewList);
     }
 
-    @PostMapping("/api/v1/listing/newest-five-reviews")
-    public ResponseObject getFirstFiveReviewsByListing(@RequestBody ReviewsByListingRequest request){
-        List<Review> reviewList = reviewRepo.findFirst5ByListingIdOrderByDateCreatedDesc(request.listingId());
+    @GetMapping("/api/v1/listing/{id}/firstfivereviews")
+    public ResponseObject getFirstFiveReviewsByListing(@PathVariable String id){
+        List<Review> reviewList = reviewRepo.findFirst5ByListingIdOrderByDateCreatedDesc(id);
 
         return new ResponseObject(true, reviewList);
     }
