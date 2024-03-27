@@ -111,6 +111,8 @@ public class TourListingDTO extends ValidateClass {
 
     @Override
     public void validate() {
+        if (getMaxPax() < getMinPax())
+            addErrors("Max pax cannot be less than min pax");
         if (getTitle() == null || getDescription() ==null || getCategory() == null || getLocation() == null || getTimeRangeList() == null || getPrice() == null || getMinPax() == null || getMaxPax() == null)
             addErrors("Missing fields in json");
         getErrors().remove(null);
