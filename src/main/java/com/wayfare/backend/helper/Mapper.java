@@ -36,8 +36,11 @@ public class Mapper {
     {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String encryptedPassword = encoder.encode(userCreationDTO.getPlainPassword());
+        String picUrl = userCreationDTO.getPictureUrl();
+        if (userCreationDTO.getPictureUrl() == null)
+            picUrl = "";
         return new User(
-                userCreationDTO.getPictureUrl(),
+                picUrl,
                 userCreationDTO.getAboutMe(),
                 new ArrayList<BadgeEnum>(),
                 userCreationDTO.getUsername(),
