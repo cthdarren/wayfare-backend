@@ -16,7 +16,7 @@ public class TourListingDTO extends ValidateClass {
     private final Point location;
     private ArrayList<TimeRange> timeRangeList;
     private double price;
-    private final Integer maxPax;
+    private Integer maxPax;
     private final Integer minPax;
 
     public TourListingDTO(
@@ -94,6 +94,15 @@ public class TourListingDTO extends ValidateClass {
 
     public Integer getMaxPax() {
         return maxPax;
+    }
+
+    public void setMaxPax(Integer value){
+        if (value < getMinPax()){
+            addErrors("Max Pax must be more than Min Pax!");
+        }
+        else {
+            this.maxPax = value;
+        }
     }
 
     public Integer getMinPax() {

@@ -4,7 +4,6 @@ import com.wayfare.backend.model.BookingStatusEnum;
 import com.wayfare.backend.model.ValidateClass;
 import com.wayfare.backend.model.object.TimeRange;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 public class BookingDTO extends ValidateClass {
@@ -27,7 +26,12 @@ public class BookingDTO extends ValidateClass {
 
     public TimeRange getBookingDuration() {return bookingDuration;}
 
-    public void setBookingDuration(TimeRange bookingDuration) {this.bookingDuration = bookingDuration;}
+    public void setBookingDuration(TimeRange bookingDuration) {
+        // prevent conflict
+
+        this.bookingDuration = bookingDuration;
+
+    }
 
     public Date getDateBooked() {return dateBooked;}
 
