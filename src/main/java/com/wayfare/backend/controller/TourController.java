@@ -1,11 +1,13 @@
 package com.wayfare.backend.controller;
 
+import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.google.maps.errors.ApiException;
 import com.mongodb.MongoQueryException;
 import com.wayfare.backend.model.User;
 import com.wayfare.backend.model.dto.TourListingDTO;
@@ -89,7 +91,19 @@ public class TourController {
         dto.validate();
         if (dto.hasErrors()){return new ResponseObject(false, dto.getErrors());}
         WayfareUserDetails user = getCurrentUserDetails();
-        TourListing toAdd = new Mapper().toTourListing(dto, user.getId());
+        TourListing toAdd = null;
+        try {
+            toAdd = new Mapper().toTourListing(dto, user.getId());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ResponseObject(false, "Server error");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return new ResponseObject(false, "Server error");
+        } catch (ApiException e) {
+            e.printStackTrace();
+            return new ResponseObject(false, "Server error");
+        }
 
         tourRepo.save(toAdd);
         return new ResponseObject(true, "Listing added");

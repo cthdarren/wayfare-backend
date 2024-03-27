@@ -16,14 +16,16 @@ repositories {
 }
 
 dependencies {
+	implementation("org.slf4j:slf4j-simple:1.7.25")
+	implementation("com.google.maps:google-maps-services:2.2.0")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-data-rest")
 	implementation("com.fasterxml.jackson.core:jackson-databind:2.16.0")
 	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.16.0")
-	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.16.0")
 	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.16.0")
 	implementation("io.jsonwebtoken:jjwt-api:0.12.3")
 	implementation("com.mashape.unirest:unirest-java:1.4.9")
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")
