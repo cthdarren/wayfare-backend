@@ -48,6 +48,9 @@ public class AuthController {
     @Value("${MAIL_API_KEY}")
     private String MAIL_API_KEY;
 
+    @Value("${SERVER_URL}")
+    private String SERVER_URL;
+
     private final WayfareUserDetailService wayfareUserDetailsService;
     private final SecurityContextRepository securityContextRepository =
             new HttpSessionSecurityContextRepository();
@@ -184,7 +187,7 @@ public class AuthController {
                     .queryString("to", userEmail)
                     .queryString("subject", "WayFare Email Verification")
                     // .queryString("text", "verify your email by clicking this link below!\n\nhttp://localhost:8080/api/auth/verify/" + randomGUID)
-                    .queryString("text", "verify your email by clicking this link below!\n\nhttp://143.198.223.202/api/auth/verify/" + randomGUID)
+                    .queryString("text", "verify your email by clicking this link below!\n\n" + SERVER_URL + " + randomGUID)
                     .asJson();
 
             if (response.getStatus() == 200) {
