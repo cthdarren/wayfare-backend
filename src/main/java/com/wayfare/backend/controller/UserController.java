@@ -71,7 +71,12 @@ public class UserController {
                 currUser.getLastName(),
                 currUser.getEmail(),
                 currUser.getPhoneNumber(),
-                currUser.getIsVerified()
+                currUser.getIsVerified(),
+                currUser.getDateCreated(),
+                currUser.getPictureUrl(),
+                currUser.getAboutMe(),
+                currUser.getBadges(),
+                currUser.getRole()
         );
         return new ResponseObject(true, response);
 
