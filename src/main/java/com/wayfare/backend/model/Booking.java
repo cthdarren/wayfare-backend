@@ -15,14 +15,14 @@ public class Booking {
     private String wayFarerId;
     private TimeRange bookingDuration;
     private Date dateBooked;
-    private BigDecimal bookingPrice;
+    private Double bookingPrice;
     private int pax;
     private String remarks;
     private BookingStatusEnum status;
 
     public Booking (){}
 
-    public Booking(String bookingId, String listingId, String userId, String wayFarerId, TimeRange bookingDuration, Date dateBooked, BigDecimal bookingPrice, int pax, String remarks, BookingStatusEnum status) {
+    public Booking(String bookingId, String listingId, String userId, String wayFarerId, TimeRange bookingDuration, Date dateBooked, Double bookingPrice, int pax, String remarks, BookingStatusEnum status) {
         this.bookingId = bookingId;
         this.listingId = listingId;
         this.userId = userId;
@@ -69,11 +69,11 @@ public class Booking {
         this.dateBooked = dateBooked;
     }
 
-    public BigDecimal getBookingPrice() {
+    public Double getBookingPrice() {
         return bookingPrice;
     }
 
-    public void setBookingPrice(BigDecimal bookingPrice) {
+    public void setBookingPrice(Double bookingPrice) {
         this.bookingPrice = bookingPrice;
     }
 
