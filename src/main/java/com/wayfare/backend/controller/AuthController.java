@@ -187,7 +187,7 @@ public class AuthController {
                     .queryString("to", userEmail)
                     .queryString("subject", "WayFare Email Verification")
                     // .queryString("text", "verify your email by clicking this link below!\n\nhttp://localhost:8080/api/auth/verify/" + randomGUID)
-                    .queryString("text", "verify your email by clicking this link below!\n\n" + SERVER_URL + " + randomGUID)
+                    .queryString("text", "verify your email by clicking this link below!\n\n" + SERVER_URL + randomGUID)
                     .asJson();
 
             if (response.getStatus() == 200) {
