@@ -2,7 +2,6 @@ package com.wayfare.backend.model;
 
 import com.wayfare.backend.model.object.TimeRange;
 
-import org.bson.internal.BsonUtil;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;

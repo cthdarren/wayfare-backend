@@ -119,6 +119,8 @@ public class TourController {
 
     @PostMapping("/wayfarer/listing/edit/{id}")
     public ResponseObject editListing(@PathVariable String id, @RequestBody TourListingDTO dto) {
+        dto.validate();
+        if (dto.hasErrors()){return new ResponseObject(false, dto.getErrors());}
 
         Optional<TourListing> tourListing = tourRepo.findById(id);
 
