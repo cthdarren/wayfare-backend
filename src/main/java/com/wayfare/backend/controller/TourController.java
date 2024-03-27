@@ -97,7 +97,7 @@ public class TourController {
 
 
     // Delete Listing
-    @DeleteMapping("/wayfarer/listing/delete/{id}")
+    @PostMapping("/wayfarer/listing/delete/{id}")
     public ResponseObject deleteListing(@PathVariable String id) {
         Optional<TourListing> tourListing = tourRepo.findById(id);
 
@@ -117,7 +117,7 @@ public class TourController {
 
     // Edit Listing
 
-    @PutMapping("/wayfarer/listing/edit/{id}")
+    @PostMapping("/wayfarer/listing/edit/{id}")
     public ResponseObject editListing(@PathVariable String id, @RequestBody TourListingDTO dto) {
 
         Optional<TourListing> tourListing = tourRepo.findById(id);
