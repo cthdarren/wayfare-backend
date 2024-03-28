@@ -158,11 +158,14 @@ public class UserController {
 
         ProfileResponse response = new ProfileResponse(
                 username,
+                toView.getFirstName(),
+                toView.getLastName(),
                 toView.getAboutMe(),
                 toView.getPictureUrl(),
                 toView.getBadges(),
                 avgScore,
                 reviewCount,
+                toView.getRole(),
                 userReviews,
                 userTours,
                 toView.getDateCreated()
