@@ -1,10 +1,13 @@
 package com.wayfare.backend.model.dto;
 
+import com.wayfare.backend.model.Booking;
 import com.wayfare.backend.model.BookingStatusEnum;
 import com.wayfare.backend.model.ValidateClass;
 import com.wayfare.backend.model.object.TimeRange;
+import com.wayfare.backend.repository.BookingRepository;
 
 import java.util.Date;
+import java.util.List;
 
 public class BookingDTO extends ValidateClass {
 
@@ -14,23 +17,37 @@ public class BookingDTO extends ValidateClass {
     private int pax;
     private String remarks;
     private BookingStatusEnum status;
+    private BookingRepository bookingRepository;
 
-    public BookingDTO(TimeRange bookingDuration, Date dateBooked, Double bookingPrice, int pax, String remarks, BookingStatusEnum status) {
+    public BookingDTO(TimeRange bookingDuration, Date dateBooked, Double bookingPrice, int pax, String remarks, BookingStatusEnum status, BookingRepository bookingRepository) {
         this.bookingDuration = bookingDuration;
         this.dateBooked = dateBooked;
         this.bookingPrice = bookingPrice;
         this.pax = pax;
         this.remarks = remarks;
         this.status = status;
+        this.bookingRepository = bookingRepository;
     }
 
     public TimeRange getBookingDuration() {return bookingDuration;}
 
     public void setBookingDuration(TimeRange bookingDuration) {
-        // prevent conflict
+        Date dateBooked = getDateBooked();
 
-        this.bookingDuration = bookingDuration;
+        if (dateBooked != null && hasBookingConflict(bookingDuration, dateBooked)){
 
+            addErrors("This time slot is reserved for another booking");
+
+        } else {
+
+            this.bookingDuration = bookingDuration;
+
+        }
+    }
+
+    private boolean hasBookingConflict(TimeRange bookingDuration, Date dateBooked) {
+        List<Booking> conflictingBookings = bookingRepository.findByDateAndTime(dateBooked, bookingDuration);
+        return !conflictingBookings.isEmpty();
     }
 
     public Date getDateBooked() {return dateBooked;}
