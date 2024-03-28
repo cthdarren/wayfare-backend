@@ -20,7 +20,8 @@ public interface BookingRepository extends MongoRepository<Booking, String> {
     // match by datedBooked first
     // match by bookingDuration start time and end time
     @Aggregation(pipeline = {
-            "{ $match : { dateBooked : ?0, bookingDuration : ?1}}",
+            "{ $match : { dateBooked : ?0}}",
+            "{ $match : {$expr : { $and : [{$gte : [$bookingDuration.startTime, ?1.startTime]}, {$lte : [bookingDuration.endTime, ?1.endTime]}]}}}"
     })
     List<Booking> findByDateAndTime(Date dateBooked, TimeRange bookingDuration);
 }
