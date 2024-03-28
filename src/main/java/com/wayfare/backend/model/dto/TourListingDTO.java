@@ -96,15 +96,6 @@ public class TourListingDTO extends ValidateClass {
         return maxPax;
     }
 
-    public void setMaxPax(Integer value){
-        if (value < getMinPax()){
-            addErrors("Max Pax must be more than Min Pax!");
-        }
-        else {
-            this.maxPax = value;
-        }
-    }
-
     public Integer getMinPax() {
         return minPax;
     }

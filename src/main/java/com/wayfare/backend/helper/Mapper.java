@@ -1,15 +1,29 @@
 package com.wayfare.backend.helper;
 
+import com.google.maps.GeoApiContext;
+import com.google.maps.GeocodingApi;
+import com.google.maps.GeocodingApiRequest;
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.AddressType;
+import com.google.maps.model.GeocodingResult;
+import com.google.maps.model.LatLng;
 import com.wayfare.backend.model.*;
 import com.wayfare.backend.model.dto.ReviewDTO;
 import com.wayfare.backend.model.dto.TourListingDTO;
 import com.wayfare.backend.model.dto.UserDTO;
 import com.wayfare.backend.repository.TourRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
 
+import static com.wayfare.backend.helper.helper.geoApiContext;
+
+
+@RestController
 public class Mapper {
     private TourRepository tourRepo;
 
@@ -22,8 +36,11 @@ public class Mapper {
     {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String encryptedPassword = encoder.encode(userCreationDTO.getPlainPassword());
+        String picUrl = userCreationDTO.getPictureUrl();
+        if (userCreationDTO.getPictureUrl() == null)
+            picUrl = "";
         return new User(
-                userCreationDTO.getPictureUrl(),
+                picUrl,
                 userCreationDTO.getAboutMe(),
                 new ArrayList<BadgeEnum>(),
                 userCreationDTO.getUsername(),
@@ -50,13 +67,23 @@ public class Mapper {
         );
     }
 
-    public TourListing toTourListing(TourListingDTO tourListingCreationDTO, String userId){
+    public TourListing toTourListing(TourListingDTO tourListingCreationDTO, String userId) throws IOException, InterruptedException, ApiException {
+        Double lat = tourListingCreationDTO.getLocation().getY();
+        Double lng = tourListingCreationDTO.getLocation().getX();
+
+        GeocodingResult[] result =  GeocodingApi.reverseGeocode(
+                geoApiContext,
+                new LatLng(lat,lng))
+                .resultType( AddressType.ADMINISTRATIVE_AREA_LEVEL_1, AddressType.COUNTRY)
+                .await();
+
         return new TourListing(
                 tourListingCreationDTO.getTitle(),
                 tourListingCreationDTO.getDescription(),
                 tourListingCreationDTO.getThumbnailUrls(),
                 tourListingCreationDTO.getCategory(),
                 tourListingCreationDTO.getLocation(),
+                result[0].formattedAddress,
                 tourListingCreationDTO.getTimeRangeList(),
                 tourListingCreationDTO.getPrice(),
                 tourListingCreationDTO.getMaxPax(),

@@ -12,7 +12,7 @@ public interface BookingRepository extends MongoRepository<Booking, String> {
     List<Booking> findAllByBookingId(String bookingId);
     List<Booking> findAllByListingId(String listingId);
     List<Booking> findAllByUserId(String userId);
-    List<Booking> findAllByWayfarerId(String wayFarerId);
+    List<Booking> findAllByWayFarerId(String wayFarerId);
 
     // aggregation pipeline date booked --> time slot
 

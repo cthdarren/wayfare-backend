@@ -14,6 +14,7 @@ public class TourListing {
     private ArrayList<String> thumbnailUrls;
     private CategoryEnum category;
     private Point location;
+    private String region;
     private ArrayList<TimeRange> timeRangeList;
     private Double price;
     private Integer maxPax;
@@ -28,6 +29,7 @@ public class TourListing {
             ArrayList<String> thumbnailUrls,
             CategoryEnum category,
             Point location,
+            String region,
             ArrayList<TimeRange> timeRangeList,
             Double price,
             int maxPax,
@@ -42,6 +44,7 @@ public class TourListing {
         this.thumbnailUrls = thumbnailUrls;
         this.category = category;
         this.location = location;
+        this.region = region;
         this.timeRangeList = timeRangeList;
         this.price = price;
         this.maxPax = maxPax;
@@ -73,6 +76,13 @@ public class TourListing {
 
     public void setLocation(Point location) {this.location = location;}
 
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
     public ArrayList<TimeRange> getTimeRangeList() {
         return timeRangeList;
     }
@@ -127,4 +137,6 @@ public class TourListing {
     }
 
     public void setCategory(CategoryEnum category) {this.category = category;}
+
+
 }
