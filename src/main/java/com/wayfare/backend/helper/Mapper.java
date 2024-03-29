@@ -12,6 +12,7 @@ import com.wayfare.backend.model.dto.BookingDTO;
 import com.wayfare.backend.model.dto.ReviewDTO;
 import com.wayfare.backend.model.dto.TourListingDTO;
 import com.wayfare.backend.model.dto.UserDTO;
+import com.wayfare.backend.model.object.PublicUserData;
 import com.wayfare.backend.repository.TourRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -57,14 +58,14 @@ public class Mapper {
                 Instant.now());
     }
 
-    public Review toReview(ReviewDTO reviewCreationDTO, String userId){
+    public Review toReview(ReviewDTO reviewCreationDTO, User user){
         return new Review(
                 reviewCreationDTO.getTitle(),
                 reviewCreationDTO.getScore(),
                 reviewCreationDTO.getReviewContent(),
                 Instant.now(),
                 Instant.now(),
-                userId,
+                new PublicUserData(user),
                 tourRepo.findById(reviewCreationDTO.getListingId()).orElseThrow()
         );
     }

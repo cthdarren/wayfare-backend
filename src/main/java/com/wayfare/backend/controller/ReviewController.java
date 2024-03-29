@@ -87,7 +87,7 @@ public class ReviewController {
 
         WayfareUserDetails user = getCurrentUserDetails();
         try {
-            toAdd = new Mapper(tourRepo).toReview(dto, user.getId());
+            toAdd = new Mapper(tourRepo).toReview(dto, userRepo.findByUsername(user.getUsername()));
         }
         catch (NoSuchElementException e){
             return new ResponseObject(false,"No such listing");
@@ -143,7 +143,7 @@ public class ReviewController {
 
         TourListing listing = tourRepo.findById(toDelete.getListing().getId()).orElseThrow();
 
-        if (!Objects.equals(toDelete.getUserId(), user.getId()))
+        if (!Objects.equals(toDelete.getUser().getId(), user.getId()))
             return new ResponseObject(false, "User does not own review");
 
         reviewRepo.deleteById(request.reviewId());

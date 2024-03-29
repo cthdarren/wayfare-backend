@@ -1,5 +1,6 @@
 package com.wayfare.backend.model;
 
+import com.wayfare.backend.model.object.PublicUserData;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
@@ -13,16 +14,16 @@ public class Review {
     private final Instant dateCreated;
     private Instant dateModified;
 
-    private String userId;
+    private PublicUserData user;
     private TourListing listing;
 
-    public Review(String title, Integer score, String reviewContent, Instant dateCreated, Instant dateModified, String userId,  TourListing listing) {
+    public Review(String title, Integer score, String reviewContent, Instant dateCreated, Instant dateModified, PublicUserData user,  TourListing listing) {
         this.title = title;
         this.score = score;
         this.reviewContent = reviewContent;
         this.dateCreated = dateCreated;
         this.dateModified = dateModified;
-        this.userId = userId;
+        this.user= user;
         this.listing = listing;
     }
 
@@ -66,8 +67,8 @@ public class Review {
         this.dateModified = dateModified;
     }
 
-    public String getUserId() {
-        return userId;
+    public PublicUserData getUser() {
+        return user;
     }
 
     public TourListing getListing() {
