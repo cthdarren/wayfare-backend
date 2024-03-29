@@ -83,7 +83,7 @@ public class BookingController {
             WayfareUserDetails user = getCurrentUserDetails();
             toAdd = null;
             try {
-                toAdd = new Mapper().toBooking(dto, user.getId());
+                toAdd = new Mapper(tourRepository).toBooking(dto, id);
             } catch (IOException e) {
                 e.printStackTrace();
                 return new ResponseObject(false, "Server error");

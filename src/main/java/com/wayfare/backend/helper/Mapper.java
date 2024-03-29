@@ -14,8 +14,12 @@ import com.wayfare.backend.model.dto.TourListingDTO;
 import com.wayfare.backend.model.dto.UserDTO;
 import com.wayfare.backend.model.object.PublicUserData;
 import com.wayfare.backend.repository.TourRepository;
+import com.wayfare.backend.repository.UserRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
@@ -24,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.wayfare.backend.helper.helper.geoApiContext;
-
 
 @RestController
 public class Mapper {
@@ -97,10 +100,10 @@ public class Mapper {
         );
     }
 
-    public Booking toBooking(BookingDTO bookingDTO, String userId) throws IOException, InterruptedException, ApiException {
-        List<TourListing> tourListingId = tourRepo.findAllByUserId(userId);
+    public Booking toBooking(BookingDTO bookingDTO, String listingId) throws IOException, InterruptedException, ApiException {
+        String userId = tourRepo.findUserIdByListingId(listingId);
         return new Booking(
-                tourListingId.toString(),
+                listingId,
                 userId,
                 bookingDTO.getBookingDuration(),
                 bookingDTO.getDateBooked(),

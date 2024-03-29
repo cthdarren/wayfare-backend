@@ -5,11 +5,17 @@ import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 
 import java.util.List;
 
 public interface TourRepository extends MongoRepository<TourListing, String> {
     List<TourListing> findAllByUserId(String userId);
+    @Aggregation(pipeline = {
+            "{ '$match': { 'id' : ?0 } }",
+            "{ '$project': { 'userId': 1, '_id': 0 } }"
+    })
+    String findUserIdByListingId(String id);
     @Aggregation(pipeline = {
             "{ $match : { userId: ?0}}",
             "{ $group : {_id : null, average: { $avg : $rating}}}"
