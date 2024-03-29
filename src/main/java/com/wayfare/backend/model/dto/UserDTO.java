@@ -3,9 +3,8 @@ package com.wayfare.backend.model.dto;
 import com.wayfare.backend.model.ValidateClass;
 import com.wayfare.backend.validator.*;
 
+import java.util.List;
 import java.util.Objects;
-
-import static com.wayfare.backend.model.RoleEnum.ROLE_USER;
 
 //only used for the creation of new users
 public class UserDTO extends ValidateClass {
@@ -18,7 +17,8 @@ public class UserDTO extends ValidateClass {
     private final String verifyPassword;
     private final String email;
     private final String phoneNumber;
-    public UserDTO(String pictureUrl,String aboutMe, String username, String firstName, String lastName, String password, String verifyPassword, String email, String phoneNumber){
+    private final List<String> languagesSpoken;
+    public UserDTO(String pictureUrl, String aboutMe, String username, String firstName, String lastName, String password, String verifyPassword, String email, String phoneNumber, List<String> languagesSpoken){
         this.pictureUrl = pictureUrl;
         this.aboutMe = aboutMe;
         this.username = username;
@@ -28,6 +28,7 @@ public class UserDTO extends ValidateClass {
         this.verifyPassword = verifyPassword;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        this.languagesSpoken = languagesSpoken;
     }
 
     public String getPictureUrl() {
@@ -42,6 +43,8 @@ public class UserDTO extends ValidateClass {
     public String getPlainPassword() {return password;}
     public String getVerifyPassword() {return verifyPassword;}
     public String getEmail() {return email;}
+    public List<String> getLanguagesSpoken() {return languagesSpoken;}
+
     public String getPhoneNumber() {return phoneNumber;}
     public void validate(){
         if (!Objects.equals(getVerifyPassword(), getPlainPassword())) {

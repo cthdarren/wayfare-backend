@@ -29,6 +29,8 @@ public class User{
 
     private String password;
 
+    private List<String> languagesSpoken;
+
     private RoleEnum role;
     private Boolean isVerified;
     private Instant dateModified;
@@ -46,7 +48,8 @@ public class User{
                 RoleEnum role,
                 Boolean isVerified,
                 Instant dateModified,
-                Instant dateCreated
+                Instant dateCreated,
+                List<String> languagesSpoken
     ) {
         super();
         setPictureUrl(pictureUrl);
@@ -61,6 +64,7 @@ public class User{
         setRole(role);
         setIsVerified(isVerified);
         setDateModified(dateModified);
+        setLanguagesSpoken(languagesSpoken);
         this.dateCreated = dateCreated;
     }
 
@@ -140,6 +144,14 @@ public class User{
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+    public List<String> getLanguagesSpoken() {
+        return languagesSpoken;
+    }
+
+    public void setLanguagesSpoken(List<String> languagesSpoken) {
+        this.languagesSpoken = languagesSpoken;
     }
 
     public String getLastName() {
