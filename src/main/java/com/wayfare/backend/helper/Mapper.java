@@ -58,7 +58,10 @@ public class Mapper {
                 RoleEnum.ROLE_USER,
                 false,
                 Instant.now(),
-                Instant.now());
+                Instant.now(),
+                userCreationDTO.getLanguagesSpoken()
+        );
+
     }
 
     public Review toReview(ReviewDTO reviewCreationDTO, User user){
