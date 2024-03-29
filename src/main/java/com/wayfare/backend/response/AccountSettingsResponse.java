@@ -53,7 +53,7 @@ public class AccountSettingsResponse {
         return phoneNumber;
     }
 
-    public boolean isVerified() {
+    public boolean getIsVerified() {
         return isVerified;
     }
 
