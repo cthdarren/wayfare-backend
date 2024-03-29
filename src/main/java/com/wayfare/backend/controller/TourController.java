@@ -11,6 +11,7 @@ import com.google.maps.errors.ApiException;
 import com.mongodb.MongoQueryException;
 import com.wayfare.backend.model.User;
 import com.wayfare.backend.model.dto.TourListingDTO;
+import com.wayfare.backend.model.object.TimeRange;
 import com.wayfare.backend.repository.UserRepository;
 import com.wayfare.backend.request.LocationRequest;
 import com.wayfare.backend.response.ResponseObject;
@@ -162,7 +163,6 @@ public class TourController {
         return new ResponseObject(true, "Listing updated");
 
     }
-
 
 
 

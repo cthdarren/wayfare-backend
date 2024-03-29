@@ -8,10 +8,8 @@ import java.util.Date;
 @Document(collection = "bookings")
 public class Booking {
 
-    private String bookingId;
     private String listingId;
     private String userId;
-    private String wayFarerId;
     private TimeRange bookingDuration;
     private Date dateBooked;
     private Double bookingPrice;
@@ -21,11 +19,9 @@ public class Booking {
 
     public Booking (){}
 
-    public Booking(String bookingId, String listingId, String userId, String wayFarerId, TimeRange bookingDuration, Date dateBooked, Double bookingPrice, int pax, String remarks, BookingStatusEnum status) {
-        this.bookingId = bookingId;
+    public Booking(String listingId, String userId, TimeRange bookingDuration, Date dateBooked, Double bookingPrice, int pax, String remarks, BookingStatusEnum status) {
         this.listingId = listingId;
         this.userId = userId;
-        this.wayFarerId = wayFarerId;
         this.bookingDuration = bookingDuration;
         this.dateBooked = dateBooked;
         this.bookingPrice = bookingPrice;
@@ -35,10 +31,6 @@ public class Booking {
     }
 
 
-    public String getBookingId() {
-        return bookingId;
-    }
-
     public String getListingId() {
         return listingId;
     }
@@ -46,10 +38,6 @@ public class Booking {
 
     public String getUserId() {
         return userId;
-    }
-
-    public String getwayFarerId() {
-        return wayFarerId;
     }
 
     public TimeRange getBookingDuration() {

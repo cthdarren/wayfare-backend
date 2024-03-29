@@ -8,6 +8,7 @@ import com.google.maps.model.AddressType;
 import com.google.maps.model.GeocodingResult;
 import com.google.maps.model.LatLng;
 import com.wayfare.backend.model.*;
+import com.wayfare.backend.model.dto.BookingDTO;
 import com.wayfare.backend.model.dto.ReviewDTO;
 import com.wayfare.backend.model.dto.TourListingDTO;
 import com.wayfare.backend.model.dto.UserDTO;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.wayfare.backend.helper.helper.geoApiContext;
 
@@ -93,4 +95,20 @@ public class Mapper {
                 userId
         );
     }
+
+    public Booking toBooking(BookingDTO bookingDTO, String userId) throws IOException, InterruptedException, ApiException {
+        List<TourListing> tourListingId = tourRepo.findAllByUserId(userId);
+        return new Booking(
+                tourListingId.toString(),
+                userId,
+                bookingDTO.getBookingDuration(),
+                bookingDTO.getDateBooked(),
+                bookingDTO.getBookingPrice(),
+                bookingDTO.getPax(),
+                bookingDTO.getRemarks(),
+                bookingDTO.getStatus()
+        );
+    }
+
+
 }

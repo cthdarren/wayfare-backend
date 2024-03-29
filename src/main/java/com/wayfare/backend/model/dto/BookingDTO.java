@@ -5,6 +5,7 @@ import com.wayfare.backend.model.BookingStatusEnum;
 import com.wayfare.backend.model.ValidateClass;
 import com.wayfare.backend.model.object.TimeRange;
 import com.wayfare.backend.repository.BookingRepository;
+import com.wayfare.backend.repository.TourRepository;
 
 import java.util.Date;
 import java.util.List;
@@ -18,7 +19,6 @@ public class BookingDTO extends ValidateClass {
     private String remarks;
     private BookingStatusEnum status;
     private BookingRepository bookingRepository;
-
     public BookingDTO(TimeRange bookingDuration, Date dateBooked, Double bookingPrice, int pax, String remarks, BookingStatusEnum status, BookingRepository bookingRepository) {
         this.bookingDuration = bookingDuration;
         this.dateBooked = dateBooked;
