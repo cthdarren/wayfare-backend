@@ -74,7 +74,7 @@ public class BookingController {
         if (!Objects.equals(getCurrentUserDetails().getId(), user.getId())){
             return new ResponseObject(false, "You cannot access bookings you do not own!");
         }
-        
+
         return new ResponseObject(true, listByUserId);
     }
 
