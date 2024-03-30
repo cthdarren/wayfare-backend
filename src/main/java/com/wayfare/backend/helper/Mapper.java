@@ -113,7 +113,7 @@ public class Mapper {
                 bookingDTO.getBookingPrice(),
                 bookingDTO.getPax(),
                 bookingDTO.getRemarks(),
-                bookingDTO.getStatus()
+                BookingStatusEnum.RESERVED
         );
     }
 

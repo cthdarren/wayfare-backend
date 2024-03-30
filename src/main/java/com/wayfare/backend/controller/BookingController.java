@@ -8,6 +8,7 @@ import com.wayfare.backend.model.Booking;
 import com.wayfare.backend.model.TourListing;
 import com.wayfare.backend.model.User;
 import com.wayfare.backend.model.dto.BookingDTO;
+import com.wayfare.backend.model.object.TimeRange;
 import com.wayfare.backend.repository.BookingRepository;
 import com.wayfare.backend.repository.TourRepository;
 import com.wayfare.backend.repository.UserRepository;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -70,6 +72,14 @@ public class BookingController {
     // create booking under LISTING ID
     @PostMapping("/booking/create/{id}")
     public ResponseObject createBooking(@PathVariable String id, @RequestBody BookingDTO dto) {
+        Date dateBooked = dto.getDateBooked();
+        TimeRange bookingDuration = dto.getBookingDuration();
+        List<Booking> conflictingBookings = bookingRepository.findByDateAndTime(dateBooked, bookingDuration);
+
+        if (!conflictingBookings.isEmpty()) {
+            return new ResponseObject(false, "This slot has already been reserved");
+        }
+
         Optional<TourListing> tourListing = tourRepository.findById(id);
 
         Booking toAdd;
@@ -124,7 +134,6 @@ public class BookingController {
         bookingToUpdate.setBookingPrice(dto.getBookingPrice());
         bookingToUpdate.setPax(dto.getPax());
         bookingToUpdate.setRemarks(dto.getRemarks());
-        bookingToUpdate.setStatus(dto.getStatus());
         bookingRepository.save(bookingToUpdate);
         return new ResponseObject(true, "Booking updated");
 

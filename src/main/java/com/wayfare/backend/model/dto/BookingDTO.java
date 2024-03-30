@@ -17,42 +17,17 @@ public class BookingDTO extends ValidateClass {
     private Double bookingPrice;
     private int pax;
     private String remarks;
-    private BookingStatusEnum status;
-    private BookingRepository bookingRepository;
-    public BookingDTO(TimeRange bookingDuration, Date dateBooked, Double bookingPrice, int pax, String remarks, BookingStatusEnum status, BookingRepository bookingRepository) {
+    public BookingDTO(TimeRange bookingDuration, Date dateBooked, Double bookingPrice, int pax, String remarks) {
         this.bookingDuration = bookingDuration;
         this.dateBooked = dateBooked;
         this.bookingPrice = bookingPrice;
         this.pax = pax;
         this.remarks = remarks;
-        this.status = status;
-        this.bookingRepository = bookingRepository;
     }
 
     public TimeRange getBookingDuration() {return bookingDuration;}
 
-    public void setBookingDuration(TimeRange bookingDuration) {
-        Date dateBooked = getDateBooked();
-
-        if (dateBooked != null && hasBookingConflict(bookingDuration, dateBooked)){
-
-            addErrors("This time slot is reserved for another booking");
-
-        } else {
-
-            this.bookingDuration = bookingDuration;
-
-        }
-    }
-
-    private boolean hasBookingConflict(TimeRange bookingDuration, Date dateBooked) {
-        List<Booking> conflictingBookings = bookingRepository.findByDateAndTime(dateBooked, bookingDuration);
-        return !conflictingBookings.isEmpty();
-    }
-
     public Date getDateBooked() {return dateBooked;}
-
-    public void setDateBooked(Date dateBooked) {this.dateBooked = dateBooked;}
 
     public Double getBookingPrice() {return bookingPrice;}
 
@@ -70,17 +45,11 @@ public class BookingDTO extends ValidateClass {
 
     public int getPax() {return pax;}
 
-    public void setPax(int pax) {this.pax = pax;}
-
     public String getRemarks() {return remarks;}
-
-    public void setRemarks(String remarks) {this.remarks = remarks;}
-
-    public BookingStatusEnum getStatus() {return status;}
 
     @Override
     public void validate() {
-        if (getBookingDuration() == null || getBookingPrice() == null || getDateBooked() == null || getStatus() == null || getPax() == 0){
+        if (getBookingDuration() == null || getBookingPrice() == null || getDateBooked() == null || getPax() == 0){
             addErrors("Missing JSON Fields");
         }
         getErrors().remove(null);
