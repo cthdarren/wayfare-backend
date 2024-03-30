@@ -12,6 +12,7 @@ import com.wayfare.backend.model.User;
 import com.wayfare.backend.model.dto.UserDTO;
 import com.wayfare.backend.repository.UserRepository;
 import com.wayfare.backend.request.LoginRequest;
+import com.wayfare.backend.request.UserEmailRequest;
 import com.wayfare.backend.security.WayfareUserDetailService;
 import com.wayfare.backend.security.WayfareUserDetails;
 import com.wayfare.backend.security.jwt.JwtService;
@@ -20,6 +21,7 @@ import static com.wayfare.backend.model.RoleEnum.ROLE_WAYFARER;
 
 import java.net.http.HttpClient;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -35,6 +37,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -67,6 +70,23 @@ public class AuthController {
         this.verifyRepo = verifyRepo;
         this.jwtService = jwtService;
     }
+    @PostMapping("/api/v1/auth/checknewuser-email")
+    public ResponseObject checkUserAndEmailExists(@RequestBody UserEmailRequest request){
+        boolean usernameExists = userRepo.existsByUsername(request.username());
+        boolean emailExists = userRepo.existsByEmail(request.email());
+        
+        ArrayList<String> errorList = new ArrayList<>(); 
+        if (usernameExists)
+            errorList.add("Username exists");
+        if (emailExists)
+            errorList.add("Email exists");
+
+        if (errorList.size() > 0)
+            return new ResponseObject(false, errorList);
+            else
+            return new ResponseObject(true, "username and email does not exist");
+    }
+
 
     @PostMapping(value = "/api/v1/auth/register", consumes = "application/json; charset=UTF-8", produces = "application/json; charset=UTF-8")
     public ResponseObject wayfareRegister(@RequestBody UserDTO dto){
@@ -160,7 +180,7 @@ public class AuthController {
         return new ResponseObject(false, "Verify link expired");
     }
 
-    /// MUST BE AUTHORISED AS USER
+        /// MUST BE AUTHORISED AS USER
     // *** GET ***
     // Generates verify link for the specified user. Needs the user to be logged in and pass
     // the users Bearer token through the headers. On success, returns the user email to be
