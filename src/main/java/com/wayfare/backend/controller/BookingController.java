@@ -45,10 +45,15 @@ public class BookingController {
 
     // GET METHODS
 
-    // get all bookings under a listing
+    // get booking based on its id
     @GetMapping("/api/v1/booking/{id}")
     public ResponseObject getBooking(@PathVariable String id){
-        List<Booking> booking = bookingRepository.findAllByListingId(id);
+        Optional<Booking> booking = bookingRepository.findById(id);
+
+        if (!Objects.equals(getCurrentUserDetails().getId(), booking.get().getUserId())){
+            return new ResponseObject(false, "You cannot access a booking you do not own!");
+        }
+
         if (booking.isEmpty()){
             return new ResponseObject(false, "Booking not found");
         } else {
@@ -63,7 +68,13 @@ public class BookingController {
         if (user == null){
             return new ResponseObject(false, "Username not found");
         }
+
         List<Booking> listByUserId = bookingRepository.findAllByUserId(user.getId());
+
+        if (!Objects.equals(getCurrentUserDetails().getId(), user.getId())){
+            return new ResponseObject(false, "You cannot access bookings you do not own!");
+        }
+        
         return new ResponseObject(true, listByUserId);
     }
 
@@ -111,18 +122,14 @@ public class BookingController {
 
     }
 
-    // edit booking under a LISTING ID
+    // edit booking using its id
     @PostMapping("/booking/edit/{id}")
     public ResponseObject editBooking(@PathVariable String id, @RequestBody BookingDTO dto) {
         dto.validate();
         if (dto.hasErrors()){return new ResponseObject(false, dto.getErrors());}
 
-        Optional<TourListing> tourListing = tourRepository.findById(id);
-        Optional<Booking> booking = Optional.ofNullable(bookingRepository.findByListingId(id));
+        Optional<Booking> booking = bookingRepository.findById(id);
 
-        if (tourListing.isEmpty()){
-            return new ResponseObject(false, "No such listing");
-        }
 
         if (!Objects.equals(getCurrentUserDetails().getId(), booking.get().getUserId())){
             return new ResponseObject(false, "You cannot edit a booking you do not own!");
@@ -139,17 +146,11 @@ public class BookingController {
 
     }
 
-    // delete booking under a LISTING ID
+    // delete booking using its id
 
     @PostMapping("/booking/delete/{id}")
     public ResponseObject deleteBooking(@PathVariable String id) {
-        Optional<TourListing> tourListing = tourRepository.findById(id);
-        Optional<Booking> booking = Optional.ofNullable(bookingRepository.findByListingId(id));
-
-
-        if (tourListing.isEmpty()){
-            return new ResponseObject(false, "No such listing");
-        }
+        Optional<Booking> booking = bookingRepository.findById(id);
 
         if (!Objects.equals(getCurrentUserDetails().getId(), booking.get().getUserId())){
             return new ResponseObject(false, "You cannot delete a booking you do not own!");
