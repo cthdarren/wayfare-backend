@@ -13,8 +13,10 @@ import com.wayfare.backend.model.dto.ReviewDTO;
 import com.wayfare.backend.model.dto.TourListingDTO;
 import com.wayfare.backend.model.dto.UserDTO;
 import com.wayfare.backend.model.object.PublicUserData;
+import com.wayfare.backend.repository.BookingRepository;
 import com.wayfare.backend.repository.TourRepository;
 import com.wayfare.backend.repository.UserRepository;
+import com.wayfare.backend.security.WayfareUserDetails;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,15 +30,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.wayfare.backend.helper.helper.geoApiContext;
+import static com.wayfare.backend.helper.helper.getCurrentUserDetails;
 
 @RestController
 public class Mapper {
     private TourRepository tourRepo;
+    private BookingRepository bookingRepo;
 
     public Mapper(){}
     public Mapper(TourRepository tourRepo) {
         this.tourRepo = tourRepo;
     }
+    public Mapper(BookingRepository bookingRepo) {this.bookingRepo = bookingRepo;}
 
     public User toUser(UserDTO userCreationDTO)
     {
@@ -104,7 +109,11 @@ public class Mapper {
     }
 
     public Booking toBooking(BookingDTO bookingDTO, String listingId) throws IOException, InterruptedException, ApiException {
-        String userId = tourRepo.findUserIdByListingId(listingId);
+
+        // alt approach, pass in listing id again, getCurrentUserDetails to get user id
+        WayfareUserDetails user = getCurrentUserDetails();
+        String userId = user.getId();
+
         return new Booking(
                 listingId,
                 userId,

@@ -12,18 +12,22 @@ import java.util.List;
 
 public class BookingDTO extends ValidateClass {
 
+    private String listingId;
     private TimeRange bookingDuration;
     private Date dateBooked;
     private Double bookingPrice;
     private int pax;
     private String remarks;
-    public BookingDTO(TimeRange bookingDuration, Date dateBooked, Double bookingPrice, int pax, String remarks) {
+    public BookingDTO(String listingId, TimeRange bookingDuration, Date dateBooked, Double bookingPrice, int pax, String remarks) {
+        this.listingId = listingId;
         this.bookingDuration = bookingDuration;
         this.dateBooked = dateBooked;
         this.bookingPrice = bookingPrice;
         this.pax = pax;
         this.remarks = remarks;
     }
+
+    public String getListingId() {return listingId;}
 
     public TimeRange getBookingDuration() {return bookingDuration;}
 

@@ -101,10 +101,9 @@ public class BookingController {
             if (dto.hasErrors()) {
                 return new ResponseObject(false, dto.getErrors());
             }
-            WayfareUserDetails user = getCurrentUserDetails();
             toAdd = null;
             try {
-                toAdd = new Mapper(tourRepository).toBooking(dto, id);
+                toAdd = new Mapper().toBooking(dto, id);
             } catch (IOException e) {
                 e.printStackTrace();
                 return new ResponseObject(false, "Server error");
