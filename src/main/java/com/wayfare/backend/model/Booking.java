@@ -30,6 +30,7 @@ public class Booking {
         this.status = status;
     }
 
+    public void setListingId(String listingId) {this.listingId = listingId;}
 
     public String getListingId() {
         return listingId;

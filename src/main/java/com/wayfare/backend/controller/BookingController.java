@@ -130,12 +130,18 @@ public class BookingController {
 
         Optional<Booking> booking = bookingRepository.findById(id);
 
+        if (booking.isEmpty()){
+            return new ResponseObject(false, "Booking does not exist");
+        }
 
-        if (!Objects.equals(getCurrentUserDetails().getId(), booking.get().getUserId())){
+        Booking bookingFound = booking.get();
+
+        if (!Objects.equals(getCurrentUserDetails().getId(), bookingFound.getUserId())){
             return new ResponseObject(false, "You cannot edit a booking you do not own!");
         }
 
         Booking bookingToUpdate = booking.get();
+        bookingToUpdate.setListingId(dto.getListingId());
         bookingToUpdate.setBookingDuration(dto.getBookingDuration());
         bookingToUpdate.setDateBooked(dto.getDateBooked());
         bookingToUpdate.setBookingPrice(dto.getBookingPrice());
@@ -152,11 +158,17 @@ public class BookingController {
     public ResponseObject deleteBooking(@PathVariable String id) {
         Optional<Booking> booking = bookingRepository.findById(id);
 
-        if (!Objects.equals(getCurrentUserDetails().getId(), booking.get().getUserId())){
+        if (booking.isEmpty()){
+            return new ResponseObject(false, "Booking does not exist");
+        }
+
+        Booking bookingFound = booking.get();
+
+        if (!Objects.equals(getCurrentUserDetails().getId(), bookingFound.getUserId())){
             return new ResponseObject(false, "You cannot delete a booking you do not own!");
         }
 
-        bookingRepository.delete(booking.get());
+        bookingRepository.delete(bookingFound);
         return new ResponseObject(true, "Booking successfully deleted");
 
 

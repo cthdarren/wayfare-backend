@@ -34,7 +34,7 @@ public class BookingDTO extends ValidateClass {
     public Date getDateBooked() {return dateBooked;}
 
     public Double getBookingPrice() {return bookingPrice;}
-    
+
     public void setBookingDuration(TimeRange bookingDuration) {
 
         if (bookingDuration.startTime > bookingDuration.endTime){
