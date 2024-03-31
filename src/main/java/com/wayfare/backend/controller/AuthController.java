@@ -72,8 +72,8 @@ public class AuthController {
     }
     @PostMapping("/api/v1/auth/checknewuseremail")
     public ResponseObject checkUserAndEmailExists(@RequestBody UserEmailRequest request){
-        boolean usernameExists = userRepo.existsByUsername(request.username());
-        boolean emailExists = userRepo.existsByEmail(request.email());
+        boolean usernameExists = userRepo.existsByUsername(request.username().toLowerCase());
+        boolean emailExists = userRepo.existsByEmail(request.email().toLowerCase());
         
         ArrayList<String> errorList = new ArrayList<>(); 
         if (request.username() == ""){
