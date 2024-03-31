@@ -15,9 +15,5 @@ public interface BookingRepository extends MongoRepository<Booking, String> {
     Booking findByListingId(String listingId);
     List<Booking> findAllByUserId(String userId);
 
-    @Aggregation(pipeline = {
-            "{ $match : { dateBooked : ?0}}",
-            "{ $match : {$expr : { $and : [{$gte : [$bookingDuration.startTime, ?1.startTime]}, {$lte : [bookingDuration.endTime, ?1.endTime]}]}}}"
-    })
-    List<Booking> findByDateAndTime(Date dateBooked, TimeRange bookingDuration);
+    List<Booking> findByDateBookedAndBookingDuration(Date dateBooked, TimeRange bookingDuration);
 }

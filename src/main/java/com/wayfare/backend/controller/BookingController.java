@@ -85,7 +85,7 @@ public class BookingController {
     public ResponseObject createBooking(@PathVariable String id, @RequestBody BookingDTO dto) {
         Date dateBooked = dto.getDateBooked();
         TimeRange bookingDuration = dto.getBookingDuration();
-        List<Booking> conflictingBookings = bookingRepository.findByDateAndTime(dateBooked, bookingDuration);
+        List<Booking> conflictingBookings = bookingRepository.findByDateBookedAndBookingDuration(dateBooked, bookingDuration);
 
         if (!conflictingBookings.isEmpty()) {
             return new ResponseObject(false, "This slot has already been reserved");
