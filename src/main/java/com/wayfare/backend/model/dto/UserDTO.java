@@ -28,7 +28,7 @@ public class UserDTO extends ValidateClass {
         this.lastName = StringUtils.capitalize(lastName);
         this.password = password;
         this.verifyPassword = verifyPassword;
-        this.email = email;
+        this.email = email.toLowerCase();
         this.phoneNumber = phoneNumber;
         this.languagesSpoken = languagesSpoken;
     }
