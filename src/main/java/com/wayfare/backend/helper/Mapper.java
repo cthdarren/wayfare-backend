@@ -110,7 +110,6 @@ public class Mapper {
 
     public Booking toBooking(BookingDTO bookingDTO, String listingId) throws IOException, InterruptedException, ApiException {
 
-        // alt approach, pass in listing id again, getCurrentUserDetails to get user id
         WayfareUserDetails user = getCurrentUserDetails();
         String userId = user.getId();
 

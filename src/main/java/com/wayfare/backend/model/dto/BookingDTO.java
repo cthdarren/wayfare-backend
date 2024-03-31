@@ -20,9 +20,9 @@ public class BookingDTO extends ValidateClass {
     private String remarks;
     public BookingDTO(String listingId, TimeRange bookingDuration, Date dateBooked, Double bookingPrice, int pax, String remarks) {
         this.listingId = listingId;
-        this.bookingDuration = bookingDuration;
+        setBookingDuration(bookingDuration);
         this.dateBooked = dateBooked;
-        this.bookingPrice = bookingPrice;
+        setBookingPrice(bookingPrice);
         this.pax = pax;
         this.remarks = remarks;
     }
@@ -34,6 +34,16 @@ public class BookingDTO extends ValidateClass {
     public Date getDateBooked() {return dateBooked;}
 
     public Double getBookingPrice() {return bookingPrice;}
+    
+    public void setBookingDuration(TimeRange bookingDuration) {
+
+        if (bookingDuration.startTime > bookingDuration.endTime){
+            addErrors("Start time must be earlier than end time");
+        } else {
+            this.bookingDuration = bookingDuration;
+        }
+
+    }
 
     public void setBookingPrice(Double bookingPrice) {
         if (bookingPrice == null){

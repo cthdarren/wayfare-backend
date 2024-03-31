@@ -8,6 +8,7 @@ import com.wayfare.backend.model.Booking;
 import com.wayfare.backend.model.TourListing;
 import com.wayfare.backend.model.User;
 import com.wayfare.backend.model.dto.BookingDTO;
+import com.wayfare.backend.model.dto.TourListingDTO;
 import com.wayfare.backend.model.object.TimeRange;
 import com.wayfare.backend.repository.BookingRepository;
 import com.wayfare.backend.repository.TourRepository;
