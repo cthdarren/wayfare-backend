@@ -6,6 +6,8 @@ import com.wayfare.backend.validator.*;
 import java.util.List;
 import java.util.Objects;
 
+import org.apache.commons.lang3.StringUtils;
+
 //only used for the creation of new users
 public class UserDTO extends ValidateClass {
     private final String pictureUrl;
@@ -21,9 +23,9 @@ public class UserDTO extends ValidateClass {
     public UserDTO(String pictureUrl, String aboutMe, String username, String firstName, String lastName, String password, String verifyPassword, String email, String phoneNumber, List<String> languagesSpoken){
         this.pictureUrl = pictureUrl;
         this.aboutMe = aboutMe;
-        this.username = username;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.username = username.toLowerCase();
+        this.firstName = StringUtils.capitalize(firstName);
+        this.lastName = StringUtils.capitalize(lastName);
         this.password = password;
         this.verifyPassword = verifyPassword;
         this.email = email;
