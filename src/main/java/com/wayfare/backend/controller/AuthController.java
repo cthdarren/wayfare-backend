@@ -76,13 +76,19 @@ public class AuthController {
         boolean emailExists = userRepo.existsByEmail(request.email());
         
         ArrayList<String> errorList = new ArrayList<>(); 
-        if (usernameExists){
+        if (request.username() == ""){
+            errorList.add("Username cannot be blank");
+        }
+        else if (usernameExists){
             errorList.add("Username exists");
         }
         else{
             errorList.add("");
         }
-        if (emailExists){
+        if (request.email() == ""){
+            errorList.add("Email cannot be blank");
+        }
+        else if (emailExists){
             errorList.add("Email exists");
         }
         else{
@@ -91,7 +97,7 @@ public class AuthController {
 
         if (errorList.get(0) == "" & errorList.get(1) == ""){
             return new ResponseObject(true, "username and email does not exist");
-}
+        }
         else{
             return new ResponseObject(false, errorList);
         }
