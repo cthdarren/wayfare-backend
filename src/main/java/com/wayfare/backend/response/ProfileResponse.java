@@ -11,6 +11,7 @@ public class ProfileResponse {
     private final String lastName;
     private final String aboutMe;
     private final String pictureUrl;
+    private final List<String> languagesSpoken;
     private final List<BadgeEnum> badges;
     private final Double avgScore;
     private final Integer reviewCount;
@@ -19,12 +20,13 @@ public class ProfileResponse {
     private final List<TourListing> tours;
     private final Instant dateCreated;
 
-    public ProfileResponse(String username, String firstName, String lastName, String aboutMe, String pictureUrl, List<BadgeEnum> badges, double avgScore, int reviewCount, RoleEnum role, List<Review> reviews, List<TourListing> tours, Instant dateCreated) {
+    public ProfileResponse(String username, String firstName, String lastName, String aboutMe, String pictureUrl, List<String> languagesSpoken, List<BadgeEnum> badges, double avgScore, int reviewCount, RoleEnum role, List<Review> reviews, List<TourListing> tours, Instant dateCreated) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.aboutMe = aboutMe;
         this.pictureUrl = pictureUrl;
+        this.languagesSpoken = languagesSpoken;
         this.badges = badges;
         this.avgScore = avgScore;
         this.reviewCount = reviewCount;
