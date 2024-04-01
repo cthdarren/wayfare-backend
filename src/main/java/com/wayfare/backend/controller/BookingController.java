@@ -13,6 +13,7 @@ import com.wayfare.backend.model.object.TimeRange;
 import com.wayfare.backend.repository.BookingRepository;
 import com.wayfare.backend.repository.TourRepository;
 import com.wayfare.backend.repository.UserRepository;
+import com.wayfare.backend.response.BookingResponse;
 import com.wayfare.backend.response.ResponseObject;
 import com.wayfare.backend.security.WayfareUserDetails;
 
@@ -70,7 +71,7 @@ public class BookingController {
             return new ResponseObject(false, "Username not found");
         }
 
-        List<Booking> listByUserId = bookingRepository.findAllUpcomingBookings(user.getId());
+        List<BookingResponse> listByUserId = bookingRepository.findAllUpcomingBookings(user.getId());
 
         return new ResponseObject(true, listByUserId);
     }
@@ -81,7 +82,7 @@ public class BookingController {
         if (user == null){
             return new ResponseObject(false, "Username not found");
         }
-        List<Booking> listByUserId = bookingRepository.findAllUpcomingBookings(user.getId());
+        List<BookingResponse> listByUserId = bookingRepository.findAllUpcomingBookings(user.getId());
 
         return new ResponseObject(true, listByUserId);
     }

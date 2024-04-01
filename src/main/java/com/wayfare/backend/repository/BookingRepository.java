@@ -3,6 +3,7 @@ package com.wayfare.backend.repository;
 import com.wayfare.backend.model.Booking;
 import com.wayfare.backend.model.object.TimeRange;
 
+import com.wayfare.backend.response.BookingResponse;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
@@ -15,10 +16,39 @@ public interface BookingRepository extends MongoRepository<Booking, String> {
     Booking findByListingId(String listingId);
     List<Booking> findAllByUserId(String userId);
     @Aggregation(pipeline = {
+            //lmao sorry for the eye cancer but i copy-pasted this from mongodb after crafting the aggregation myself
             "{ $match : { userId: ?0} }",
             "{ $sort : { dateBooked: -1, \"bookingDuration.startTime\" : 1}}",
+            """
+            { $lookup: {
+                 from: "users",
+                 let: {
+                   searchId: {
+                     $toObjectId: "$listing.userId",
+                   },
+                 },
+                 pipeline: [
+                   {
+                     $match: {
+                       $expr: {
+                         $eq: ["$_id", "$$searchId"],
+                       },
+                     },
+                   },
+                   {
+                     $project: {
+                       username: 1,
+                       pictureUrl: 1,
+                     },
+                   },
+                 ],
+                 as: "user",
+               },
+             }
+            """,
+            "{ $unwind : { path: $user }}"
     })
-    List<Booking> findAllUpcomingBookings(String userId);
+    List<BookingResponse> findAllUpcomingBookings(String userId);
 
     List<Booking> findByDateBookedAndBookingDuration(Date dateBooked, TimeRange bookingDuration);
 }
