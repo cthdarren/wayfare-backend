@@ -52,6 +52,8 @@ public class UserDTO extends ValidateClass {
         if (!Objects.equals(getVerifyPassword(), getPlainPassword())) {
             addErrors("Passwords do not match");
         }
+        if (getLanguagesSpoken().size() == 0)
+            addErrors("You must be able to speak at least one language");
         addErrors(new UsernameValidator(getUsername()).validateRegex());
         addErrors(new AlphabeticalValidator(getFirstName(), "First name can only accept alphabetical characters").validateRegex());
         addErrors(new AlphabeticalValidator(getLastName(), "Last name can only accept alphabetical characters").validateRegex());
