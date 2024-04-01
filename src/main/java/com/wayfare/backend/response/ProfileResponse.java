@@ -83,4 +83,8 @@ public class ProfileResponse {
     public String getLastName() {
         return lastName;
     }
+
+    public List<String> getLanguagesSpoken() {
+        return languagesSpoken;
+    }
 }
