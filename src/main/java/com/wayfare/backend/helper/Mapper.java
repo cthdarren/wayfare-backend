@@ -108,13 +108,13 @@ public class Mapper {
         );
     }
 
-    public Booking toBooking(BookingDTO bookingDTO, String listingId) throws IOException, InterruptedException, ApiException {
+    public Booking toBooking(BookingDTO bookingDTO, String listingId) throws IOException{
 
         WayfareUserDetails user = getCurrentUserDetails();
         String userId = user.getId();
 
         return new Booking(
-                listingId,
+                tourRepo.findById(listingId).orElseThrow(),
                 userId,
                 bookingDTO.getBookingDuration(),
                 bookingDTO.getDateBooked(),

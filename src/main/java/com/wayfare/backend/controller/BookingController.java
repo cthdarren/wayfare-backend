@@ -75,6 +75,17 @@ public class BookingController {
         return new ResponseObject(true, listByUserId);
     }
 
+    @GetMapping("/booking/upcoming")
+    public ResponseObject getUpcomingBookings(){
+        WayfareUserDetails user = getCurrentUserDetails();
+        if (user == null){
+            return new ResponseObject(false, "Username not found");
+        }
+        List<Booking> listByUserId = bookingRepository.findAllUpcomingBookings(user.getId());
+
+        return new ResponseObject(true, listByUserId);
+    }
+
     // POST METHODS
 
     // create booking under LISTING ID
@@ -100,8 +111,8 @@ public class BookingController {
             }
             toAdd = null;
             try {
-                toAdd = new Mapper().toBooking(dto, id);
-            } catch (IOException | InterruptedException | ApiException e) {
+                toAdd = new Mapper(tourRepository).toBooking(dto, id);
+            } catch (IOException e) {
                 e.printStackTrace();
                 return new ResponseObject(false, "Server error");
             }
@@ -129,7 +140,6 @@ public class BookingController {
         }
 
         Booking bookingToUpdate = booking.get();
-        bookingToUpdate.setListingId(dto.getListingId());
         bookingToUpdate.setBookingDuration(dto.getBookingDuration());
         bookingToUpdate.setDateBooked(dto.getDateBooked());
         bookingToUpdate.setBookingPrice(dto.getBookingPrice());

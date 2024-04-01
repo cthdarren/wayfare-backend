@@ -8,7 +8,7 @@ import java.util.Date;
 @Document(collection = "bookings")
 public class Booking {
 
-    private String listingId;
+    private TourListing listing;
     private String userId;
     private TimeRange bookingDuration;
     private Date dateBooked;
@@ -19,8 +19,8 @@ public class Booking {
 
     public Booking (){}
 
-    public Booking(String listingId, String userId, TimeRange bookingDuration, Date dateBooked, Double bookingPrice, int pax, String remarks, BookingStatusEnum status) {
-        this.listingId = listingId;
+    public Booking(TourListing listing, String userId, TimeRange bookingDuration, Date dateBooked, Double bookingPrice, int pax, String remarks, BookingStatusEnum status) {
+        this.listing = listing;
         this.userId = userId;
         this.bookingDuration = bookingDuration;
         this.dateBooked = dateBooked;
@@ -30,12 +30,9 @@ public class Booking {
         this.status = status;
     }
 
-    public void setListingId(String listingId) {this.listingId = listingId;}
-
-    public String getListingId() {
-        return listingId;
+    public TourListing getListingId() {
+        return listing;
     }
-
 
     public String getUserId() {
         return userId;
