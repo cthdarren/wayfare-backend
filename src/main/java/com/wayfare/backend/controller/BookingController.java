@@ -70,7 +70,7 @@ public class BookingController {
             return new ResponseObject(false, "Username not found");
         }
 
-        List<Booking> listByUserId = bookingRepository.findAllByUserId(user.getId());
+        List<Booking> listByUserId = bookingRepository.findAllUpcomingBookings(user.getId());
 
         return new ResponseObject(true, listByUserId);
     }
