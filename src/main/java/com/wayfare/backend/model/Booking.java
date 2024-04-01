@@ -30,7 +30,7 @@ public class Booking {
         this.status = status;
     }
 
-    public TourListing getListingId() {
+    public TourListing getListing() {
         return listing;
     }
 
