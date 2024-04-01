@@ -124,9 +124,7 @@ public class BookingController {
             return new ResponseObject(false, "Booking does not exist");
         }
 
-        Booking bookingFound = booking.get();
-
-        if (!Objects.equals(getCurrentUserDetails().getId(), bookingFound.getUserId())){
+        if (!Objects.equals(getCurrentUserDetails().getId(), booking.get().getUserId())){
             return new ResponseObject(false, "You cannot edit a booking you do not own!");
         }
 
