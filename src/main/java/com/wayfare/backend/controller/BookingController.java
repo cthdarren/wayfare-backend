@@ -63,18 +63,14 @@ public class BookingController {
     }
 
     // get all bookings under a username
-    @GetMapping("/api/v1/user/booking/{username}")
-    public ResponseObject getUserBooking(@PathVariable String username){
-        User user = userRepository.findByUsername(username);
+    @GetMapping("/bookings")
+    public ResponseObject getUserBooking(){
+        WayfareUserDetails user = getCurrentUserDetails();
         if (user == null){
             return new ResponseObject(false, "Username not found");
         }
 
         List<Booking> listByUserId = bookingRepository.findAllByUserId(user.getId());
-
-        if (!Objects.equals(getCurrentUserDetails().getId(), user.getId())){
-            return new ResponseObject(false, "You cannot access bookings you do not own!");
-        }
 
         return new ResponseObject(true, listByUserId);
     }
@@ -105,13 +101,7 @@ public class BookingController {
             toAdd = null;
             try {
                 toAdd = new Mapper().toBooking(dto, id);
-            } catch (IOException e) {
-                e.printStackTrace();
-                return new ResponseObject(false, "Server error");
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                return new ResponseObject(false, "Server error");
-            } catch (ApiException e) {
+            } catch (IOException | InterruptedException | ApiException e) {
                 e.printStackTrace();
                 return new ResponseObject(false, "Server error");
             }
