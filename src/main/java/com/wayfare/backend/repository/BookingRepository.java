@@ -18,8 +18,6 @@ public interface BookingRepository extends MongoRepository<Booking, String> {
     @Aggregation(pipeline = {
             //lmao sorry for the eye cancer but i copy-pasted this from mongodb after crafting the aggregation myself
             "{ $match : { userId: ?0, dateBooked:{ $gte : new Date()}}}",
-
-            "{ $sort : { dateBooked: -1, \"bookingDuration.startTime\" : 1}}",
             """
             { $lookup: {
                  from: "users",
@@ -47,14 +45,13 @@ public interface BookingRepository extends MongoRepository<Booking, String> {
                },
              }
             """,
-            "{ $unwind : { path: $user }}"
+            "{ $unwind : { path: $user }}",
+            "{ $sort : { dateBooked: 1, \"bookingDuration.startTime\" : 1}}"
     })
     List<BookingResponse> findAllUpcomingBookings(String userId);
     @Aggregation(pipeline = {
             //lmao sorry for the eye cancer but i copy-pasted this from mongodb after crafting the aggregation myself
             "{ $match : { userId: ?0, dateBooked:{ $lt : new Date()}}}",
-
-            "{ $sort : { dateBooked: -1, \"bookingDuration.startTime\" : 1}}",
             """
             { $lookup: {
                  from: "users",
@@ -82,7 +79,8 @@ public interface BookingRepository extends MongoRepository<Booking, String> {
                },
              }
             """,
-            "{ $unwind : { path: $user }}"
+            "{ $unwind : { path: $user }}",
+            "{ $sort : { dateBooked: 1, \"bookingDuration.startTime\" : 1}}"
     })
     List<BookingResponse> findAllPastBookings(String userId);
 
