@@ -17,7 +17,8 @@ public interface BookingRepository extends MongoRepository<Booking, String> {
     List<Booking> findAllByUserId(String userId);
     @Aggregation(pipeline = {
             //lmao sorry for the eye cancer but i copy-pasted this from mongodb after crafting the aggregation myself
-            "{ $match : { userId: ?0} }",
+            "{ $match : { userId: ?0, dateBooked:{ $gte : new Date()}}}",
+
             "{ $sort : { dateBooked: -1, \"bookingDuration.startTime\" : 1}}",
             """
             { $lookup: {
@@ -49,6 +50,41 @@ public interface BookingRepository extends MongoRepository<Booking, String> {
             "{ $unwind : { path: $user }}"
     })
     List<BookingResponse> findAllUpcomingBookings(String userId);
+    @Aggregation(pipeline = {
+            //lmao sorry for the eye cancer but i copy-pasted this from mongodb after crafting the aggregation myself
+            "{ $match : { userId: ?0, dateBooked:{ $lt : new Date()}}}",
+
+            "{ $sort : { dateBooked: -1, \"bookingDuration.startTime\" : 1}}",
+            """
+            { $lookup: {
+                 from: "users",
+                 let: {
+                   searchId: {
+                     $toObjectId: "$listing.userId",
+                   },
+                 },
+                 pipeline: [
+                   {
+                     $match: {
+                       $expr: {
+                         $eq: ["$_id", "$$searchId"],
+                       },
+                     },
+                   },
+                   {
+                     $project: {
+                       username: 1,
+                       pictureUrl: 1,
+                     },
+                   },
+                 ],
+                 as: "user",
+               },
+             }
+            """,
+            "{ $unwind : { path: $user }}"
+    })
+    List<BookingResponse> findAllPastBookings(String userId);
 
     List<Booking> findByDateBookedAndBookingDuration(Date dateBooked, TimeRange bookingDuration);
 }

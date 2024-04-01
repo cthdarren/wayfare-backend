@@ -15,6 +15,7 @@ import com.wayfare.backend.repository.TourRepository;
 import com.wayfare.backend.repository.UserRepository;
 import com.wayfare.backend.response.BookingResponse;
 import com.wayfare.backend.response.ResponseObject;
+import com.wayfare.backend.response.UpcomingPastBookingResponse;
 import com.wayfare.backend.security.WayfareUserDetails;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -66,26 +67,27 @@ public class BookingController {
     // get all bookings under a username
     @GetMapping("/bookings")
     public ResponseObject getUserBooking(){
+
         WayfareUserDetails user = getCurrentUserDetails();
         if (user == null){
             return new ResponseObject(false, "Username not found");
         }
 
-        List<BookingResponse> listByUserId = bookingRepository.findAllUpcomingBookings(user.getId());
+        List<BookingResponse> upcomingBookings = bookingRepository.findAllUpcomingBookings(user.getId());
+        List<BookingResponse> pastBookings = bookingRepository.findAllPastBookings(user.getId());
 
-        return new ResponseObject(true, listByUserId);
+        return new ResponseObject(true, new UpcomingPastBookingResponse(upcomingBookings, pastBookings));
     }
 
-    @GetMapping("/booking/upcoming")
-    public ResponseObject getUpcomingBookings(){
-        WayfareUserDetails user = getCurrentUserDetails();
-        if (user == null){
-            return new ResponseObject(false, "Username not found");
-        }
-        List<BookingResponse> listByUserId = bookingRepository.findAllUpcomingBookings(user.getId());
-
-        return new ResponseObject(true, listByUserId);
-    }
+//    @GetMapping("/pastbookings")
+//    public ResponseObject getUpcomingBookings(){
+//        WayfareUserDetails user = getCurrentUserDetails();
+//        if (user == null){
+//            return new ResponseObject(false, "Username not found");
+//        }
+//
+//        return new ResponseObject(true, listByUserId);
+//    }
 
     // POST METHODS
 
