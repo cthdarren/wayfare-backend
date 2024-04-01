@@ -39,7 +39,11 @@ public class BookingDTO extends ValidateClass {
 
         if (bookingDuration.startTime > bookingDuration.endTime){
             addErrors("Start time must be earlier than end time");
-        } else {
+        }
+        else if (bookingDuration.startTime < 0 || bookingDuration.endTime < 0){
+            addErrors("Time must be a positive integer");
+        }
+        else {
             this.bookingDuration = bookingDuration;
         }
 

@@ -102,6 +102,9 @@ public class BookingController {
 
         Optional<TourListing> tourListing = tourRepository.findById(id);
 
+        if (!tourListing.get().getTimeRangeList().contains(bookingDuration)){
+            return new ResponseObject(false, "This timing is not available");
+        }
         Booking toAdd;
         if (tourListing.isEmpty()) {
             return new ResponseObject(false, "No such listing");
@@ -131,6 +134,14 @@ public class BookingController {
         if (dto.hasErrors()){return new ResponseObject(false, dto.getErrors());}
 
         Optional<Booking> booking = bookingRepository.findById(id);
+
+        Date dateBooked = dto.getDateBooked();
+        TimeRange bookingDuration = dto.getBookingDuration();
+        List<Booking> conflictingBookings = bookingRepository.findByDateBookedAndBookingDuration(dateBooked, bookingDuration);
+
+        if (!conflictingBookings.isEmpty()) {
+            return new ResponseObject(false, "This slot has already been reserved");
+        }
 
         if (booking.isEmpty()){
             return new ResponseObject(false, "Booking does not exist");
