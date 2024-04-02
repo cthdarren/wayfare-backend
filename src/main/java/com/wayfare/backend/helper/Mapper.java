@@ -19,6 +19,7 @@ import com.wayfare.backend.repository.TourRepository;
 import com.wayfare.backend.repository.UserRepository;
 import com.wayfare.backend.security.WayfareUserDetails;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -58,11 +59,11 @@ public class Mapper {
                 picUrl,
                 userCreationDTO.getAboutMe(),
                 new ArrayList<BadgeEnum>(),
-                userCreationDTO.getUsername(),
-                userCreationDTO.getFirstName(),
-                userCreationDTO.getLastName(),
+                userCreationDTO.getUsername().toLowerCase(),
+                StringUtils.capitalize(userCreationDTO.getFirstName()),
+                StringUtils.capitalize(userCreationDTO.getLastName()),
                 encryptedPassword,
-                userCreationDTO.getEmail(),
+                userCreationDTO.getEmail().toLowerCase(),
                 userCreationDTO.getPhoneNumber(),
                 RoleEnum.ROLE_USER,
                 false,

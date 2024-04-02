@@ -4,8 +4,9 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.wayfare.backend.helper.Mapper;
-import com.wayfare.backend.model.VerifyURL;
-import com.wayfare.backend.repository.VerifyURLRepository;
+import com.wayfare.backend.model.Otp;
+import com.wayfare.backend.repository.OtpRepository;
+import com.wayfare.backend.request.OtpRequest;
 import com.wayfare.backend.request.PasswordRequest;
 import com.wayfare.backend.response.ResponseObject;
 import com.wayfare.backend.model.User;
@@ -21,12 +22,17 @@ import static com.wayfare.backend.model.RoleEnum.ROLE_WAYFARER;
 
 import java.net.http.HttpClient;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.UUID;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
 
+import com.wayfare.backend.validator.EmailValidator;
+import com.wayfare.backend.validator.UsernameValidator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.http.HttpMessage;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -36,8 +42,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -59,22 +63,22 @@ public class AuthController {
             new HttpSessionSecurityContextRepository();
 
     private final UserRepository userRepo;
-    private final VerifyURLRepository verifyRepo;
+    private final OtpRepository otpRepo;
 
     private final JwtService jwtService;
 
-    public AuthController(AuthenticationManager authenticationManager, WayfareUserDetailService wayfareUserDetailsService, UserRepository userRepo, VerifyURLRepository verifyRepo, JwtService jwtService) {
+    public AuthController(AuthenticationManager authenticationManager, WayfareUserDetailService wayfareUserDetailsService, UserRepository userRepo, OtpRepository otpRepo, JwtService jwtService) {
         this.authenticationManager = authenticationManager;
         this.wayfareUserDetailsService = wayfareUserDetailsService;
         this.userRepo = userRepo;
-        this.verifyRepo = verifyRepo;
+        this.otpRepo = otpRepo;
         this.jwtService = jwtService;
     }
     @PostMapping("/api/v1/auth/checknewuseremail")
     public ResponseObject checkUserAndEmailExists(@RequestBody UserEmailRequest request){
         boolean usernameExists = userRepo.existsByUsername(request.username().toLowerCase());
         boolean emailExists = userRepo.existsByEmail(request.email().toLowerCase());
-        
+
         ArrayList<String> errorList = new ArrayList<>(); 
         if (request.username() == ""){
             errorList.add("Username cannot be blank");
@@ -83,7 +87,7 @@ public class AuthController {
             errorList.add("Username exists");
         }
         else{
-            errorList.add("");
+            errorList.add(new UsernameValidator(request.username().toLowerCase()).validateRegex());
         }
         if (request.email() == ""){
             errorList.add("Email cannot be blank");
@@ -92,10 +96,10 @@ public class AuthController {
             errorList.add("Email exists");
         }
         else{
-            errorList.add("");
+            errorList.add(new EmailValidator(request.email().toLowerCase()).validateRegex());
         }
 
-        if (errorList.get(0) == "" & errorList.get(1) == ""){
+        if (errorList.get(0) == null & errorList.get(1) == null){
             return new ResponseObject(true, "username and email does not exist");
         }
         else{
@@ -180,20 +184,38 @@ public class AuthController {
 
     }
 
-    // TODO email verification using one time link
-    @GetMapping("/api/v1/verify/{oneTimeURL}")
-    public ResponseObject verifyUser(@PathVariable String oneTimeURL){
-        VerifyURL checkURL = verifyRepo.findByUrl(oneTimeURL);
-        if (checkURL != null){
-            User toVerify = userRepo.findByUsername(checkURL.getUsername());
-            toVerify.setIsVerified(true);
-            toVerify.setDateModified(Instant.now());
-            userRepo.save(toVerify);
-            verifyRepo.delete(checkURL);
+//    //TODO email verification using one time link
+//    @GetMapping("/api/v1/verify/{oneTimeURL}")
+//    public ResponseObject verifyUser(@PathVariable String oneTimeURL){
+//        Otp checkURL = otpRepo.findByUrl(oneTimeURL);
+//        if (checkURL != null){
+//            User toVerify = userRepo.findByUsername(checkURL.getUsername());
+//            toVerify.setIsVerified(true);
+//            toVerify.setDateModified(Instant.now());
+//            userRepo.save(toVerify);
+//            otpRepo.delete(checkURL);
+//
+//            return new ResponseObject(toVerify.getIsVerified(), toVerify.getUsername());
+//        }
+//        return new ResponseObject(false, "Verify link expired");
+//    }
 
-            return new ResponseObject(toVerify.getIsVerified(), toVerify.getUsername());
+    @PostMapping("/verifyotp")
+    public ResponseObject verifyOtp(@RequestBody OtpRequest request){
+        WayfareUserDetails user = getCurrentUserDetails();
+        List<Otp> otpList = otpRepo.findAllByUserIdAndCreationTimeGreaterThan(user.getId(), LocalDateTime.now().minusMinutes(10));
+        for (Otp otp : otpList){
+            if (Objects.equals(otp.getOtpString(), request.otp()) & Objects.equals(otp.getUserId(), user.getId())) {
+                User toVerify = userRepo.findById(user.getId()).orElseThrow();
+                toVerify.setIsVerified(true);
+                userRepo.save(toVerify);
+
+                otpRepo.deleteByUserId(user.getId());
+
+                return new ResponseObject(true, "You have been verified");
+            }
         }
-        return new ResponseObject(false, "Verify link expired");
+        return new ResponseObject(false, "Otp not found or expired");
     }
 
         /// MUST BE AUTHORISED AS USER
@@ -201,8 +223,8 @@ public class AuthController {
     // Generates verify link for the specified user. Needs the user to be logged in and pass
     // the users Bearer token through the headers. On success, returns the user email to be
     // displayed in the front end ( can use a message similar to please check your email at {email} )
-    @GetMapping("/generateverifylink")
-    public ResponseObject generateVerifyLink(){
+    @GetMapping("/generateotp")
+    public ResponseObject generateOtp(){
         WayfareUserDetails currUser = getCurrentUserDetails();
 
         if (currUser.getIsVerified()){
@@ -213,7 +235,8 @@ public class AuthController {
         HttpClient httpClient = HttpClient.newHttpClient();
         String postURL = "https://api.mailgun.net/v3/" + MAIL_DOMAIN_NAME + "/messages.mime";
 
-        String randomGUID = UUID.randomUUID().toString();
+        int otp = new Random().nextInt(999999);
+        String otpString = String.format("%06d", otp);
 
         try {
             // Had to use unirest here because the normal HttpClient library has problems with multipart forms
@@ -223,12 +246,13 @@ public class AuthController {
                     .queryString("to", userEmail)
                     .queryString("subject", "WayFare Email Verification")
                     // .queryString("text", "verify your email by clicking this link below!\n\nhttp://localhost:8080/api/auth/verify/" + randomGUID)
-                    .queryString("text", "verify your email by clicking this link below!\n\n" + SERVER_URL + randomGUID)
+//                    .queryString("text", "Verify your email by clicking this link below!\n\n" + SERVER_URL + "/api/auth/verify/" + randomGUID)
+                    .queryString("text", "Your otp is " + otpString)
                     .asJson();
 
             if (response.getStatus() == 200) {
-                VerifyURL newURL = new VerifyURL(randomGUID, currUser.getUsername());
-                verifyRepo.save(newURL);
+                Otp newOtp = new Otp(otpString, currUser.getId());
+                otpRepo.save(newOtp);
                 return new ResponseObject(true, userEmail);
             }
 
