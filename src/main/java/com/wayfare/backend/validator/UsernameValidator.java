@@ -6,6 +6,6 @@ public class UsernameValidator extends BaseValidator {
 
     public static Pattern pattern = Pattern.compile("^[a-z0-9_-]{3,15}$");
     public UsernameValidator(String input){
-        super(pattern, "Invalid username", input);
+        super(pattern, "Username must be between 3-15 characters", input);
     }
 }

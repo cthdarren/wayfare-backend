@@ -24,6 +24,8 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import com.wayfare.backend.validator.EmailValidator;
+import com.wayfare.backend.validator.UsernameValidator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpMessage;
@@ -74,7 +76,7 @@ public class AuthController {
     public ResponseObject checkUserAndEmailExists(@RequestBody UserEmailRequest request){
         boolean usernameExists = userRepo.existsByUsername(request.username().toLowerCase());
         boolean emailExists = userRepo.existsByEmail(request.email().toLowerCase());
-        
+
         ArrayList<String> errorList = new ArrayList<>(); 
         if (request.username() == ""){
             errorList.add("Username cannot be blank");
@@ -83,7 +85,7 @@ public class AuthController {
             errorList.add("Username exists");
         }
         else{
-            errorList.add("");
+            errorList.add(new UsernameValidator(request.username().toLowerCase()).validateRegex());
         }
         if (request.email() == ""){
             errorList.add("Email cannot be blank");
@@ -92,7 +94,7 @@ public class AuthController {
             errorList.add("Email exists");
         }
         else{
-            errorList.add("");
+            errorList.add(new EmailValidator(request.email().toLowerCase()).validateRegex());
         }
 
         if (errorList.get(0) == "" & errorList.get(1) == ""){
