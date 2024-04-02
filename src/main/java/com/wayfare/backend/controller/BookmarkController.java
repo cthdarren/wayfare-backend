@@ -11,6 +11,7 @@ import com.wayfare.backend.repository.TourRepository;
 import com.wayfare.backend.repository.UserRepository;
 import com.wayfare.backend.request.DeleteReviewRequest;
 import com.wayfare.backend.request.ListingIdRequest;
+import com.wayfare.backend.response.BookmarkResponse;
 import com.wayfare.backend.response.ResponseObject;
 import com.wayfare.backend.security.WayfareUserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +33,13 @@ public class BookmarkController {
     public BookmarkController(TourRepository tourRepo, BookmarksRepository bookmarkRepo) {
         this.tourRepo = tourRepo;
         this.bookmarkRepo = bookmarkRepo;
+    }
+
+    @GetMapping("/getbookmarks")
+    public ResponseObject getBookmarks(){
+        WayfareUserDetails user = getCurrentUserDetails();
+        List<BookmarkResponse> bookmarkList = bookmarkRepo.findAllBookmarks(user.getId());
+        return new ResponseObject(true, bookmarkList);
     }
 
     @PostMapping("/bookmark")
