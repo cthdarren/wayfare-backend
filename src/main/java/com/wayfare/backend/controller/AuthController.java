@@ -97,7 +97,7 @@ public class AuthController {
             errorList.add(new EmailValidator(request.email().toLowerCase()).validateRegex());
         }
 
-        if (errorList.get(0) == "" & errorList.get(1) == ""){
+        if (errorList.get(0) == null & errorList.get(1) == null){
             return new ResponseObject(true, "username and email does not exist");
         }
         else{
