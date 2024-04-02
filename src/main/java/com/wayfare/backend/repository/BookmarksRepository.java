@@ -2,7 +2,6 @@ package com.wayfare.backend.repository;
 
 import com.mongodb.lang.Nullable;
 import com.wayfare.backend.model.Bookmark;
-import com.wayfare.backend.model.VerifyURL;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
