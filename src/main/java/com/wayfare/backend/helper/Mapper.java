@@ -3,6 +3,7 @@ package com.wayfare.backend.helper;
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
 import com.google.maps.GeocodingApiRequest;
+import com.google.maps.TimeZoneApi;
 import com.google.maps.errors.ApiException;
 import com.google.maps.model.AddressType;
 import com.google.maps.model.GeocodingResult;
@@ -27,7 +28,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import static com.wayfare.backend.helper.helper.geoApiContext;
 import static com.wayfare.backend.helper.helper.getCurrentUserDetails;
@@ -108,13 +112,20 @@ public class Mapper {
         );
     }
 
-    public Booking toBooking(BookingDTO bookingDTO, String listingId) throws IOException{
+    public Booking toBooking(BookingDTO bookingDTO, String listingId) throws IOException, InterruptedException, ApiException {
+        TourListing tourListing = tourRepo.findById(listingId).orElseThrow();
+
+        double latitude = tourListing.getLocation().getY();
+        double longitude = tourListing.getLocation().getX();
+
+        GeocodingResult[] results = GeocodingApi.reverseGeocode(geoApiContext, new LatLng(latitude, longitude)).await();
+
 
         WayfareUserDetails user = getCurrentUserDetails();
         String userId = user.getId();
 
         return new Booking(
-                tourRepo.findById(listingId).orElseThrow(),
+                tourListing,
                 userId,
                 bookingDTO.getBookingDuration(),
                 bookingDTO.getDateBooked(),

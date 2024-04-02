@@ -4,6 +4,7 @@ import com.wayfare.backend.model.object.TimeRange;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.Instant;
 import java.util.Date;
 @Document(collection = "bookings")
 public class Booking {
@@ -11,7 +12,7 @@ public class Booking {
     private TourListing listing;
     private String userId;
     private TimeRange bookingDuration;
-    private Date dateBooked;
+    private Instant dateBooked;
     private Double bookingPrice;
     private int pax;
     private String remarks;
@@ -19,7 +20,7 @@ public class Booking {
 
     public Booking (){}
 
-    public Booking(TourListing listing, String userId, TimeRange bookingDuration, Date dateBooked, Double bookingPrice, int pax, String remarks, BookingStatusEnum status) {
+    public Booking(TourListing listing, String userId, TimeRange bookingDuration, Instant dateBooked, Double bookingPrice, int pax, String remarks, BookingStatusEnum status) {
         this.listing = listing;
         this.userId = userId;
         this.bookingDuration = bookingDuration;
@@ -46,11 +47,11 @@ public class Booking {
         this.bookingDuration = bookingDuration;
     }
 
-    public Date getDateBooked() {
+    public Instant getDateBooked() {
         return dateBooked;
     }
 
-    public void setDateBooked(Date dateBooked) {
+    public void setDateBooked(Instant dateBooked) {
         this.dateBooked = dateBooked;
     }
 
