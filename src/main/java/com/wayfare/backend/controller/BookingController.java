@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -94,7 +95,7 @@ public class BookingController {
     // create booking under LISTING ID
     @PostMapping("/booking/create/{id}")
     public ResponseObject createBooking(@PathVariable String id, @RequestBody BookingDTO dto) {
-        Date dateBooked = dto.getDateBooked();
+        Instant dateBooked = dto.getDateBooked();
         TimeRange bookingDuration = dto.getBookingDuration();
         List<Booking> conflictingBookings = bookingRepository.findByDateBookedAndBookingDuration(dateBooked, bookingDuration);
 
@@ -121,6 +122,10 @@ public class BookingController {
             } catch (IOException e) {
                 e.printStackTrace();
                 return new ResponseObject(false, "Server error");
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            } catch (ApiException e) {
+                throw new RuntimeException(e);
             }
         }
 
@@ -137,7 +142,7 @@ public class BookingController {
 
         Optional<Booking> booking = bookingRepository.findById(id);
 
-        Date dateBooked = dto.getDateBooked();
+        Instant dateBooked = dto.getDateBooked();
         TimeRange bookingDuration = dto.getBookingDuration();
         List<Booking> conflictingBookings = bookingRepository.findByDateBookedAndBookingDuration(dateBooked, bookingDuration);
 
