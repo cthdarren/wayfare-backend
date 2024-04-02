@@ -1,5 +1,8 @@
 package com.wayfare.backend.model;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "verifyURL")
 public class VerifyURL {
 
     private String id;
