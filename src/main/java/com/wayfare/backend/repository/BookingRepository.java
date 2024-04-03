@@ -85,5 +85,5 @@ public interface BookingRepository extends MongoRepository<Booking, String> {
     })
     List<BookingResponse> findAllPastBookings(String userId);
 
-    List<Booking> findByDateBookedAndBookingDuration(Instant dateBooked, TimeRange bookingDuration);
+    List<Booking> findByDateBookedAndBookingDuration(Date dateBooked, TimeRange bookingDuration);
 }

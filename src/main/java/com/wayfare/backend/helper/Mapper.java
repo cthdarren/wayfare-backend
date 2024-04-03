@@ -28,6 +28,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -115,13 +119,6 @@ public class Mapper {
 
     public Booking toBooking(BookingDTO bookingDTO, String listingId) throws IOException, InterruptedException, ApiException {
         TourListing tourListing = tourRepo.findById(listingId).orElseThrow();
-
-        double latitude = tourListing.getLocation().getY();
-        double longitude = tourListing.getLocation().getX();
-
-        GeocodingResult[] results = GeocodingApi.reverseGeocode(geoApiContext, new LatLng(latitude, longitude)).await();
-
-
         WayfareUserDetails user = getCurrentUserDetails();
         String userId = user.getId();
 

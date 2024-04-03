@@ -7,7 +7,6 @@ import com.wayfare.backend.model.object.TimeRange;
 import com.wayfare.backend.repository.BookingRepository;
 import com.wayfare.backend.repository.TourRepository;
 
-import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
@@ -15,11 +14,11 @@ public class BookingDTO extends ValidateClass {
 
     private String listingId;
     private TimeRange bookingDuration;
-    private Instant dateBooked;
+    private Date dateBooked;
     private Double bookingPrice;
     private int pax;
     private String remarks;
-    public BookingDTO(String listingId, TimeRange bookingDuration, Instant dateBooked, Double bookingPrice, int pax, String remarks) {
+    public BookingDTO(String listingId, TimeRange bookingDuration, Date dateBooked, Double bookingPrice, int pax, String remarks) {
         this.listingId = listingId;
         setBookingDuration(bookingDuration);
         this.dateBooked = dateBooked;
@@ -32,7 +31,7 @@ public class BookingDTO extends ValidateClass {
 
     public TimeRange getBookingDuration() {return bookingDuration;}
 
-    public Instant getDateBooked() {return dateBooked;}
+    public Date getDateBooked() {return dateBooked;}
 
     public Double getBookingPrice() {return bookingPrice;}
 
