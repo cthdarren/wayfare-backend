@@ -8,6 +8,7 @@ import java.util.Date;
 @Document(collection = "bookings")
 public class Booking {
 
+    private String id;
     private TourListing listing;
     private String userId;
     private TimeRange bookingDuration;
@@ -28,6 +29,10 @@ public class Booking {
         this.pax = pax;
         this.remarks = remarks;
         this.status = status;
+    }
+
+    public String getId(){
+        return id;
     }
 
     public TourListing getListing() {
