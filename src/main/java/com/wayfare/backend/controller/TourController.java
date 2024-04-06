@@ -86,6 +86,8 @@ public class TourController {
         return new ResponseObject(true, listByUserId);
     }
 
+
+
     //POST METHODS
     @PostMapping("/wayfarer/listing/create")
     public ResponseObject createTourListing(@RequestBody TourListingDTO dto) {

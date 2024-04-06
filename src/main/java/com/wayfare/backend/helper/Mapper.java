@@ -3,6 +3,7 @@ package com.wayfare.backend.helper;
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
 import com.google.maps.GeocodingApiRequest;
+import com.google.maps.TimeZoneApi;
 import com.google.maps.errors.ApiException;
 import com.google.maps.model.AddressType;
 import com.google.maps.model.GeocodingResult;
@@ -13,9 +14,12 @@ import com.wayfare.backend.model.dto.ReviewDTO;
 import com.wayfare.backend.model.dto.TourListingDTO;
 import com.wayfare.backend.model.dto.UserDTO;
 import com.wayfare.backend.model.object.PublicUserData;
+import com.wayfare.backend.repository.BookingRepository;
 import com.wayfare.backend.repository.TourRepository;
 import com.wayfare.backend.repository.UserRepository;
+import com.wayfare.backend.security.WayfareUserDetails;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,19 +28,29 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import static com.wayfare.backend.helper.helper.geoApiContext;
+import static com.wayfare.backend.helper.helper.getCurrentUserDetails;
 
 @RestController
 public class Mapper {
     private TourRepository tourRepo;
+    private BookingRepository bookingRepo;
 
     public Mapper(){}
     public Mapper(TourRepository tourRepo) {
         this.tourRepo = tourRepo;
     }
+    public Mapper(BookingRepository bookingRepo) {this.bookingRepo = bookingRepo;}
 
     public User toUser(UserDTO userCreationDTO)
     {
@@ -49,11 +63,11 @@ public class Mapper {
                 picUrl,
                 userCreationDTO.getAboutMe(),
                 new ArrayList<BadgeEnum>(),
-                userCreationDTO.getUsername(),
-                userCreationDTO.getFirstName(),
-                userCreationDTO.getLastName(),
+                userCreationDTO.getUsername().toLowerCase(),
+                StringUtils.capitalize(userCreationDTO.getFirstName()),
+                StringUtils.capitalize(userCreationDTO.getLastName()),
                 encryptedPassword,
-                userCreationDTO.getEmail(),
+                userCreationDTO.getEmail().toLowerCase(),
                 userCreationDTO.getPhoneNumber(),
                 RoleEnum.ROLE_USER,
                 false,
@@ -104,9 +118,12 @@ public class Mapper {
     }
 
     public Booking toBooking(BookingDTO bookingDTO, String listingId) throws IOException, InterruptedException, ApiException {
-        String userId = tourRepo.findUserIdByListingId(listingId);
+        TourListing tourListing = tourRepo.findById(listingId).orElseThrow();
+        WayfareUserDetails user = getCurrentUserDetails();
+        String userId = user.getId();
+
         return new Booking(
-                listingId,
+                tourListing,
                 userId,
                 bookingDTO.getBookingDuration(),
                 bookingDTO.getDateBooked(),

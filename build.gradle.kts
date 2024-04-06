@@ -24,6 +24,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-rest")
 	implementation("com.fasterxml.jackson.core:jackson-databind:2.16.0")
 	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.16.0")
+	implementation("org.apache.commons:commons-lang3:3.14.0")	
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.16.0")
 	implementation("io.jsonwebtoken:jjwt-api:0.12.3")

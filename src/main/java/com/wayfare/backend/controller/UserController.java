@@ -162,6 +162,7 @@ public class UserController {
                 toView.getLastName(),
                 toView.getAboutMe(),
                 toView.getPictureUrl(),
+                toView.getLanguagesSpoken(),
                 toView.getBadges(),
                 avgScore,
                 reviewCount,

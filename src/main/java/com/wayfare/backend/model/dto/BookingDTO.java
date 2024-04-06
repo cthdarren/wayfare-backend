@@ -12,24 +12,42 @@ import java.util.List;
 
 public class BookingDTO extends ValidateClass {
 
+    private String listingId;
     private TimeRange bookingDuration;
     private Date dateBooked;
     private Double bookingPrice;
     private int pax;
     private String remarks;
-    public BookingDTO(TimeRange bookingDuration, Date dateBooked, Double bookingPrice, int pax, String remarks) {
-        this.bookingDuration = bookingDuration;
+    public BookingDTO(String listingId, TimeRange bookingDuration, Date dateBooked, Double bookingPrice, int pax, String remarks) {
+        this.listingId = listingId;
+        setBookingDuration(bookingDuration);
         this.dateBooked = dateBooked;
-        this.bookingPrice = bookingPrice;
+        setBookingPrice(bookingPrice);
         this.pax = pax;
         this.remarks = remarks;
     }
+
+    public String getListingId() {return listingId;}
 
     public TimeRange getBookingDuration() {return bookingDuration;}
 
     public Date getDateBooked() {return dateBooked;}
 
     public Double getBookingPrice() {return bookingPrice;}
+
+    public void setBookingDuration(TimeRange bookingDuration) {
+
+        if (bookingDuration.startTime > bookingDuration.endTime){
+            addErrors("Start time must be earlier than end time");
+        }
+        else if (bookingDuration.startTime < 0 || bookingDuration.endTime < 0){
+            addErrors("Time must be a positive integer");
+        }
+        else {
+            this.bookingDuration = bookingDuration;
+        }
+
+    }
 
     public void setBookingPrice(Double bookingPrice) {
         if (bookingPrice == null){
