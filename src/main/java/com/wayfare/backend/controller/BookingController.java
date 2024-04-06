@@ -2,6 +2,13 @@ package com.wayfare.backend.controller;
 
 import static com.wayfare.backend.helper.helper.getCurrentUserDetails;
 
+import com.azure.storage.blob.BlobContainerClient;
+import com.azure.storage.blob.BlobServiceClient;
+import com.azure.storage.blob.BlobServiceClientBuilder;
+import com.azure.storage.blob.sas.BlobContainerSasPermission;
+import com.azure.storage.blob.sas.BlobServiceSasSignatureValues;
+import com.azure.storage.common.StorageSharedKeyCredential;
+import com.azure.storage.blob.models.BlobStorageException;
 import com.google.maps.errors.ApiException;
 import com.wayfare.backend.helper.Mapper;
 import com.wayfare.backend.model.Booking;
@@ -15,6 +22,7 @@ import com.wayfare.backend.repository.UserRepository;
 import com.wayfare.backend.response.ResponseObject;
 import com.wayfare.backend.security.WayfareUserDetails;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -32,6 +41,14 @@ import okhttp3.Response;
 
 @RestController
 public class BookingController {
+    @Value("${AZURE_ACCOUNT_NAME}")
+    private String AZURE_ACCOUNT_NAME;
+
+    @Value("${AZURE_ENDPOINT_URL}")
+    private String AZURE_ENDPOINT_URL;
+
+    @Value("${AZURE_ACCOUNT_KEY}")
+    private String AZURE_ACCOUNT_KEY;
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
     private final TourRepository tourRepository;
@@ -138,6 +155,7 @@ public class BookingController {
         return new ResponseObject(true, "Booking updated");
 
     }
+
 
     // delete booking under a LISTING ID
 

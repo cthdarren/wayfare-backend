@@ -32,6 +32,13 @@ dependencies {
 	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.3")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
+	implementation(platform("com.azure:azure-sdk-bom:1.2.22"))
+	implementation("com.azure:azure-storage-blob")
+	implementation("com.azure:azure-identity")
+	implementation("com.azure:azure-storage-queue")
+	implementation("com.azure:azure-storage-file-share")
+	implementation("com.azure:azure-storage-file-datalake")
+	implementation("com.azure:azure-security-keyvault-secrets")
 }
 
 tasks.withType<Test> {
