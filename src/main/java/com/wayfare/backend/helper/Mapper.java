@@ -122,6 +122,11 @@ public class Mapper {
         WayfareUserDetails user = getCurrentUserDetails();
         String userId = user.getId();
 
+        // user inputs date, stored in BookingDTO
+        // mapper gets timezone from listing location
+        // mapper parses new date using date input from BookingDTO and timezone data
+        // new date format recorded in database is in ISO format and includes timezone offset
+
         return new Booking(
                 tourListing,
                 userId,
