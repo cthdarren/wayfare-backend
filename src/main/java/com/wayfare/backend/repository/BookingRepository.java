@@ -112,7 +112,7 @@ public interface BookingRepository extends MongoRepository<Booking, String> {
              }
             """,
             "{ $unwind : { path: \"$user\" }}",
-            "{ $sort : { dateBooked: 1, \"bookingDuration.startTime\" : 1}}",
+            "{ $sort : { dateBooked: -1, \"bookingDuration.startTime\" : 1}}",
             """
                     {
                         $lookup: {
