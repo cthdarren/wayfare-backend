@@ -1,6 +1,7 @@
 package com.wayfare.backend.controller;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.List;
@@ -12,6 +13,7 @@ import com.mongodb.MongoQueryException;
 import com.wayfare.backend.model.User;
 import com.wayfare.backend.model.dto.TourListingDTO;
 import com.wayfare.backend.model.object.TimeRange;
+import com.wayfare.backend.repository.BookingRepository;
 import com.wayfare.backend.repository.UserRepository;
 import com.wayfare.backend.request.LocationRequest;
 import com.wayfare.backend.response.ResponseObject;
@@ -32,14 +34,25 @@ import static com.wayfare.backend.helper.helper.getCurrentUserDetails;
 public class TourController {
     private final UserRepository userRepo;
     private final TourRepository tourRepo;
+    private final BookingRepository bookingRepo;
 
     ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
-    public TourController(UserRepository userRepo, TourRepository tourRepo) {
+    public TourController(UserRepository userRepo, TourRepository tourRepo, BookingRepository bookingRepo) {
         this.userRepo = userRepo;
         this.tourRepo = tourRepo;
+        this.bookingRepo = bookingRepo;
     }
 
     // GET METHODS
+
+    // get all dates booked
+    @GetMapping("/api/v1/listing/{id}/bookings")
+    public ResponseObject getDatesBooked(@PathVariable String id){
+        List<Date> bookedDates = bookingRepo.findBookedDatesByListingId(id);
+        return new ResponseObject(true, bookedDates);
+    }
+
+
     @GetMapping("/api/v1/listing/{id}")
     public ResponseObject getTourListing(@PathVariable String id) {
         Optional<TourListing> tourListing = tourRepo.findById(id);
