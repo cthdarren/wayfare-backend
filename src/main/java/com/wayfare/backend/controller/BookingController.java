@@ -11,12 +11,10 @@ import com.wayfare.backend.model.dto.BookingDTO;
 import com.wayfare.backend.model.dto.TourListingDTO;
 import com.wayfare.backend.model.object.TimeRange;
 import com.wayfare.backend.repository.BookingRepository;
+import com.wayfare.backend.repository.ReviewRepository;
 import com.wayfare.backend.repository.TourRepository;
 import com.wayfare.backend.repository.UserRepository;
-import com.wayfare.backend.response.AllBookingWayfareResponse;
-import com.wayfare.backend.response.BookingResponse;
-import com.wayfare.backend.response.ResponseObject;
-import com.wayfare.backend.response.UpcomingPastBookingResponse;
+import com.wayfare.backend.response.*;
 import com.wayfare.backend.security.WayfareUserDetails;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,11 +43,13 @@ public class BookingController {
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
     private final TourRepository tourRepository;
+    private final ReviewRepository reviewRepo;
 
-    public BookingController(BookingRepository bookingRepository, UserRepository userRepository, TourRepository tourRepository) {
+    public BookingController(BookingRepository bookingRepository, UserRepository userRepository, TourRepository tourRepository, ReviewRepository reviewRepo) {
         this.bookingRepository = bookingRepository;
         this.userRepository = userRepository;
         this.tourRepository = tourRepository;
+        this.reviewRepo = reviewRepo;
     }
 
 
@@ -81,7 +81,7 @@ public class BookingController {
         }
 
         List<BookingResponse> upcomingBookings = bookingRepository.findAllUpcomingBookings(user.getId());
-        List<BookingResponse> pastBookings = bookingRepository.findAllPastBookings(user.getId());
+        List<BookingResponseWithReview> pastBookings = bookingRepository.findAllPastBookings(user.getId());
 
         return new ResponseObject(true, new UpcomingPastBookingResponse(upcomingBookings, pastBookings));
     }
