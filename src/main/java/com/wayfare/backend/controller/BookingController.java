@@ -166,7 +166,7 @@ public class BookingController {
             paxVal = true;
         }
 
-        if (paxVal) {
+        if (!paxVal) {
             return new ResponseObject(false, "The pax specified does not fall in the listing's range");
         }
 
