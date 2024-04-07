@@ -13,6 +13,7 @@ import com.wayfare.backend.model.object.TimeRange;
 import com.wayfare.backend.repository.BookingRepository;
 import com.wayfare.backend.repository.TourRepository;
 import com.wayfare.backend.repository.UserRepository;
+import com.wayfare.backend.response.AllBookingWayfareResponse;
 import com.wayfare.backend.response.BookingResponse;
 import com.wayfare.backend.response.ResponseObject;
 import com.wayfare.backend.response.UpcomingPastBookingResponse;
@@ -26,6 +27,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.lang.String;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -79,6 +85,56 @@ public class BookingController {
 
         return new ResponseObject(true, new UpcomingPastBookingResponse(upcomingBookings, pastBookings));
     }
+
+    // get all bookings as a wayfarer
+    @GetMapping("/wayfarer/bookings")
+    public ResponseObject getWayfarerBooking(){
+
+        WayfareUserDetails user = getCurrentUserDetails();
+
+        // Get tour listings for the user
+        List<TourListing> userTourListings = tourRepository.findAllByUserId(user.getId());
+
+        // Collect the listing IDs
+        List<String> listingIds = new ArrayList<>();
+        for (TourListing listing : userTourListings) {
+            listingIds.add(listing.getId());
+        }
+
+        // Get the current date at the start of the day
+        LocalDate today = LocalDate.now();
+        LocalDateTime startOfDay = today.atStartOfDay();  // 00:00:00 at the beginning of today
+        Date beginOfDay = Date.from(startOfDay.atZone(ZoneId.systemDefault()).toInstant());
+
+        // Get the start of the next day
+        LocalDateTime endOfDay = startOfDay.plusDays(1);
+        Date startOfNextDay = Date.from(endOfDay.atZone(ZoneId.systemDefault()).toInstant());
+
+        List<BookingResponse> bookingsForTheDay = bookingRepository.findBookingsWithinDay(listingIds, beginOfDay, startOfNextDay);
+
+        // Get the start of the week (assuming Monday as the first day)
+        LocalDateTime startOfWeek = today.with(DayOfWeek.MONDAY).atStartOfDay();
+        Date beginOfWeek = Date.from(startOfWeek.atZone(ZoneId.systemDefault()).toInstant());
+
+        // Get the start of the next week
+        LocalDateTime endOfWeek = startOfWeek.plusWeeks(1);
+        Date startOfNextWeek = Date.from(endOfWeek.atZone(ZoneId.systemDefault()).toInstant());
+
+        List<BookingResponse> bookingsForTheWeek = bookingRepository.findBookingsWithinWeek(listingIds, beginOfWeek, startOfNextWeek);
+
+        // Get current month
+        LocalDateTime startOfMonth = today.withDayOfMonth(1).atStartOfDay();
+        Date beginOfMonth = Date.from(startOfMonth.atZone(ZoneId.systemDefault()).toInstant());
+
+        // Get the start of the next month
+        LocalDateTime endOfMonth = startOfMonth.plusMonths(1);
+        Date startOfNextMonth = Date.from(endOfMonth.atZone(ZoneId.systemDefault()).toInstant());
+
+        List<BookingResponse> bookingsForTheMonth = bookingRepository.findBookingsWithinMonth(listingIds, beginOfMonth, startOfNextMonth);
+
+        return new ResponseObject(true, new AllBookingWayfareResponse(bookingsForTheDay, bookingsForTheWeek, bookingsForTheMonth));
+    }
+
 
 //    @GetMapping("/pastbookings")
 //    public ResponseObject getUpcomingBookings(){
