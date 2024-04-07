@@ -29,38 +29,7 @@ import static com.wayfare.backend.helper.helper.getCurrentUserDetails;
 public class CurrencyController{
     @GetMapping("/getRates")
     public ResponseObject getRates(){
-        WayfareUserDetails user = getCurrentUserDetails();
-        List<BookmarkResponse> bookmarkList = bookmarkRepo.findAllBookmarks(user.getId());
-        return new ResponseObject(true, bookmarkList);
-    }
-
-    @PostMapping("/bookmark")
-    public ResponseObject bookmarkedListing(@RequestBody ListingIdRequest request){
-        WayfareUserDetails user = getCurrentUserDetails();
-        Optional<TourListing> listing = tourRepo.findById(request.listingId());
-        if (listing.isPresent()){
-            if (bookmarkRepo.existsByListingIdAndUserId(request.listingId(), user.getId())){
-                return new ResponseObject(false, "Listing " + request.listingId() + " is already bookmarked");
-            }
-            Bookmark toAdd = new Bookmark(listing.get(), user.getId());
-            bookmarkRepo.save(toAdd);
-            return new ResponseObject(true, "Listing " + request.listingId() + " bookmarked");
-        }
-        else{
-            return new ResponseObject(false, "No such listing");
-        }
-    }
-
-    @PostMapping("/unbookmark")
-    public ResponseObject removeBookmark(@RequestBody ListingIdRequest request){
-        WayfareUserDetails user = getCurrentUserDetails();
-
-        if (bookmarkRepo.existsByListingIdAndUserId(request.listingId(), user.getId())){
-            Bookmark toDelete = bookmarkRepo.findByListingIdAndUserId(request.listingId(), user.getId());
-            bookmarkRepo.delete(toDelete);
-            return new ResponseObject(true, "Unbookmarked listing " + request.listingId());
-        }
-        return new ResponseObject(false, "Listing " + request.listingId() + " is not bookmarked.");
+        return new ResponseObject(false, null);    
     }
 }
 
