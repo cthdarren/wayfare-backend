@@ -1,11 +1,17 @@
 package com.wayfare.backend.repository;
 
-import com.wayfare.backend.model.Role;
-import com.wayfare.backend.model.RoleEnum;
+import com.wayfare.backend.model.Currency;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;
 
 public interface CurrencyRepository extends MongoRepository<Currency, String> {
-    Optional<Role> findByName(RoleEnum role);
+    @Override
+    default Page<Currency> findAll(Pageable pageable) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'findAll'");
+    }
 }
