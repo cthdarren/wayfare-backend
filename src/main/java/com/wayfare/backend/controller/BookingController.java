@@ -108,6 +108,22 @@ public class BookingController {
 //        if (!tourListing.get().getTimeRangeList().contains(bookingDuration)){
 //            return new ResponseObject(false, "This timing is not available");
 //        }
+
+        boolean isValidBooking = false;
+        for (TimeRange range : tourListing.get().getTimeRangeList()) {
+            if (dto.getBookingDuration().getStartTime() >= range.getStartTime() &&
+                    dto.getBookingDuration().getEndTime() <= range.getEndTime()) {
+                isValidBooking = true;
+                break;
+            }
+        }
+
+        if (!isValidBooking) {
+            return new ResponseObject(false, "The specified booking duration is not within the available time ranges.");
+        }
+
+
+
         Booking toAdd;
         if (tourListing.isEmpty()) {
             return new ResponseObject(false, "No such listing");
