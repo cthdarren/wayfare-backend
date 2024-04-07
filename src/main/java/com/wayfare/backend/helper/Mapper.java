@@ -11,10 +11,12 @@ import com.google.maps.model.LatLng;
 import com.wayfare.backend.model.*;
 import com.wayfare.backend.model.dto.BookingDTO;
 import com.wayfare.backend.model.dto.ReviewDTO;
+import com.wayfare.backend.model.dto.ShortsDTO;
 import com.wayfare.backend.model.dto.TourListingDTO;
 import com.wayfare.backend.model.dto.UserDTO;
 import com.wayfare.backend.model.object.PublicUserData;
 import com.wayfare.backend.repository.BookingRepository;
+import com.wayfare.backend.repository.ShortsRepository;
 import com.wayfare.backend.repository.TourRepository;
 import com.wayfare.backend.repository.UserRepository;
 import com.wayfare.backend.security.WayfareUserDetails;
@@ -43,6 +45,7 @@ import static com.wayfare.backend.helper.helper.getCurrentUserDetails;
 
 @RestController
 public class Mapper {
+    private ShortsRepository shortsRepo;
     private TourRepository tourRepo;
     private BookingRepository bookingRepo;
 
@@ -51,6 +54,9 @@ public class Mapper {
         this.tourRepo = tourRepo;
     }
     public Mapper(BookingRepository bookingRepo) {this.bookingRepo = bookingRepo;}
+    public Mapper(ShortsRepository shortsRepo) {
+        this.shortsRepo = shortsRepo;
+    }
 
     public User toUser(UserDTO userCreationDTO)
     {
@@ -136,6 +142,39 @@ public class Mapper {
                 bookingDTO.getPax(),
                 bookingDTO.getRemarks(),
                 BookingStatusEnum.RESERVED
+        );
+    }
+
+    public Shorts toShortsNoTour(ShortsDTO shortsDTO) throws IOException, InterruptedException, ApiException {
+        //TourListing tourListing = tourRepo.findById(listingId).orElseThrow();
+        WayfareUserDetails user = getCurrentUserDetails();
+        String userId = user.getId();
+        String userName = user.getUsername();
+        ArrayList<String> likes = new ArrayList<>();
+        return new Shorts(
+                shortsDTO.getShortsUrl(),
+                userName,
+                userId,
+                shortsDTO.getDescription(),
+                shortsDTO.getDatePosted(),
+                null,
+                likes
+        );
+    }
+    public Shorts toShorts(ShortsDTO shortsDTO, String listingId) throws IOException, InterruptedException, ApiException {
+        TourListing tourListing = tourRepo.findById(listingId).orElseThrow();
+        WayfareUserDetails user = getCurrentUserDetails();
+        String userId = user.getId();
+        String userName = user.getUsername();
+        ArrayList<String> likes = new ArrayList<>();
+        return new Shorts(
+                shortsDTO.getShortsUrl(),
+                userName,
+                userId,
+                shortsDTO.getDescription(),
+                shortsDTO.getDatePosted(),
+                tourListing,
+                likes
         );
     }
 
