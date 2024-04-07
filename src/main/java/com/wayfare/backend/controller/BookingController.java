@@ -205,7 +205,6 @@ public class BookingController {
                 throw new RuntimeException(e);
             }
         }
-
         bookingRepository.save(toAdd);
         return new ResponseObject(true, "Booking added");
 
