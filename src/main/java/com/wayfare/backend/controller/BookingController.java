@@ -161,9 +161,14 @@ public class BookingController {
 
         Optional<TourListing> tourListing = tourRepository.findById(id);
 
-//        if (!tourListing.get().getTimeRangeList().contains(bookingDuration)){
-//            return new ResponseObject(false, "This timing is not available");
-//        }
+        boolean paxVal = false;
+        if (dto.getPax() >= tourListing.get().getMinPax() && dto.getPax() <= tourListing.get().getMaxPax()){
+            paxVal = true;
+        }
+
+        if (paxVal) {
+            return new ResponseObject(false, "The pax specified does not fall in the listing's range");
+        }
 
         boolean isValidBooking = false;
         for (TimeRange range : tourListing.get().getTimeRangeList()) {
