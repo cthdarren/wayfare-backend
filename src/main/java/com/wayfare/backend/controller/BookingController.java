@@ -161,12 +161,9 @@ public class BookingController {
 
         Optional<TourListing> tourListing = tourRepository.findById(id);
 
-        boolean paxVal = false;
-        if (dto.getPax() >= tourListing.get().getMinPax() && dto.getPax() <= tourListing.get().getMaxPax()){
-            paxVal = true;
-        }
+        boolean paxVal = dto.getPax() >= tourListing.get().getMinPax() && dto.getPax() <= tourListing.get().getMaxPax();
 
-        if (paxVal) {
+        if (!paxVal) {
             return new ResponseObject(false, "The pax specified does not fall in the listing's range");
         }
 
