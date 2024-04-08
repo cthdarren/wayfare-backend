@@ -232,8 +232,6 @@ public class AuthController {
         }
         String userEmail = currUser.getEmail();
 
-        HttpClient httpClient = HttpClient.newHttpClient();
-        String postURL = "https://api.mailgun.net/v3/" + MAIL_DOMAIN_NAME + "/messages.mime";
 
         int otp = new Random().nextInt(999999);
         String otpString = String.format("%06d", otp);
