@@ -16,8 +16,9 @@ public class Review {
 
     private PublicUserData user;
     private TourListing listing;
+    private String bookingId;
 
-    public Review(String title, Integer score, String reviewContent, Instant dateCreated, Instant dateModified, PublicUserData user,  TourListing listing) {
+    public Review(String title, Integer score, String reviewContent, Instant dateCreated, Instant dateModified, PublicUserData user, TourListing listing, String bookingId) {
         this.title = title;
         this.score = score;
         this.reviewContent = reviewContent;
@@ -25,6 +26,7 @@ public class Review {
         this.dateModified = dateModified;
         this.user= user;
         this.listing = listing;
+        this.bookingId = bookingId;
     }
 
     public String getId() {
@@ -76,4 +78,7 @@ public class Review {
     }
 
 
+    public String getBookingId() {
+        return bookingId;
+    }
 }

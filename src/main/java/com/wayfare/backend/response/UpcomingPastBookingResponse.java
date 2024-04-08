@@ -5,8 +5,8 @@ import java.util.List;
 public class UpcomingPastBookingResponse {
 
         public List<BookingResponse> upcoming;
-        public List<BookingResponse> past;
-        public UpcomingPastBookingResponse(List<BookingResponse> upcoming, List<BookingResponse> past){
+        public List<BookingResponseWithReview> past;
+        public UpcomingPastBookingResponse(List<BookingResponse> upcoming, List<BookingResponseWithReview> past){
             this.upcoming = upcoming;
             this.past = past;
         }
