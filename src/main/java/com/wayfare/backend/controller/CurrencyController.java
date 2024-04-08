@@ -47,7 +47,7 @@ public class CurrencyController{
     public ResponseObject getRates(){
         try {
             Currency currencyData = currencyRepo.findAll().get(0);
-            if (ChronoUnit.DAYS.between(Instant.now(), currencyData.getLastUpdate()) >= 1)
+            if (ChronoUnit.DAYS.between(Instant.now(), currencyData.getLastUpdate()) != 0 )
                 new helper(currencyRepo).getExchangeRates();
 
             return new ResponseObject(true, currencyData.getData());
