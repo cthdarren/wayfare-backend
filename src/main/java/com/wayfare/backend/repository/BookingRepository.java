@@ -29,19 +29,101 @@ public interface BookingRepository extends MongoRepository<Booking, String> {
     List<Date> findBookedDatesByListingId(String listingId);
 
     @Aggregation(pipeline = {
-            "{ $match : { listingId: { $in : ?0 }, dateBooked: { $gte : ?1, $lt: ?2 }}}",
+            "{ $match : { listingId: { $in : ?0 }, dateBooked: { $gte : ?1, $lt: ?2 }}}", """
+            { $lookup: {
+                 from: "users",
+                 let: {
+                   searchId: {
+                     $toObjectId: "$userId",
+                   },
+                 },
+                 pipeline: [
+                   {
+                     $match: {
+                       $expr: {
+                         $eq: ["$_id", "$$searchId"],
+                       },
+                     },
+                   },
+                   {
+                     $project: {
+                       username: 1,
+                       pictureUrl: 1,
+                     },
+                   },
+                 ],
+                 as: "user",
+               },
+             }
+            """,
+            "{ $unwind : { path: $user }}",
             "{ $sort : { dateBooked: 1, 'bookingDuration.startTime' : 1}}",
     })
     List<BookingResponse> findBookingsWithinDay(List<String> listingId, Date beginOfDay, Date startOfNextDay);
 
     @Aggregation(pipeline = {
-            "{ $match : { listingId: { $in : ?0 }, dateBooked: { $gte : ?1, $lt: ?2 }}}",
+            "{ $match : { listingId: { $in : ?0 }, dateBooked: { $gte : ?1, $lt: ?2 }}}", """
+            { $lookup: {
+                 from: "users",
+                 let: {
+                   searchId: {
+                     $toObjectId: "$userId",
+                   },
+                 },
+                 pipeline: [
+                   {
+                     $match: {
+                       $expr: {
+                         $eq: ["$_id", "$$searchId"],
+                       },
+                     },
+                   },
+                   {
+                     $project: {
+                       username: 1,
+                       pictureUrl: 1,
+                     },
+                   },
+                 ],
+                 as: "user",
+               },
+             }
+            """,
+            "{ $unwind : { path: $user }}",
             "{ $sort : { dateBooked: 1, 'bookingDuration.startTime' : 1}}"
     })
     List<BookingResponse> findBookingsWithinWeek(List<String> listingId, Date beginOfWeek, Date startOfNextWeek);
 
     @Aggregation(pipeline = {
             "{ $match : { listingId: { $in : ?0 }, dateBooked: { $gte : ?1, $lt: ?2 }}}",
+            """
+           { $lookup: {
+                from: "users",
+                let: {
+                  searchId: {
+                    $toObjectId: "$userId",
+                  },
+                },
+                pipeline: [
+                  {
+                    $match: {
+                      $expr: {
+                        $eq: ["$_id", "$$searchId"],
+                      },
+                    },
+                  },
+                  {
+                    $project: {
+                      username: 1,
+                      pictureUrl: 1,
+                    },
+                  },
+                ],
+                as: "user",
+              },
+            }
+           """,
+            "{ $unwind : { path: $user }}",
             "{ $sort : { dateBooked: 1, 'bookingDuration.startTime' : 1}}"
     })
     List<BookingResponse> findBookingsWithinMonth(List<String> listingId, Date beginOfMonth, Date startOfNextMonth);
