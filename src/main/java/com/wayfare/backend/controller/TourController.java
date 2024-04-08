@@ -1,6 +1,7 @@
 package com.wayfare.backend.controller;
 
 import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
@@ -28,6 +29,7 @@ import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Metrics;
 import org.springframework.data.geo.Point;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import static com.wayfare.backend.helper.helper.getCurrentUserDetails;
@@ -66,7 +68,7 @@ public class TourController {
     }
 
     @GetMapping("/api/v1/listing/search")
-    public ResponseObject getListingsByLocation
+    public ResponseObject getListingsByLocationAndDate
             (
             @RequestParam(required = false) String longitude,
             @RequestParam(required = false) String latitude,
@@ -117,10 +119,20 @@ public class TourController {
         } catch (NumberFormatException e) {
             System.out.println(e.getMessage());
             return new ResponseObject(false, "Invalid parameters");
+        } catch (AuthenticationCredentialsNotFoundException e) {
+            System.out.println(e.getMessage());
+            return new ResponseObject(false, "Unauthorized: Invalid credentials");
+        } catch (MongoQueryException e) {
+            System.out.println(e.getMessage());
+            return new ResponseObject(false, "Error fetching listings (database error)");
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            return new ResponseObject(false, "Invalid request parameters");
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
-            return new ResponseObject(false, "Error fetching listings");
+            return new ResponseObject(false, "Internal Server Error");
         }
+
 
     }
 
