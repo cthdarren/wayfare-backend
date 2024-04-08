@@ -3,6 +3,7 @@ package com.wayfare.backend.controller;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -105,8 +106,10 @@ public class UserController {
 
         request.validate();
 
-        if(userRepo.existsByEmail(request.email))
-            request.addErrors("Email already exists");
+        if (!Objects.equals(user.getEmail(), toEdit.getEmail())) {
+            if (userRepo.existsByEmail(request.email))
+                request.addErrors("Email already exists");
+        }
 
         if (request.hasErrors())
             return new ResponseObject(false, request.getErrors());
