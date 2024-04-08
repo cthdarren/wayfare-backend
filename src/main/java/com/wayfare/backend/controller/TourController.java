@@ -1,6 +1,7 @@
 package com.wayfare.backend.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
@@ -26,6 +27,7 @@ import org.apache.coyote.Response;
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Metrics;
 import org.springframework.data.geo.Point;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import static com.wayfare.backend.helper.helper.getCurrentUserDetails;
@@ -64,27 +66,60 @@ public class TourController {
     }
 
     @GetMapping("/api/v1/listing/search")
-    public ResponseObject getListingsByLocation(@RequestParam String longitude, @RequestParam String latitude, @RequestParam String kmdistance, @RequestParam String numberPax) {
-        try {
-            double dLong = Double.parseDouble(longitude);
-            double dLat = Double.parseDouble(latitude);
-            double dDist = Double.parseDouble(kmdistance);
-            Integer iNumberPax = Integer.parseInt(numberPax);
-            if (dLong < -180 || dLong > 180 || dLat < -90 || dLat > 90){
-                return new ResponseObject(false, "Invalid coordinates");
-            }
-            List<TourListing> listByLocation = tourRepo.findByLocationNearAndMaxPaxGreaterThanEqualAndMinPaxLessThanEqualOrderByRatingDesc(
-                    new Point(dLong,dLat),
-                    new Distance(dDist, Metrics.KILOMETERS),
-                    iNumberPax,
-                    iNumberPax
-            );
+    public ResponseObject getListingsByLocation
+            (
+            @RequestParam(required = false) String longitude,
+            @RequestParam(required = false) String latitude,
+            @RequestParam(required = false) String kmdistance,
+            @RequestParam(required = false) String numberPax,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate
+            )
+    {
 
-            return new ResponseObject(true, listByLocation);
-        }
-        catch (NumberFormatException e) {
+        try {
+            List<TourListing> combinedListings = new ArrayList<>();
+
+            // Check if location parameters are provided
+            if (longitude != null && latitude != null && kmdistance != null && numberPax != null) {
+                double dLong = Double.parseDouble(longitude);
+                double dLat = Double.parseDouble(latitude);
+                double dDist = Double.parseDouble(kmdistance);
+                Integer iNumberPax = Integer.parseInt(numberPax);
+                if (dLong < -180 || dLong > 180 || dLat < -90 || dLat > 90) {
+                    return new ResponseObject(false, "Invalid coordinates");
+                }
+
+                // Perform the location-based search
+                List<TourListing> listByLocation = tourRepo.findByLocationNearAndMaxPaxGreaterThanEqualAndMinPaxLessThanEqualOrderByRatingDesc(
+                        new Point(dLong,dLat),
+                        new Distance(dDist, Metrics.KILOMETERS),
+                        iNumberPax,
+                        iNumberPax
+                );
+
+                combinedListings.addAll(listByLocation);
+            }
+
+            // Check if date range parameters are provided
+            if (startDate != null && endDate != null) {
+                // Perform the date range search
+                List<TourListing> availableListings = tourRepo.findAvailableListingsByDateRange(startDate, endDate);
+
+                if (combinedListings.isEmpty()) {
+                    combinedListings.addAll(availableListings);
+                } else {
+                    // Retains listings matching both criteria
+                    combinedListings.retainAll(availableListings);
+                }
+            }
+            return new ResponseObject(true, combinedListings);
+        } catch (NumberFormatException e) {
             System.out.println(e.getMessage());
             return new ResponseObject(false, "Invalid parameters");
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+            return new ResponseObject(false, "Error fetching listings");
         }
 
     }

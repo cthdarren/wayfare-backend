@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
+import java.util.Date;
 import java.util.List;
 
 public interface TourRepository extends MongoRepository<TourListing, String> {
@@ -21,6 +22,37 @@ public interface TourRepository extends MongoRepository<TourListing, String> {
             "{ $group : {_id : null, average: { $avg : $rating}}}"
     })
     Double avgScoreByUserId(String userId);
+
+
+    @Aggregation(pipeline = {
+            "{ $lookup: {",
+            "from: 'booking',",
+            "pipeline: [",
+            "{ $match: {",
+            "$and: [",
+            "{ $gte: [ '$dateBooked', '?0' ] },",
+            "{ $lte: [ '$dateBooked', '?1' ] }",
+            "]",
+            "} }",
+            "],",
+            "as: 'conflictingBookings'",
+            "}",
+            "{ $unwind: '$timeRangeList' }",
+            "{ $match: {",
+            "$not: {",
+            "$and: [",
+            "{ $forall: { in: '$conflictingBookings', elemMatch: {",
+            "$or: [",
+            "{ $and: [ { $gte: [ '$bookingDuration.startTime', '$$timeRangeList.startTime' ] }, { $lt: [ '$bookingDuration.startTime', '$$timeRangeList.endTime' ] } ] },",
+            "{ $and: [ { $gt: [ '$bookingDuration.endTime', '$$timeRangeList.startTime' ] }, { $lt: [ '$bookingDuration.endTime', '$$timeRangeList.endTime' ] } ] }",
+            "]",
+            "} }",
+            "]",
+            "}",
+            "} }",
+            "{ $group: { _id: '$_id' } }"
+    })
+    List<TourListing> findAvailableListingsByDateRange(Date startDate, Date endDate);
 
 
 
