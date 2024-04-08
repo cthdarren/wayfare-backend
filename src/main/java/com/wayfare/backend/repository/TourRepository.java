@@ -25,32 +25,43 @@ public interface TourRepository extends MongoRepository<TourListing, String> {
 
 
     @Aggregation(pipeline = {
-            "{ $lookup: {",
-            "from: 'booking',",
-            "pipeline: [",
-            "{ $match: {",
-            "$and: [",
-            "{ $gte: [ '$dateBooked', '?0' ] },",
-            "{ $lte: [ '$dateBooked', '?1' ] }",
-            "]",
-            "} }",
-            "],",
-            "as: 'conflictingBookings'",
-            "}",
-            "{ $unwind: '$timeRangeList' }",
-            "{ $match: {",
-            "$not: {",
-            "$and: [",
-            "{ $forall: { in: '$conflictingBookings', elemMatch: {",
-            "$or: [",
-            "{ $and: [ { $gte: [ '$bookingDuration.startTime', '$$timeRangeList.startTime' ] }, { $lt: [ '$bookingDuration.startTime', '$$timeRangeList.endTime' ] } ] },",
-            "{ $and: [ { $gt: [ '$bookingDuration.endTime', '$$timeRangeList.startTime' ] }, { $lt: [ '$bookingDuration.endTime', '$$timeRangeList.endTime' ] } ] }",
-            "]",
-            "} }",
-            "]",
-            "}",
-            "} }",
-            "{ $group: { _id: '$_id' } }"
+
+            """
+            { $lookup : from: 'bookings',
+                                         localField: '_id',\s
+                                         foreignField: 'listing._id',
+                                         as: 'conflictingBookings',
+                                         pipeline:\s
+                                         [
+                                           {$match: {
+                                               $and:\s
+                                           [
+                                             {gte: [ '$dateBooked', '?0' ]},
+                                             {lte: [ '$dateBooked', '?1' ]}
+                                           ]
+                                           }
+                                           }] }        
+            """,
+            "{ $unwind : { path: $timeRangeList }}",
+            """
+                     { $match:    $nor: [ {
+                                            $and: [
+                                            {
+                                              forall: {
+                                                $in: ['$conflictingBookings'],\s
+                                                      $elemMatch: {
+                                                        $or: [{
+                                                          $and: [
+                                                          { gte: [ '$bookingDuration.startTime', '$timeRangeList.startTime' ] },\s
+                                                          { lte: [ '$bookingDuration.startTime', '$timeRangeList.endTime' ] }
+                                                          ]
+                                                        }]
+                                                      } }\s
+                                            }
+                                            ]
+                                          } ]}
+                    """
+
     })
     List<TourListing> findAvailableListingsByDateRange(Date startDate, Date endDate);
 
