@@ -18,7 +18,7 @@ public interface TourRepository extends MongoRepository<TourListing, String> {
     })
     String findUserIdByListingId(String id);
     @Aggregation(pipeline = {
-            "{ $match : { userId: ?0}}",
+            "{ $match : { userId: ?0, rating: { $ne: 0 } } }",
             "{ $group : {_id : null, average: { $avg : $rating}}}"
     })
     Double avgScoreByUserId(String userId);
