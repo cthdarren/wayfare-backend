@@ -1,7 +1,9 @@
 package com.wayfare.backend.controller;
 
 import com.wayfare.backend.helper.Mapper;
+import com.wayfare.backend.helper.helper;
 import com.wayfare.backend.model.Bookmark;
+import com.wayfare.backend.model.Currency;
 import com.wayfare.backend.model.Review;
 import com.wayfare.backend.model.TourListing;
 import com.wayfare.backend.model.dto.ReviewDTO;
@@ -22,6 +24,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -41,11 +45,16 @@ public class CurrencyController{
 
     @GetMapping("/api/v1/getrates")
     public ResponseObject getRates(){
-        Object currencyData = currencyRepo.findAll().get(0).getData();
-        if (currencyData == null){
+        try {
+            Currency currencyData = currencyRepo.findAll().get(0);
+            if (ChronoUnit.DAYS.between(Instant.now(), currencyData.getLastUpdate()) >= 1)
+                new helper(currencyRepo).getExchangeRates();
+
+            return new ResponseObject(true, currencyData.getData());
+        }
+        catch (IndexOutOfBoundsException e) {
             return new ResponseObject(false, "No currency data");
         }
-        return new ResponseObject(true, currencyData);
     }
 }
 
