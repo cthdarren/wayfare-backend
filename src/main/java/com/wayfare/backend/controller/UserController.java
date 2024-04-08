@@ -91,6 +91,7 @@ public class UserController {
 
         toEdit.setPictureUrl(request.pictureUrl());
         toEdit.setAboutMe(request.aboutMe());
+        toEdit.setLanguagesSpoken(request.languagesSpoken());
         toEdit.setDateModified(Instant.now());
 
         userRepo.save(toEdit);
@@ -104,20 +105,20 @@ public class UserController {
 
         request.validate();
 
-        if(userRepo.existsByUsername(request.username))
-            request.addErrors("Username already exists");
+        if(userRepo.existsByEmail(request.email))
+            request.addErrors("Email already exists");
 
         if (request.hasErrors())
             return new ResponseObject(false, request.getErrors());
 
         toEdit.setFirstName(request.firstName);
         toEdit.setLastName(request.lastName);
+        toEdit.setEmail(request.email);
         toEdit.setPhoneNumber(request.phoneNumber);
-        toEdit.setUsername(request.username);
         toEdit.setDateModified(Instant.now());
 
         userRepo.save(toEdit);
-        return new ResponseObject(true, "Account details have been upated");
+        return new ResponseObject(true, "Account details have been updated");
     }
 
     @PostMapping("/account/delete")

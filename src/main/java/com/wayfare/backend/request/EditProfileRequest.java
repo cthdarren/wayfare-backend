@@ -1,4 +1,6 @@
 package com.wayfare.backend.request;
 
-public record EditProfileRequest(String pictureUrl, String aboutMe) {
+import java.util.List;
+
+public record EditProfileRequest(String pictureUrl, String aboutMe, List<String> languagesSpoken) {
 }
