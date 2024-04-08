@@ -10,8 +10,8 @@ import java.util.Date;
 
 public class BookingResponse extends Booking {
     public ReturnedUser user;
-    public BookingResponse(TourListing listing, String userId, TimeRange bookingDuration, Date dateBooked, Double bookingPrice, int pax, String remarks, BookingStatusEnum status, ReturnedUser user){
-        super(listing, userId, bookingDuration, dateBooked, bookingPrice, pax, remarks,status);
+    public BookingResponse(TourListing listing, String userId, TimeRange bookingDuration,Instant startDateTime, Date dateBooked, Double bookingPrice, int pax, String remarks, BookingStatusEnum status, ReturnedUser user){
+        super(listing, userId, bookingDuration, startDateTime, dateBooked, bookingPrice, pax, remarks,status);
         this.user = user;
     }
 

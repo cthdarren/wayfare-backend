@@ -12,12 +12,14 @@ public class ReviewDTO extends ValidateClass {
     private final Integer score;
     private final String reviewContent;
     private final String listingId;
+    private final String bookingId;
 
-    public ReviewDTO(String title, Integer score, String reviewContent, String listingId){
+    public ReviewDTO(String title, Integer score, String reviewContent, String listingId, String bookingId){
         this.title = title;
         this.score = score;
         this.reviewContent = reviewContent;
         this.listingId = listingId;
+        this.bookingId = bookingId;
     }
 
     public String getTitle() {
@@ -39,5 +41,9 @@ public class ReviewDTO extends ValidateClass {
     public void validate() {
         if(this.score < 0 || this.score > 5){addErrors("Score must be between 1-5 inclusive");}
         getErrors().remove(null);
+    }
+
+    public String getBookingId() {
+        return bookingId;
     }
 }

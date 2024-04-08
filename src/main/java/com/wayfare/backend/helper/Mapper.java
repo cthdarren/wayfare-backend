@@ -34,6 +34,9 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAmount;
+import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -92,7 +95,8 @@ public class Mapper {
                 Instant.now(),
                 Instant.now(),
                 new PublicUserData(user),
-                tourRepo.findById(reviewCreationDTO.getListingId()).orElseThrow()
+                tourRepo.findById(reviewCreationDTO.getListingId()).orElseThrow(),
+                reviewCreationDTO.getBookingId()
         );
     }
 
@@ -137,6 +141,7 @@ public class Mapper {
                 tourListing,
                 userId,
                 bookingDTO.getBookingDuration(),
+                bookingDTO.getDateBooked().toInstant().plus(bookingDTO.getBookingDuration().startTime, ChronoUnit.HOURS),
                 bookingDTO.getDateBooked(),
                 bookingDTO.getBookingPrice(),
                 bookingDTO.getPax(),
