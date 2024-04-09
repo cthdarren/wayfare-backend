@@ -28,19 +28,19 @@ public interface TourRepository extends MongoRepository<TourListing, String> {
 
             """
             { $lookup : from: 'bookings',
-                                         localField: '_id',\s
+                                         localField: '_id',
                                          foreignField: 'listing._id',
                                          as: 'conflictingBookings',
-                                         pipeline:\s
+                                         pipeline:
                                          [
                                            {$match: {
-                                               $and:\s
+                                               $and:
                                            [
                                              {gte: [ '$dateBooked', '?0' ]},
                                              {lte: [ '$dateBooked', '?1' ]}
                                            ]
                                            }
-                                           }] }        
+                                           }] }
             """,
             "{ $unwind : { path: $timeRangeList }}",
             """
@@ -48,7 +48,7 @@ public interface TourRepository extends MongoRepository<TourListing, String> {
                                             $and: [
                                             {
                                               forall: {
-                                                $in: ['$conflictingBookings'],\s
+                                                $in: ['$conflictingBookings'],
                                                       $elemMatch: {
                                                         $or: [{
                                                           $and: [
@@ -56,11 +56,11 @@ public interface TourRepository extends MongoRepository<TourListing, String> {
                                                           { lte: [ '$bookingDuration.startTime', '$timeRangeList.endTime' ] }
                                                           ]
                                                         }]
-                                                      } }\s
+                                                      } }
                                             }
                                             ]
                                           } ]}
-                    """
+            """
 
     })
     List<TourListing> findAvailableListingsByDateRange(Date startDate, Date endDate);

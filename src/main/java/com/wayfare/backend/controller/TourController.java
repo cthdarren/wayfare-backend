@@ -70,12 +70,13 @@ public class TourController {
     @GetMapping("/api/v1/listing/search")
     public ResponseObject getListingsByLocationAndDate
             (
+                    // @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             @RequestParam(required = false) String longitude,
             @RequestParam(required = false) String latitude,
             @RequestParam(required = false) String kmdistance,
             @RequestParam(required = false) String numberPax,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate
+            @RequestParam(required = false) Date startDate,
+            @RequestParam(required = false) Date endDate
             )
     {
 
