@@ -117,6 +117,8 @@ public class TourController {
                 }
             }
             return new ResponseObject(true, combinedListings);
+
+            // DEBUGGING
         } catch (NumberFormatException e) {
             System.out.println(e.getMessage());
             return new ResponseObject(false, "Invalid parameters");
