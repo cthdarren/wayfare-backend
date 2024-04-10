@@ -186,6 +186,8 @@ public interface BookingRepository extends MongoRepository<Booking, String> {
                      $project: {
                        username: 1,
                        pictureUrl: 1,
+                       dateCreated: 1,
+                       isVerified: 1
                      },
                    },
                  ],
