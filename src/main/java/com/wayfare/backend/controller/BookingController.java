@@ -56,11 +56,12 @@ public class BookingController {
     // GET METHODS
 
     // get booking based on its id
-    @GetMapping("/api/v1/booking/{id}")
+    @GetMapping("/booking/{id}")
     public ResponseObject getBooking(@PathVariable String id){
         Optional<Booking> booking = bookingRepository.findById(id);
+        WayfareUserDetails curr = getCurrentUserDetails();
 
-        if (!Objects.equals(getCurrentUserDetails().getId(), booking.get().getUserId())){
+        if (!(Objects.equals(curr.getId(), booking.get().getUserId()) | Objects.equals(curr.getId(), booking.get().getListing().getUserId()))){
             return new ResponseObject(false, "You cannot access a booking you do not own!");
         }
 
