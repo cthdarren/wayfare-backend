@@ -20,6 +20,43 @@ public interface BookingRepository extends MongoRepository<Booking, String> {
 
     List<Booking> findAllByListingId(String listingId);
     Booking findByListingId(String listingId);
+
+    @Aggregation(pipeline = {
+            //lmao sorry for the eye cancer but i copy-pasted this from mongodb after crafting the aggregation myself
+            "{ $match : {_id: ?0}}",
+            """
+            { $lookup: {
+                 from: "users",
+                 let: {
+                   searchId: {
+                     $toObjectId: "$listing.userId",
+                   },
+                 },
+                 pipeline: [
+                   {
+                     $match: {
+                       $expr: {
+                         $eq: ["$_id", "$$searchId"],
+                       },
+                     },
+                   },
+                   {
+                     $project: {
+                       username: 1,
+                       pictureUrl: 1,
+                       dateCreated: 1,
+                       isVerified: 1
+                     },
+                   },
+                 ],
+                 as: "user",
+               },
+             }
+            """,
+            "{ $unwind : { path: $user }}",
+            "{ $sort : { dateBooked: 1, \"bookingDuration.startTime\" : 1}}"
+    })
+    BookingResponse findBooking(String bookingId);
     List<Booking> findAllByUserId(String userId);
 
     @Aggregation(pipeline = {
