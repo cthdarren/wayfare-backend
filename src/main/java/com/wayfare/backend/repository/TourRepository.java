@@ -52,7 +52,7 @@ public interface TourRepository extends MongoRepository<TourListing, String> {
                                                       $elemMatch: {
                                                         $or: [{
                                                           $and: [
-                                                          { gte: [ '$bookingDuration.startTime', '$timeRangeList.startTime' ] },\s
+                                                          { gte: [ '$bookingDuration.startTime', '$timeRangeList.startTime' ] },
                                                           { lte: [ '$bookingDuration.startTime', '$timeRangeList.endTime' ] }
                                                           ]
                                                         }]
