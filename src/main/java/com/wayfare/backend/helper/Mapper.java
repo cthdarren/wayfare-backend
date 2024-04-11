@@ -141,7 +141,7 @@ public class Mapper {
                 tourListing,
                 userId,
                 bookingDTO.getBookingDuration(),
-                bookingDTO.getDateBooked().toInstant().plus(bookingDTO.getBookingDuration().startTime, ChronoUnit.HOURS),
+                bookingDTO.getDateBooked().toInstant().plus(bookingDTO.getBookingDuration().startTime - 8, ChronoUnit.HOURS),
                 bookingDTO.getDateBooked(),
                 bookingDTO.getBookingPrice(),
                 bookingDTO.getPax(),

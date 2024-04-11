@@ -167,7 +167,7 @@ public interface BookingRepository extends MongoRepository<Booking, String> {
 
     @Aggregation(pipeline = {
             //lmao sorry for the eye cancer but i copy-pasted this from mongodb after crafting the aggregation myself
-            "{ $match : { userId: ?0, dateBooked:{ $gte : new Date()}}}",
+            "{ $match : { userId: ?0, startDateTime:{ $gte : new Date()}}}",
             """
             { $lookup: {
                  from: "users",
@@ -202,7 +202,7 @@ public interface BookingRepository extends MongoRepository<Booking, String> {
     @Aggregation(pipeline = {
             //lmao sorry for the eye cancer but i copy-pasted this from mongodb after crafting the aggregation myself
             //YOOO I GOT AN EVEN LONGER ONE
-            "{ $match : { userId: ?0, dateBooked:{ $lt : new Date()}}}",
+            "{ $match : { userId: ?0, startDateTime:{ $lt : new Date()}}}",
             """
         { $lookup: {
                  from: "users",

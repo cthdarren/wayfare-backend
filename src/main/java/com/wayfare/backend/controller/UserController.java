@@ -78,7 +78,8 @@ public class UserController {
                 currUser.getPictureUrl(),
                 currUser.getAboutMe(),
                 currUser.getBadges(),
-                currUser.getRole()
+                currUser.getRole(),
+                currUser.getLanguagesSpoken()
         );
         return new ResponseObject(true, response);
 

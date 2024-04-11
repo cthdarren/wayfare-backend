@@ -17,9 +17,10 @@ public class AccountSettingsResponse {
     private final String aboutMe;
     private final List<BadgeEnum> badges;
     private final RoleEnum role;
+    private final List<String> languagesSpoken;
 
 
-    public AccountSettingsResponse(String username, String firstName, String lastName, String email, String phoneNumber, boolean isVerified, Instant dateCreated, String pictureUrl, String aboutMe, List<BadgeEnum> badges, RoleEnum role){
+    public AccountSettingsResponse(String username, String firstName, String lastName, String email, String phoneNumber, boolean isVerified, Instant dateCreated, String pictureUrl, String aboutMe, List<BadgeEnum> badges, RoleEnum role, List<String> languagesSpoken){
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -31,6 +32,7 @@ public class AccountSettingsResponse {
         this.aboutMe = aboutMe;
         this.badges = badges;
         this.role = role;
+        this.languagesSpoken = languagesSpoken;
     }
 
     public String getUsername() {
@@ -75,6 +77,10 @@ public class AccountSettingsResponse {
 
     public RoleEnum getRole() {
         return role;
+    }
+
+    public List<String> getLanguagesSpoken() {
+        return languagesSpoken;
     }
 }
 
