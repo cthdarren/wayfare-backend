@@ -149,17 +149,17 @@ public class BookingController {
     // POST METHODS
 
     // create booking under LISTING ID
-    @PostMapping("/booking/create/{id}")
-    public ResponseObject createBooking(@PathVariable String id, @RequestBody BookingDTO dto) {
+    @PostMapping("/booking/create/")
+    public ResponseObject createBooking(@RequestBody BookingDTO dto) {
         Date dateBooked = dto.getDateBooked();
         TimeRange bookingDuration = dto.getBookingDuration();
-        List<Booking> conflictingBookings = bookingRepository.findByDateBookedAndBookingDuration(dateBooked, bookingDuration);
+        List<Booking> conflictingBookings = bookingRepository.findByListingIdAndDateBookedAndBookingDuration(dto.getListingId(), dateBooked, bookingDuration);
 
         if (!conflictingBookings.isEmpty()) {
             return new ResponseObject(false, "This slot has already been reserved");
         }
 
-        Optional<TourListing> tourListing = tourRepository.findById(id);
+        Optional<TourListing> tourListing = tourRepository.findById(dto.getListingId());
 
         boolean paxVal = dto.getPax() >= tourListing.get().getMinPax() && dto.getPax() <= tourListing.get().getMaxPax();
 
@@ -192,7 +192,7 @@ public class BookingController {
             }
             toAdd = null;
             try {
-                toAdd = new Mapper(tourRepository).toBooking(dto, id);
+                toAdd = new Mapper(tourRepository).toBooking(dto);
             } catch (IOException e) {
                 e.printStackTrace();
                 return new ResponseObject(false, "Server error");
@@ -217,7 +217,7 @@ public class BookingController {
 
         Date dateBooked = dto.getDateBooked();
         TimeRange bookingDuration = dto.getBookingDuration();
-        List<Booking> conflictingBookings = bookingRepository.findByDateBookedAndBookingDuration(dateBooked, bookingDuration);
+        List<Booking> conflictingBookings = bookingRepository.findByListingIdAndDateBookedAndBookingDuration(dto.getListingId(), dateBooked, bookingDuration);
 
         if (!conflictingBookings.isEmpty()) {
             return new ResponseObject(false, "This slot has already been reserved");

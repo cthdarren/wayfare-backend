@@ -282,5 +282,5 @@ public interface BookingRepository extends MongoRepository<Booking, String> {
     })
     List<BookingResponseWithReview> findAllPastBookings(String userId);
 
-    List<Booking> findByDateBookedAndBookingDuration(Date dateBooked, TimeRange bookingDuration);
+    List<Booking> findByListingIdAndDateBookedAndBookingDuration(String listingId, Date dateBooked, TimeRange bookingDuration);
 }

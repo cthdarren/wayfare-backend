@@ -127,8 +127,8 @@ public class Mapper {
         );
     }
 
-    public Booking toBooking(BookingDTO bookingDTO, String listingId) throws IOException, InterruptedException, ApiException {
-        TourListing tourListing = tourRepo.findById(listingId).orElseThrow();
+    public Booking toBooking(BookingDTO bookingDTO) throws IOException, InterruptedException, ApiException {
+        TourListing tourListing = tourRepo.findById(bookingDTO.getListingId()).orElseThrow();
         WayfareUserDetails user = getCurrentUserDetails();
         String userId = user.getId();
 

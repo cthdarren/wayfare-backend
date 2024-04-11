@@ -4,6 +4,7 @@ package com.wayfare.backend.controller;
 import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -162,6 +163,44 @@ public class UserController {
 
         ProfileResponse response = new ProfileResponse(
                 username,
+                toView.getFirstName(),
+                toView.getLastName(),
+                toView.getAboutMe(),
+                toView.getPictureUrl(),
+                toView.getLanguagesSpoken(),
+                toView.getBadges(),
+                avgScore,
+                reviewCount,
+                toView.getRole(),
+                userReviews,
+                userTours,
+                toView.getDateCreated()
+        );
+
+        return new ResponseObject(true, response);
+    }
+
+    //Profiel by userId
+    @GetMapping("/api/v1/profile/{userId}")
+    public ResponseObject getUserProfileById(@PathVariable String userId){
+        Optional<User> getUser = userRepo.findById(userId);
+        if (getUser.isEmpty()){
+            return new ResponseObject(false, "Username does not exist");
+        }
+        User toView =getUser.get();
+        List<Review> userReviews = reviewRepo.findFirst5ByListingUserIdOrderByDateCreatedDesc(toView.getId());
+        List<TourListing> userTours = tourRepo.findAllByUserId(toView.getId());
+        Double avgScore = tourRepo.avgScoreByUserId(toView.getId());
+        Integer reviewCount = reviewRepo.findNumberOfReviewsByCustomers(toView.getId());
+
+        if (avgScore == null)
+            avgScore = 0.0;
+
+        if (reviewCount == null)
+            reviewCount = 0;
+
+        ProfileResponse response = new ProfileResponse(
+                toView.getUsername(),
                 toView.getFirstName(),
                 toView.getLastName(),
                 toView.getAboutMe(),
