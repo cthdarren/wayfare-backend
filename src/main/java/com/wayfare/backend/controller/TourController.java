@@ -12,10 +12,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.maps.errors.ApiException;
 import com.mongodb.MongoQueryException;
+import com.wayfare.backend.model.Review;
 import com.wayfare.backend.model.User;
 import com.wayfare.backend.model.dto.TourListingDTO;
 import com.wayfare.backend.model.object.TimeRange;
 import com.wayfare.backend.repository.BookingRepository;
+import com.wayfare.backend.repository.ReviewRepository;
 import com.wayfare.backend.repository.UserRepository;
 import com.wayfare.backend.request.LocationRequest;
 import com.wayfare.backend.response.ResponseObject;
@@ -39,12 +41,14 @@ public class TourController {
     private final UserRepository userRepo;
     private final TourRepository tourRepo;
     private final BookingRepository bookingRepo;
+    private final ReviewRepository reviewRepo;
 
     ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
-    public TourController(UserRepository userRepo, TourRepository tourRepo, BookingRepository bookingRepo) {
+    public TourController(UserRepository userRepo, TourRepository tourRepo, BookingRepository bookingRepo, ReviewRepository reviewRepo) {
         this.userRepo = userRepo;
         this.tourRepo = tourRepo;
         this.bookingRepo = bookingRepo;
+        this.reviewRepo = reviewRepo;
     }
 
     // GET METHODS
@@ -185,12 +189,16 @@ public class TourController {
             return new ResponseObject(false, "No such listing");
         }
 
+        if (bookingRepo.existsByListingId(id))
+            return new ResponseObject(false, "You must cancel any ongoing bookings before deleting this listing");
+
         if (!Objects.equals(getCurrentUserDetails().getId(), tourListing.get().getUserId())){
             return new ResponseObject(false, "You cannot delete a listing that you do not own!");
         }
 
         tourRepo.delete(tourListing.get());
-        return new ResponseObject(true, "Listing successfully deleted");
+        int reviewsDeleted = reviewRepo.deleteAllByListingId(id);
+        return new ResponseObject(true, String.format("Listing successfully deleted along with %d reviews", reviewsDeleted));
 
     }
 

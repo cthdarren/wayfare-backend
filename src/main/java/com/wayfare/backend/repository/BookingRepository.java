@@ -20,6 +20,7 @@ public interface BookingRepository extends MongoRepository<Booking, String> {
 
     List<Booking> findAllByListingId(String listingId);
     Booking findByListingId(String listingId);
+    boolean existsByListingId(String listingId);
 
     @Aggregation(pipeline = {
             //lmao sorry for the eye cancer but i copy-pasted this from mongodb after crafting the aggregation myself

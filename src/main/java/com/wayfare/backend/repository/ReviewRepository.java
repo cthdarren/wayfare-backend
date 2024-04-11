@@ -27,4 +27,5 @@ public interface ReviewRepository extends MongoRepository<Review, String> {
     @Nullable
     Review findByUserIdAndListingId(String userId, String listingId);
     boolean existsByUserIdAndListingId(String userId, String listingId);
+    int deleteAllByListingId(String listingId);
 }
