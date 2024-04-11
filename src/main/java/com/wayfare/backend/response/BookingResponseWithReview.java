@@ -10,7 +10,7 @@ import java.util.Date;
 
 public class BookingResponseWithReview extends BookingResponse {
     public boolean reviewed;
-    public BookingResponseWithReview(TourListing listing, String userId, TimeRange bookingDuration, Instant startDateTime, Date dateBooked, Double bookingPrice, int pax, String remarks, BookingStatusEnum status, ReturnedUser user, boolean reviewed){
+    public BookingResponseWithReview(TourListing listing, String userId, TimeRange bookingDuration, Date startDateTime, Date dateBooked, Double bookingPrice, int pax, String remarks, BookingStatusEnum status, ReturnedUser user, boolean reviewed){
         super(listing, userId, bookingDuration, startDateTime, dateBooked, bookingPrice, pax, remarks,status, user);
         this.reviewed = reviewed;
     }

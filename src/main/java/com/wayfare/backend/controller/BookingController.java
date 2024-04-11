@@ -149,7 +149,7 @@ public class BookingController {
     // POST METHODS
 
     // create booking under LISTING ID
-    @PostMapping("/booking/create/")
+    @PostMapping("/booking/create")
     public ResponseObject createBooking(@RequestBody BookingDTO dto) {
         Date dateBooked = dto.getDateBooked();
         TimeRange bookingDuration = dto.getBookingDuration();

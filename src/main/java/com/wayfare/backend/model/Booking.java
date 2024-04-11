@@ -13,14 +13,14 @@ public class Booking {
     private TourListing listing;
     private String userId;
     private TimeRange bookingDuration;
-    private Instant startDateTime;
+    private Date startDateTime;
     private Date dateBooked;
     private Double bookingPrice;
     private int pax;
     private String remarks;
     private BookingStatusEnum status;
 
-    public Booking(TourListing listing, String userId, TimeRange bookingDuration, Instant startDateTime, Date dateBooked, Double bookingPrice, int pax, String remarks, BookingStatusEnum status) {
+    public Booking(TourListing listing, String userId, TimeRange bookingDuration, Date startDateTime, Date dateBooked, Double bookingPrice, int pax, String remarks, BookingStatusEnum status) {
         this.listing = listing;
         this.userId = userId;
         this.bookingDuration = bookingDuration;
@@ -88,7 +88,7 @@ public class Booking {
         this.status = status;
     }
 
-    public Instant getStartDateTime() {
+    public Date getStartDateTime() {
         return startDateTime;
     }
 }
