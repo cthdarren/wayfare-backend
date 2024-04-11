@@ -181,7 +181,7 @@ public class UserController {
     }
 
     //Profiel by userId
-    @GetMapping("/api/v1/profile/{userId}")
+    @GetMapping("/api/v1/profileid/{userId}")
     public ResponseObject getUserProfileById(@PathVariable String userId){
         Optional<User> getUser = userRepo.findById(userId);
         if (getUser.isEmpty()){
