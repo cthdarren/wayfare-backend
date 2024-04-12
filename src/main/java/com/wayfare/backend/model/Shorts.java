@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Document(collection = "shorts")
 public class Shorts {
-//    private String id;
+    private String id;
     private String shortsUrl,description,userId,userName;
     private TourListing listing;
     private ArrayList<String> likes;
@@ -23,10 +23,10 @@ public class Shorts {
         this.datePosted = datePosted;
     }
 
-//    public String getId() {
-//        return id;
-//    }
-//
+    public String getId() {
+        return id;
+    }
+
 //    public void setId(String id) {
 //        this.id = id;
 //    }
