@@ -24,7 +24,7 @@ public interface ReviewRepository extends MongoRepository<Review, String> {
     List<Review> findFirst5ByListingIdOrderByDateCreatedDesc(String listingId);
     List<Review> findFirst5ByListingUserIdOrderByDateCreatedDesc(String UserId);
     @Aggregation(pipeline = {
-            "{ $match : { \"listing.userId\": ?0} }",
+            "{ $match : { \"listing.userId\": ?0, revieweeId: ?0} }",
             "{ $group : { _id : null, total: { $count: {} } } }",
     })
     Integer findNumberOfReviewsByCustomers(String userId);
