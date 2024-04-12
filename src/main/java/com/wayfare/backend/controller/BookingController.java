@@ -118,22 +118,20 @@ public class BookingController {
         Date beginOfDay = Date.from(Instant.now());
 
         // Until 24 hours from now
-        Instant startOfNext= Instant.now().plus(1, ChronoUnit.DAYS);
-        Date startOfNextDay = Date.from(startOfNext);
+        LocalDateTime endOfDay = LocalDate.now().atStartOfDay().plus(1, ChronoUnit.DAYS);
+        Date endOfDayDate = Date.from(endOfDay.toInstant(ZoneOffset.UTC).plus(8, ChronoUnit.HOURS));
 
-        List<BookingResponse> bookingsForTheDay = bookingRepository.findBookingsWithinDay(listingIds, beginOfDay, startOfNextDay);
+        Instant startOfNext= endOfDayDate.toInstant();
 
-        // Get the end period of the previous date
-        Date beginOfWeek = Date.from(startOfNext);
+        List<BookingResponse> bookingsForTheDay = bookingRepository.findBookingsWithinDay(listingIds, beginOfDay, endOfDayDate);
+
 
         // Add one week
-        Instant endWeek = startOfNext.plus(7, ChronoUnit.DAYS);
+        Instant endWeek = startOfNext.plus(6, ChronoUnit.DAYS);
         Date startOfNextWeek = Date.from(endWeek);
 
         List<BookingResponse> bookingsForTheWeek = bookingRepository.findBookingsWithinWeek(listingIds, beginOfDay, startOfNextWeek);
 
-        // Get end period of the previous week query
-        Date beginOfMonth = Date.from(endWeek);
 
         //Find all remaining upcoming bookings
         List<BookingResponse> bookingsForTheMonth = bookingRepository.findRestOfBookings(listingIds, beginOfDay);
