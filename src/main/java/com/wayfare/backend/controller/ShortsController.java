@@ -94,23 +94,17 @@ public class ShortsController {
     @PostMapping("/shorts/liked/{id}")
     public ResponseObject shortsLiked(@PathVariable String id) {
         WayfareUserDetails user = getCurrentUserDetails();
-        Optional<Shorts> shortsData = shortsRepository.findById(id);
-        if (shortsData.isEmpty()) {
-            return new ResponseObject(false, "No such shorts");
-        }else{
-            shortsData.ifPresent(shorts -> shorts.addLike(user.getId()));
-        }
+        Shorts shortsData = shortsRepository.findById(id).orElseThrow();
+        shortsData.addLike(user.getId());
+        shortsRepository.save(shortsData);
         return new ResponseObject(true, "Liked");
     }
     @PostMapping("/shorts/unliked/{id}")
     public ResponseObject shortsUnliked(@PathVariable String id) {
         WayfareUserDetails user = getCurrentUserDetails();
-        Optional<Shorts> shortsData = shortsRepository.findById(id);
-        if (shortsData.isEmpty()) {
-            return new ResponseObject(false, "No such shorts");
-        }else{
-            shortsData.ifPresent(shorts -> shorts.removeLike(user.getId()));
-        }
+        Shorts shortsData = shortsRepository.findById(id).orElseThrow();
+        shortsData.removeLike(user.getId());
+        shortsRepository.save(shortsData);
         return new ResponseObject(true, "Unliked");
     }
 }

@@ -79,7 +79,9 @@ public class Shorts {
         if (this.likes == null) {
             this.likes = new ArrayList<>();
         }
-        this.likes.add(like);
+        if (!this.likes.contains(like)) {
+            this.likes.add(like);
+        }
     }
     public void removeLike(String like) {
         if (this.likes != null) {
