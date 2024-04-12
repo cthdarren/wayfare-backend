@@ -95,7 +95,7 @@ public class ShortsController {
     public ResponseObject shortsLiked(@PathVariable String id) {
         WayfareUserDetails user = getCurrentUserDetails();
         Shorts shortsData = shortsRepository.findById(id).orElseThrow();
-        shortsData.addLike(user.getId());
+        shortsData.addLike(user.getUsername());
         shortsRepository.save(shortsData);
         return new ResponseObject(true, "Liked");
     }
@@ -103,7 +103,7 @@ public class ShortsController {
     public ResponseObject shortsUnliked(@PathVariable String id) {
         WayfareUserDetails user = getCurrentUserDetails();
         Shorts shortsData = shortsRepository.findById(id).orElseThrow();
-        shortsData.removeLike(user.getId());
+        shortsData.removeLike(user.getUsername());
         shortsRepository.save(shortsData);
         return new ResponseObject(true, "Unliked");
     }
