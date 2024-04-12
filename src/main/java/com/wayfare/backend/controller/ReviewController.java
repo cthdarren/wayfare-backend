@@ -105,7 +105,7 @@ public class ReviewController {
         if(!tourRepo.existsById(listingId))
             return new ResponseObject(false, "Listing does not exist");
 
-        if(reviewRepo.existsByBookingId(dto.getBookingId()))
+        if(reviewRepo.existsByBookingIdAndUserId(dto.getBookingId(), user.getId()))
             return new ResponseObject(false, "Review already exists");
 
         if (toAdd == null)
