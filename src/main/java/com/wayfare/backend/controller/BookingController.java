@@ -253,14 +253,14 @@ public class BookingController {
     @PostMapping("/booking/delete/{id}")
     public ResponseObject deleteBooking(@PathVariable String id) {
         Optional<Booking> booking = bookingRepository.findById(id);
-
         if (booking.isEmpty()){
             return new ResponseObject(false, "Booking does not exist");
         }
 
         Booking bookingFound = booking.get();
+        String currId = getCurrentUserDetails().getId();
 
-        if (!Objects.equals(getCurrentUserDetails().getId(), bookingFound.getUserId())){
+        if (!Objects.equals(currId, bookingFound.getUserId()) | !Objects.equals(currId, bookingFound.getListing().getUserId())){
             return new ResponseObject(false, "You cannot delete a booking you do not own!");
         }
 
