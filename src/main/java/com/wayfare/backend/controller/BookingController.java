@@ -25,10 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.lang.String;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.*;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -101,36 +99,29 @@ public class BookingController {
             listingIds.add(listing.getId());
         }
 
-        // Get the current date at the start of the day
-        LocalDate today = LocalDate.now();
-        LocalDateTime startOfDay = today.atStartOfDay();  // 00:00:00 at the beginning of today
-        Date beginOfDay = Date.from(startOfDay.atZone(ZoneId.systemDefault()).toInstant());
+        // Get the current date from now
+        Date beginOfDay = Date.from(Instant.now());
 
-        // Get the start of the next day
-        LocalDateTime endOfDay = startOfDay.plusDays(1);
-        Date startOfNextDay = Date.from(endOfDay.atZone(ZoneId.systemDefault()).toInstant());
+        // Until 24 hours from now
+        Instant startOfNext= Instant.now().plus(1, ChronoUnit.DAYS);
+        Date startOfNextDay = Date.from(startOfNext);
 
         List<BookingResponse> bookingsForTheDay = bookingRepository.findBookingsWithinDay(listingIds, beginOfDay, startOfNextDay);
 
-        // Get the start of the week (assuming Monday as the first day)
-        LocalDateTime startOfWeek = today.with(DayOfWeek.MONDAY).atStartOfDay();
-        Date beginOfWeek = Date.from(startOfWeek.atZone(ZoneId.systemDefault()).toInstant());
+        // Get the end period of the previous date
+        Date beginOfWeek = Date.from(startOfNext);
 
-        // Get the start of the next week
-        LocalDateTime endOfWeek = startOfWeek.plusWeeks(1);
-        Date startOfNextWeek = Date.from(endOfWeek.atZone(ZoneId.systemDefault()).toInstant());
+        // Add one week
+        Instant endWeek = startOfNext.plus(7, ChronoUnit.DAYS);
+        Date startOfNextWeek = Date.from(endWeek);
 
-        List<BookingResponse> bookingsForTheWeek = bookingRepository.findBookingsWithinWeek(listingIds, beginOfWeek, startOfNextWeek);
+        List<BookingResponse> bookingsForTheWeek = bookingRepository.findBookingsWithinWeek(listingIds, beginOfDay, startOfNextWeek);
 
-        // Get current month
-        LocalDateTime startOfMonth = today.withDayOfMonth(1).atStartOfDay();
-        Date beginOfMonth = Date.from(startOfMonth.atZone(ZoneId.systemDefault()).toInstant());
+        // Get end period of the previous week query
+        Date beginOfMonth = Date.from(endWeek);
 
-        // Get the start of the next month
-        LocalDateTime endOfMonth = startOfMonth.plusMonths(1);
-        Date startOfNextMonth = Date.from(endOfMonth.atZone(ZoneId.systemDefault()).toInstant());
-
-        List<BookingResponse> bookingsForTheMonth = bookingRepository.findBookingsWithinMonth(listingIds, beginOfMonth, startOfNextMonth);
+        //Find all remaining upcoming bookings
+        List<BookingResponse> bookingsForTheMonth = bookingRepository.findRestOfBookings(listingIds, beginOfDay);
 
         return new ResponseObject(true, new AllBookingWayfareResponse(bookingsForTheDay, bookingsForTheWeek, bookingsForTheMonth));
     }
