@@ -13,7 +13,12 @@ import java.util.Optional;
 
 public interface ReviewRepository extends MongoRepository<Review, String> {
 
+    // all the reviews that someone has created
     List<Review> findAllByUserId(String userId);
+
+    //all the reviews that has been made by other people for this person
+    List<Review> findAllByRevieweeId(String revieweeId);
+
     List<Review> findAllByListingId(String listingId);
     List<Review> findAllByListingIdOrderByDateCreatedDesc(String listingId);
     List<Review> findFirst5ByListingIdOrderByDateCreatedDesc(String listingId);
@@ -24,6 +29,12 @@ public interface ReviewRepository extends MongoRepository<Review, String> {
     })
     Integer findNumberOfReviewsByCustomers(String userId);
 
+    @Aggregation(pipeline = {
+            "{ $match : { \"revieweeId\": ?0} }",
+            "{ $group : { _id : null, total: { $count: {} } } }",
+    })
+    Integer findNumberOfReviewsByOthers(String revieweeId);
+    
     @Nullable
     Review findByUserIdAndListingId(String userId, String listingId);
     boolean existsByUserIdAndListingId(String userId, String listingId);

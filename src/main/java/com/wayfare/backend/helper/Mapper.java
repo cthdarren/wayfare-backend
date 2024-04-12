@@ -87,7 +87,7 @@ public class Mapper {
 
     }
 
-    public Review toReview(ReviewDTO reviewCreationDTO, User user){
+    public Review toReview(ReviewDTO reviewCreationDTO, User user, String revieweeId){
         return new Review(
                 reviewCreationDTO.getTitle(),
                 reviewCreationDTO.getScore(),
@@ -96,7 +96,8 @@ public class Mapper {
                 Instant.now(),
                 new PublicUserData(user),
                 tourRepo.findById(reviewCreationDTO.getListingId()).orElseThrow(),
-                reviewCreationDTO.getBookingId()
+                reviewCreationDTO.getBookingId(),
+                revieweeId
         );
     }
 

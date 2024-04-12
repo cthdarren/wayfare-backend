@@ -24,6 +24,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static com.wayfare.backend.helper.helper.getCurrentUserDetails;
+import static java.lang.Math.nextUp;
 import static java.lang.Math.round;
 
 @RestController
@@ -89,17 +90,14 @@ public class ReviewController {
         dto.validate();
         if (dto.hasErrors()){return new ResponseObject(false, dto.getErrors());}
 
-        WayfareUserDetails user = getCurrentUserDetails();
-        try {
-            toAdd = new Mapper(tourRepo).toReview(dto, userRepo.findByUsername(user.getUsername()));
-        }
-        catch (NoSuchElementException e){
-            return new ResponseObject(false,"No such listing");
-        }
-
         String listingId = dto.getListingId();
         Optional<TourListing> listing = tourRepo.findById(dto.getListingId());
         Optional<Booking> booking = bookingRepo.findById(dto.getBookingId());
+        WayfareUserDetails user = getCurrentUserDetails();
+
+
+        String revieweeId;
+        boolean reviewerIsWayfarer = false;
 
         if (listing.isEmpty())
             return new ResponseObject(false,"No such listing");
@@ -107,8 +105,24 @@ public class ReviewController {
         if (booking.isEmpty())
             return new ResponseObject(false,"No booking found");
 
+        // if you are the person that made the listing, and made the booking, and is making the review 
+        // you are reviewing yourself
+        if(Objects.equals(user.getId(), booking.get().getUserId()) & Objects.equals(user.getId(), listing.get().getUserId())) 
+            return new ResponseObject(false, "You cannot review your own listing");
+
+        // otherwise, if you are the person who made the booking, means that you are reviewing a Wayfarer
         if(Objects.equals(user.getId(), booking.get().getUserId()))
-            return new ResponseObject(false, "You cannot review your own booking");
+            revieweeId = listing.get().getUserId();
+
+        //otherwise, if you are the person that made the listinhg, you are the Wayfarer reviewing the customer
+        else if(Objects.equals(user.getId(), listing.get().getUserId())){
+            revieweeId = booking.get().getUserId(); 
+            reviewerIsWayfarer = true;
+        }
+
+        //then this means you are neither and you shouldn't be here;
+        else
+            revieweeId = null;
 
         if(!tourRepo.existsById(listingId))
             return new ResponseObject(false, "Listing does not exist");
@@ -116,12 +130,24 @@ public class ReviewController {
         if(reviewRepo.existsByBookingIdAndUserId(dto.getBookingId(), user.getId()))
             return new ResponseObject(false, "Review already exists");
 
+        if (revieweeId == null){
+            return new ResponseObject(false, "You shouldn't be here.");
+        }
+
+        try {
+            toAdd = new Mapper(tourRepo).toReview(dto, userRepo.findByUsername(user.getUsername()), revieweeId);
+        }
+        catch (NoSuchElementException e){
+            return new ResponseObject(false,"No such listing");
+        }
+
         if (toAdd == null)
             return new ResponseObject(false, "Server error");
 
         reviewRepo.save(toAdd);
 
-        updateListingRatings(listing.get());
+        if (!reviewerIsWayfarer)
+            updateListingRatings(listing.get());
 
         return new ResponseObject(true, "Review added");
     }

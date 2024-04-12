@@ -14,11 +14,13 @@ public class Review {
     private final Instant dateCreated;
     private Instant dateModified;
 
+    //reviewer
     private PublicUserData user;
+    private String revieweeId;
     private TourListing listing;
     private String bookingId;
 
-    public Review(String title, Integer score, String reviewContent, Instant dateCreated, Instant dateModified, PublicUserData user, TourListing listing, String bookingId) {
+    public Review(String title, Integer score, String reviewContent, Instant dateCreated, Instant dateModified, PublicUserData user, TourListing listing, String bookingId, String revieweeId) {
         this.title = title;
         this.score = score;
         this.reviewContent = reviewContent;
@@ -27,6 +29,7 @@ public class Review {
         this.user= user;
         this.listing = listing;
         this.bookingId = bookingId;
+        this.revieweeId = revieweeId;
     }
 
     public String getId() {
@@ -77,6 +80,9 @@ public class Review {
         return listing;
     }
 
+    public String getRevieweeId() {
+        return revieweeId;
+    }
 
     public String getBookingId() {
         return bookingId;
