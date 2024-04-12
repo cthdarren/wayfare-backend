@@ -150,7 +150,7 @@ public class BookingController {
             return new ResponseObject(false, "Username not found");
         }
 
-        List<BookingResponseWithReview> pastBookings = bookingRepository.findAllPastBookings(user.getId());
+        List<BookingResponseWithReview> pastBookings = bookingRepository.findAllPastBookingsWithWayfarerId(user.getId());
 
         return new ResponseObject(true, pastBookings);
     }

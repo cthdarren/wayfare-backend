@@ -289,5 +289,50 @@ public interface BookingRepository extends MongoRepository<Booking, String> {
     })
     List<BookingResponseWithReview> findAllPastBookings(String userId);
 
+    @Aggregation(pipeline = {
+            //lmao sorry for the eye cancer but i copy-pasted this from mongodb after crafting the aggregation myself
+            //YOOO I GOT AN EVEN LONGER ONE
+            "{ $match : { \"listing.userId\": ?0, startDateTime:{ $lt : new Date()}}}",
+            """
+           {
+                      "$lookup": {
+                        "from": "users",
+                        "let": { "userId": "$userId" },
+                        "pipeline": [
+                          { "$match": { "$expr": { "$eq": ["$_id", { "$toObjectId": "$$userId" }] } } },
+                          { "$project": { "username": 1, "pictureUrl": 1, "dateCreated": 1, "isVerified": 1 } }
+                        ],
+                        "as": "user"
+                      }
+                    },
+            """,
+            "{ $unwind : { path: \"$user\" }}",
+            "{ $sort : { dateBooked: -1, \"bookingDuration.startTime\" : 1}}",
+            """
+             {
+                 "$lookup": {
+                   "from": "reviews",
+                   "let": { "bookingId": { "$toString": "$_id" } },
+                   "pipeline": [
+                     { "$match": {
+                         "$expr": {
+                           "$and": [
+                             { "$eq": ["$bookingId", "$$bookingId"] },
+                             { "$eq": ["$listing.userId", "$userId"] }
+                           ]
+                         }
+                       }
+                     },
+                     { "$limit": 1 },
+                     { "$project": { "_id": 0, "reviewed": { "$literal": true } } }
+                   ],
+                   "as": "reviews"
+                 }
+               },
+                 },
+                    """,
+            "{ $addFields: { reviewed: { $cond: { if: { $gt: [{ $size: \"$reviews\" }, 0] }, then: true, else: false } } }}"
+    })
+    List<BookingResponseWithReview> findAllPastBookingsWithWayfarerId(String userId);
     List<Booking> findByListingIdAndDateBookedAndBookingDuration(String listingId, Date dateBooked, TimeRange bookingDuration);
 }
