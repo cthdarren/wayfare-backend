@@ -141,18 +141,20 @@ public class BookingController {
         return new ResponseObject(true, new AllBookingWayfareResponse(bookingsForTheDay, bookingsForTheWeek, bookingsForTheMonth));
     }
 
+    // Wayfarer past bookings
+    @GetMapping("/wayfarer/pastbookings")
+    public ResponseObject getPastBookingsAsWayfarer(){
 
-//    @GetMapping("/pastbookings")
-//    public ResponseObject getUpcomingBookings(){
-//        WayfareUserDetails user = getCurrentUserDetails();
-//        if (user == null){
-//            return new ResponseObject(false, "Username not found");
-//        }
-//
-//        return new ResponseObject(true, listByUserId);
-//    }
+        WayfareUserDetails user = getCurrentUserDetails();
+        if (user == null){
+            return new ResponseObject(false, "Username not found");
+        }
 
-    // POST METHODS
+        List<BookingResponseWithReview> pastBookings = bookingRepository.findAllPastBookings(user.getId());
+
+        return new ResponseObject(true, pastBookings);
+    }
+
 
     // create booking under LISTING ID
     @PostMapping("/booking/create")

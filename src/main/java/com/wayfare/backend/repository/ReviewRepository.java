@@ -28,4 +28,5 @@ public interface ReviewRepository extends MongoRepository<Review, String> {
     Review findByUserIdAndListingId(String userId, String listingId);
     boolean existsByUserIdAndListingId(String userId, String listingId);
     int deleteAllByListingId(String listingId);
+    boolean existsByBookingId(String bookingId);
 }
