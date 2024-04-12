@@ -88,7 +88,8 @@ public class TourController {
             List<TourListing> combinedListings = new ArrayList<>();
 
             if (numberPax == null){
-                return new ResponseObject(true, tourRepo.findByLocationNearOrderByRatingDesc(new Point(dLong,dLat), new Distance(dDist, Metrics.KILOMETERS)));
+                return new ResponseObject(true, tourRepo.findByLocationNearOrderByRatingDesc(new Point(Double.parseDouble(longitude),Double.parseDouble(latitude)),
+                 new Distance(Double.parseDouble(kmdistance), Metrics.KILOMETERS)));
             }
 
             // Check if location parameters are provided
