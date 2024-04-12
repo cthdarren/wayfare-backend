@@ -172,6 +172,7 @@ public class Mapper {
         WayfareUserDetails user = getCurrentUserDetails();
         String userId = user.getId();
         String userName = user.getUsername();
+        String userPicUrl = user.getPictureUrl();
         ArrayList<String> likes = new ArrayList<>();
         return new Shorts(
                 shortsDTO.getShortsUrl(),

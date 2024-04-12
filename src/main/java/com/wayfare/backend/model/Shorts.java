@@ -8,10 +8,7 @@ import java.util.Date;
 @Document(collection = "shorts")
 public class Shorts {
 //    private String id;
-    private String shortsUrl;
-    private String userId;
-    private String userName;
-    private String description;
+    private String shortsUrl,description,userId,userName;
     private TourListing listing;
     private ArrayList<String> likes;
     private Date datePosted;
