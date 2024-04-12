@@ -260,7 +260,7 @@ public class BookingController {
         Booking bookingFound = booking.get();
         String currId = getCurrentUserDetails().getId();
 
-        if (!Objects.equals(currId, bookingFound.getUserId()) | !Objects.equals(currId, bookingFound.getListing().getUserId())){
+        if (!Objects.equals(currId, bookingFound.getUserId()) & !Objects.equals(currId, bookingFound.getListing().getUserId())){
             return new ResponseObject(false, "You cannot delete a booking you do not own!");
         }
 
