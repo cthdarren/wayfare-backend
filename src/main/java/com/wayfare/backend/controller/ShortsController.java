@@ -12,6 +12,7 @@ import com.wayfare.backend.repository.TourRepository;
 import com.wayfare.backend.repository.UserRepository;
 import com.wayfare.backend.response.ResponseObject;
 
+import com.wayfare.backend.security.WayfareUserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +23,8 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
+import static com.wayfare.backend.helper.helper.getCurrentUserDetails;
 
 @RestController
 public class ShortsController {
@@ -87,6 +90,28 @@ public class ShortsController {
         }
         shortsRepository.save(toAdd);
         return new ResponseObject(true, "Short added");
+    }
+    @PostMapping("/shorts/liked/{id}")
+    public ResponseObject shortsLiked(@PathVariable String id) {
+        WayfareUserDetails user = getCurrentUserDetails();
+        Optional<Shorts> shortsData = shortsRepository.findById(id);
+        if (shortsData.isEmpty()) {
+            return new ResponseObject(false, "No such shorts");
+        }else{
+            shortsData.ifPresent(shorts -> shorts.addLike(user.getId()));
+        }
+        return new ResponseObject(true, "Liked");
+    }
+    @PostMapping("/shorts/unliked/{id}")
+    public ResponseObject shortsUnliked(@PathVariable String id) {
+        WayfareUserDetails user = getCurrentUserDetails();
+        Optional<Shorts> shortsData = shortsRepository.findById(id);
+        if (shortsData.isEmpty()) {
+            return new ResponseObject(false, "No such shorts");
+        }else{
+            shortsData.ifPresent(shorts -> shorts.removeLike(user.getId()));
+        }
+        return new ResponseObject(true, "Unliked");
     }
 }
 

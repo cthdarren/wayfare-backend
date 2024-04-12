@@ -75,8 +75,16 @@ public class Shorts {
         return likes;
     }
 
-    public void setLikes(ArrayList<String> likes) {
-        this.likes = likes;
+    public void addLike(String like) {
+        if (this.likes == null) {
+            this.likes = new ArrayList<>();
+        }
+        this.likes.add(like);
+    }
+    public void removeLike(String like) {
+        if (this.likes != null) {
+            this.likes.remove(like);
+        }
     }
 
     public Date getDatePosted() {
