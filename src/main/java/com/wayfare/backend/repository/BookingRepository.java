@@ -272,17 +272,26 @@ public interface BookingRepository extends MongoRepository<Booking, String> {
             "{ $unwind : { path: \"$user\" }}",
             "{ $sort : { dateBooked: -1, \"bookingDuration.startTime\" : 1}}",
             """
-                    {
-                       "$lookup":  {
-                           "from": "reviews",
-                           "let": { "bookingId": { "$toString": "$_id" } },
-                           "pipeline": [
-                             { "$match": { "$expr": { "$eq": ["$bookingId", "$$bookingId"] } } },
-                             { "$limit": 1 },
-                             { "$project": { "_id": 0, "reviewed": { "$literal": true } } }
-                           ],
-                           "as": "reviews"
+                  {
+                 "$lookup":{
+                   "from": "reviews",
+                   "let": { "bookingId": { "$toString": "$_id" }, "userId":{ "$toObjectId": "$userId"} },
+                   "pipeline": [
+                     { "$match": {
+                         "$expr": {
+                           "$and": [
+                             { "$eq": ["$bookingId", "$$bookingId"] },
+                             { "$eq": ["$user._id", "$$userId"] }
+                           ]
                          }
+                       }
+                     },
+                     { "$limit": 1 },
+                     { "$project": { "_id": 0, "reviewed": { "$literal": true } } }
+                   ],
+                   "as": "reviews"
+                 }
+               },
                  },
                     """,
             "{ $addFields: { reviewed: { $cond: { if: { $gt: [{ $size: \"$reviews\" }, 0] }, then: true, else: false } } }}"
