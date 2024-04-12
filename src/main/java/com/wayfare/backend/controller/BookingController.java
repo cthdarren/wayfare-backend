@@ -118,8 +118,8 @@ public class BookingController {
         Date beginOfDay = Date.from(Instant.now());
 
         // Until 24 hours from now
-        LocalDateTime endOfDay = LocalDate.now(ZoneOffset.UTC).plus(8, ChronoUnit.HOURS).atStartOfDay().plus(24, ChronoUnit.HOURS);
-        Date endOfDayDate = Date.from(endOfDay.toInstant(ZoneOffset.UTC));
+        LocalDateTime endOfDay = LocalDate.now(ZoneOffset.ofHours(8)).atStartOfDay().plus(1, ChronoUnit.DAYS);
+        Date endOfDayDate = Date.from(endOfDay.toInstant(ZoneOffset.ofHours(8)));
 
         Instant startOfNext= endOfDayDate.toInstant();
 
