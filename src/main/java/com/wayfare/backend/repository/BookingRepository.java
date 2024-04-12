@@ -310,15 +310,15 @@ public interface BookingRepository extends MongoRepository<Booking, String> {
             "{ $sort : { dateBooked: -1, \"bookingDuration.startTime\" : 1}}",
             """
              {
-                 "$lookup": {
+                 "$lookup":{
                    "from": "reviews",
-                   "let": { "bookingId": { "$toString": "$_id" } },
+                   "let": { "bookingId": { "$toString": "$_id" }, "wayfarerId":{ "$toObjectId": "$listing.userId"} },
                    "pipeline": [
                      { "$match": {
                          "$expr": {
                            "$and": [
                              { "$eq": ["$bookingId", "$$bookingId"] },
-                             { "$eq": ["$listing.userId", "$userId"] }
+                             { "$eq": ["$user._id", "$$wayfarerId"] }
                            ]
                          }
                        }
