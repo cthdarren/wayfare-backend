@@ -87,7 +87,7 @@ public class TourController {
         try {
             List<TourListing> combinedListings = new ArrayList<>();
 
-            if (numberPax == null){
+            if (numberPax == null | numberPax == "0"){
                 return new ResponseObject(true, tourRepo.findByLocationNearOrderByRatingDesc(new Point(Double.parseDouble(longitude),Double.parseDouble(latitude)),
                  new Distance(Double.parseDouble(kmdistance), Metrics.KILOMETERS)));
             }
