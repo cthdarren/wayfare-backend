@@ -1,9 +1,11 @@
 package com.wayfare.backend.controller;
 
 import com.wayfare.backend.helper.Mapper;
+import com.wayfare.backend.model.Booking;
 import com.wayfare.backend.model.Review;
 import com.wayfare.backend.model.TourListing;
 import com.wayfare.backend.model.dto.ReviewDTO;
+import com.wayfare.backend.repository.BookingRepository;
 import com.wayfare.backend.repository.ReviewRepository;
 import com.wayfare.backend.repository.TourRepository;
 import com.wayfare.backend.repository.UserRepository;
@@ -30,11 +32,13 @@ public class ReviewController {
 
     private final TourRepository tourRepo;
     private final UserRepository userRepo;
+    private final BookingRepository bookingRepo;
 
-    public ReviewController(ReviewRepository reviewRepo, TourRepository tourRepo, UserRepository userRepo) {
+    public ReviewController(ReviewRepository reviewRepo, TourRepository tourRepo, UserRepository userRepo, BookingRepository bookingRepo) {
         this.reviewRepo = reviewRepo;
         this.tourRepo = tourRepo;
         this.userRepo = userRepo;
+        this.bookingRepo = bookingRepo;
     }
 
     @GetMapping("/api/v1/review/{id}")
@@ -95,12 +99,16 @@ public class ReviewController {
 
         String listingId = dto.getListingId();
         Optional<TourListing> listing = tourRepo.findById(dto.getListingId());
+        Optional<Booking> booking = bookingRepo.findById(dto.getBookingId());
 
         if (listing.isEmpty())
             return new ResponseObject(false,"No such listing");
 
-        if(Objects.equals(user.getId(), listing.get().getUserId()))
-            return new ResponseObject(false, "You cannot leave a review on your own listing");
+        if (booking.isEmpty())
+            return new ResponseObject(false,"No booking found");
+
+        if(Objects.equals(user.getId(), booking.get().getUserId()))
+            return new ResponseObject(false, "You cannot review your own booking");
 
         if(!tourRepo.existsById(listingId))
             return new ResponseObject(false, "Listing does not exist");
