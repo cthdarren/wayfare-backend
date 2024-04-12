@@ -19,8 +19,9 @@ public class ProfileResponse {
     private final List<Review> reviews;
     private final List<TourListing> tours;
     private final Instant dateCreated;
+    private final boolean isVerified;
 
-    public ProfileResponse(String username, String firstName, String lastName, String aboutMe, String pictureUrl, List<String> languagesSpoken, List<BadgeEnum> badges, double avgScore, int reviewCount, RoleEnum role, List<Review> reviews, List<TourListing> tours, Instant dateCreated) {
+    public ProfileResponse(String username, String firstName, String lastName, String aboutMe, String pictureUrl, List<String> languagesSpoken, List<BadgeEnum> badges, double avgScore, int reviewCount, RoleEnum role, List<Review> reviews, List<TourListing> tours, Instant dateCreated, boolean isVerified) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -34,6 +35,7 @@ public class ProfileResponse {
         this.reviews = reviews;
         this.tours = tours;
         this.dateCreated = dateCreated;
+        this.isVerified = isVerified;
     }
 
     public String getUsername() {
@@ -86,5 +88,9 @@ public class ProfileResponse {
 
     public List<String> getLanguagesSpoken() {
         return languagesSpoken;
+    }
+
+    public boolean isVerified(){
+        return isVerified;
     }
 }
