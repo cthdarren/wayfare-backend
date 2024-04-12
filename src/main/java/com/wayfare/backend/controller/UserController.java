@@ -191,7 +191,7 @@ public class UserController {
                 userReviews,
                 userTours,
                 toView.getDateCreated(),
-                toView.getIsVerified();
+                toView.getIsVerified()
         );
 
         return new ResponseObject(true, response);
@@ -239,7 +239,7 @@ public class UserController {
                 userReviews,
                 userTours,
                 toView.getDateCreated(),
-                toView.getIsVerified();
+                toView.getIsVerified()
         );
 
         return new ResponseObject(true, response);
