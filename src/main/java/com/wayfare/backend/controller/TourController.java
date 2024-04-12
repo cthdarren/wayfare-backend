@@ -87,6 +87,10 @@ public class TourController {
         try {
             List<TourListing> combinedListings = new ArrayList<>();
 
+            if (numberPax == null){
+                return new ResponseObject(true, tourRepo.findByLocationNearOrderByRatingDesc(new Point(dLong,dLat), new Distance(dDist, Metrics.KILOMETERS)));
+            }
+
             // Check if location parameters are provided
             if (longitude != null && latitude != null && kmdistance != null && numberPax != null) {
                 double dLong = Double.parseDouble(longitude);
@@ -96,7 +100,6 @@ public class TourController {
                 if (dLong < -180 || dLong > 180 || dLat < -90 || dLat > 90) {
                     return new ResponseObject(false, "Invalid coordinates");
                 }
-
                 // Perform the location-based search
                 List<TourListing> listByLocation = tourRepo.findByLocationNearAndMaxPaxGreaterThanEqualAndMinPaxLessThanEqualOrderByRatingDesc(
                         new Point(dLong,dLat),

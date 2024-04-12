@@ -70,4 +70,6 @@ public interface TourRepository extends MongoRepository<TourListing, String> {
     //https://docs.spring.io/spring-data/mongodb/reference/mongodb/repositories/query-methods.html#mongodb.repositories.queries.geo-spatial
     // Find listings based on location
     List<TourListing> findByLocationNearAndMaxPaxGreaterThanEqualAndMinPaxLessThanEqualOrderByRatingDesc(Point location, Distance distance, Integer maxPax, Integer minPax);
+
+    List<TourListing> findByLocationNearOrderByRatingDesc(Point location, Distance distance);
 }
