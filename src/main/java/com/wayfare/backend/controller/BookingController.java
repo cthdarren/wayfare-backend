@@ -69,6 +69,21 @@ public class BookingController {
         return new ResponseObject(true, booking);
     }
 
+    @GetMapping("/wayfarer/booking/{id}")
+    public ResponseObject getBookingWayfarer(@PathVariable String id){
+        BookingResponse booking = bookingRepository.findBookingAsWayfarer(id);
+        WayfareUserDetails curr = getCurrentUserDetails();
+
+        if (booking == null)
+            return new ResponseObject(false, "Booking not found");
+
+        if (!(Objects.equals(curr.getId(), booking.getUserId()) | Objects.equals(curr.getId(), booking.getListing().getUserId()))){
+            return new ResponseObject(false, "You cannot access a booking you do not own!");
+        }
+
+        return new ResponseObject(true, booking);
+    }
+
     // get all bookings under a username
     @GetMapping("/bookings")
     public ResponseObject getUserBooking(){
