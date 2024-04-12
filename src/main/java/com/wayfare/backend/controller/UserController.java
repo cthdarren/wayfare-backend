@@ -156,7 +156,7 @@ public class UserController {
         if (toView == null){
             return new ResponseObject(false, "Username does not exist");
         }
-        List<Review> userReviews = reviewRepo.findFirst5ByListingUserIdOrderByDateCreatedDesc(toView.getId());
+        List<Review> userReviews = reviewRepo.findByRevieweeIdOrderByDateCreatedDesc(toView.getId());
         List<TourListing> userTours = tourRepo.findAllByUserId(toView.getId());
 
         Double avgScore;
@@ -204,7 +204,7 @@ public class UserController {
             return new ResponseObject(false, "Username does not exist");
         }
         User toView =getUser.get();
-        List<Review> userReviews = reviewRepo.findFirst5ByListingUserIdOrderByDateCreatedDesc(toView.getId());
+        List<Review> userReviews = reviewRepo.findByRevieweeIdOrderByDateCreatedDesc(toView.getId());
         List<TourListing> userTours = tourRepo.findAllByUserId(toView.getId());
 
         Double avgScore;
