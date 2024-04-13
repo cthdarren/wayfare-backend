@@ -45,6 +45,16 @@ public class ShortsController {
         List<Shorts> allShorts = shortsRepository.findAll();
         return new ResponseObject(true, allShorts);
     }
+
+    @GetMapping("/api/v1/short/{id}")
+    public ResponseObject getShortById(@PathVariable String id){
+        Optional<Shorts> toView = shortsRepository.findById(id);
+        if (toView.isEmpty())
+            return new ResponseObject(false, "Journey not found");
+        
+        return new ResponseObject(true, toView);
+    }
+
     @PostMapping("/shorts/create")
     public ResponseObject createShortsNoList(@RequestBody ShortsDTO dto) {
         Shorts toAdd;
@@ -60,7 +70,7 @@ public class ShortsController {
             return new ResponseObject(false, "Listing not found");
         }
         shortsRepository.save(toAdd);
-        return new ResponseObject(true, "Short added");
+        return new ResponseObject(true, "Journey added");
     }
     @PostMapping("/shorts/create/{id}")
     public ResponseObject createBooking(@PathVariable String id, @RequestBody ShortsDTO dto) {
@@ -81,7 +91,7 @@ public class ShortsController {
             return new ResponseObject(false, "Listing not found");
         }
         shortsRepository.save(toAdd);
-        return new ResponseObject(true, "Short added");
+        return new ResponseObject(true, "Journey added");
     }
     @PostMapping("/shorts/liked/{id}")
     public ResponseObject shortsLiked(@PathVariable String id) {
