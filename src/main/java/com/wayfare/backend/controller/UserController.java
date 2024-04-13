@@ -250,9 +250,9 @@ public class UserController {
         return new ResponseObject(true, response);
     }
 
-    @GetMapping("/api/v1/profileshorts/{userId}")
-    public ResponseObject getAllShortsByUserId(@PathVariable String userName) {
-        User user = userRepo.findByUsername(userName);
+    @GetMapping("/api/v1/profileshorts/{username}")
+    public ResponseObject getAllShortsByUserId(@PathVariable String username) {
+        User user = userRepo.findByUsername(username);
         List<Shorts> allShorts = shortsRepo.findAllByUserId(user.getId());
         return new ResponseObject(true, allShorts);
     }
