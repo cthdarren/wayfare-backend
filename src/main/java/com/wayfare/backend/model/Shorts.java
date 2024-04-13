@@ -8,12 +8,12 @@ import java.util.Date;
 @Document(collection = "shorts")
 public class Shorts {
     private String id;
-    private String shortsUrl,description,userId,userName, thumbnailUrl;
+    private String shortsUrl,description,userId,userName, thumbnailUrl, posterPictureUrl;
     private TourListing listing;
     private ArrayList<String> likes;
     private Date datePosted;
 
-    public Shorts(String shortsUrl, String userName,String userId, String description, Date datePosted, TourListing listing,ArrayList<String> likes, String thumbnailUrl) {
+    public Shorts(String shortsUrl, String userName,String userId, String description, Date datePosted, TourListing listing,ArrayList<String> likes, String thumbnailUrl, String posterPictureUrl) {
         this.shortsUrl = shortsUrl;
         this.userId = userId;
         this.userName = userName;
@@ -22,15 +22,12 @@ public class Shorts {
         this.likes = likes;
         this.datePosted = datePosted;
         this.thumbnailUrl = thumbnailUrl;
+        this.posterPictureUrl = posterPictureUrl;
     }
 
     public String getId() {
         return id;
     }
-
-//    public void setId(String id) {
-//        this.id = id;
-//    }
 
     public String getShortsUrl() {
         return shortsUrl;
@@ -104,6 +101,10 @@ public class Shorts {
 
     public void setThumbnailUrl(String thumbnailUrl) {
         this.thumbnailUrl = thumbnailUrl;
+    }
+
+    public String getPosterPictureUrl() {
+        return posterPictureUrl;
     }
 
 

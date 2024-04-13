@@ -166,7 +166,8 @@ public class Mapper {
                 shortsDTO.getDatePosted(),
                 null,
                 likes,
-                shortsDTO.getThumbnailUrl()
+                shortsDTO.getThumbnailUrl(),
+                user.getPictureUrl()
         );
     }
     public Shorts toShorts(ShortsDTO shortsDTO, String listingId) throws IllegalArgumentException {
@@ -174,7 +175,6 @@ public class Mapper {
         WayfareUserDetails user = getCurrentUserDetails();
         String userId = user.getId();
         String userName = user.getUsername();
-        String userPicUrl = user.getPictureUrl();
         ArrayList<String> likes = new ArrayList<>();
         return new Shorts(
                 shortsDTO.getShortsUrl(),
@@ -184,7 +184,8 @@ public class Mapper {
                 shortsDTO.getDatePosted(),
                 tourListing,
                 likes,
-                shortsDTO.getThumbnailUrl()
+                shortsDTO.getThumbnailUrl(),
+                user.getPictureUrl()
         );
     }
 

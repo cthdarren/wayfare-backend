@@ -54,7 +54,7 @@ public class ShortsController {
         List<Shorts> allShorts = shortsRepository.findAll();
         for (Shorts sh: allShorts){
             List<CommentWithUser> comments = commentRepo.findAllJoinUserByJourneyId(sh.getId());
-            result.add(new ShortsWithComment(sh.getShortsUrl(), sh.getUserName(), sh.getUserId(), sh.getDescription(), sh.getDatePosted(), sh.getListing(), sh.getLikes(), sh.getThumbnailUrl(), comments));
+            result.add(new ShortsWithComment(sh.getId(), sh.getShortsUrl(), sh.getUserName(), sh.getUserId(), sh.getDescription(), sh.getDatePosted(), sh.getListing(), sh.getLikes(), sh.getThumbnailUrl(), sh.getPosterPictureUrl(), comments));
         }
         return new ResponseObject(true, result);
     }
