@@ -10,11 +10,8 @@ import com.wayfare.backend.repository.ReviewRepository;
 import com.wayfare.backend.repository.TourRepository;
 import com.wayfare.backend.repository.UserRepository;
 import com.wayfare.backend.request.DeleteReviewRequest;
-import com.wayfare.backend.request.ReviewsByListingRequest;
 import com.wayfare.backend.response.ResponseObject;
 import com.wayfare.backend.security.WayfareUserDetails;
-import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
@@ -24,8 +21,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static com.wayfare.backend.helper.helper.getCurrentUserDetails;
-import static java.lang.Math.nextUp;
-import static java.lang.Math.round;
 
 @RestController
 public class ReviewController {
