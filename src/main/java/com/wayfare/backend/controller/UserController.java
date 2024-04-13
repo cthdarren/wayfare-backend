@@ -77,6 +77,7 @@ public class UserController {
             return new ResponseObject(false, "No such user with username " + user.getUsername());
 
         AccountSettingsResponse response = new AccountSettingsResponse(
+                currUser.getId(),
                 currUser.getUsername(),
                 currUser.getFirstName(),
                 currUser.getLastName(),

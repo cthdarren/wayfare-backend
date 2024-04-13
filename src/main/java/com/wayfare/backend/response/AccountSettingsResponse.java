@@ -6,6 +6,7 @@ import java.time.Instant;
 import java.util.List;
 
 public class AccountSettingsResponse {
+    private final String id;
     private final String username;
     private final String firstName;
     private final String lastName;
@@ -19,8 +20,10 @@ public class AccountSettingsResponse {
     private final RoleEnum role;
     private final List<String> languagesSpoken;
 
-
-    public AccountSettingsResponse(String username, String firstName, String lastName, String email, String phoneNumber, boolean isVerified, Instant dateCreated, String pictureUrl, String aboutMe, List<BadgeEnum> badges, RoleEnum role, List<String> languagesSpoken){
+   public AccountSettingsResponse(String id, String username, String firstName, String lastName, String email,
+            String phoneNumber, boolean isVerified, Instant dateCreated, String pictureUrl, String aboutMe,
+            List<BadgeEnum> badges, RoleEnum role, List<String> languagesSpoken) {
+        this.id = id;
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -33,6 +36,10 @@ public class AccountSettingsResponse {
         this.badges = badges;
         this.role = role;
         this.languagesSpoken = languagesSpoken;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getUsername() {
