@@ -8,12 +8,12 @@ import java.util.Date;
 @Document(collection = "shorts")
 public class Shorts {
     private String id;
-    private String shortsUrl,description,userId,userName;
+    private String shortsUrl,description,userId,userName, thumbnailUrl;
     private TourListing listing;
     private ArrayList<String> likes;
     private Date datePosted;
 
-    public Shorts(String shortsUrl, String userName,String userId, String description, Date datePosted, TourListing listing,ArrayList<String> likes) {
+    public Shorts(String shortsUrl, String userName,String userId, String description, Date datePosted, TourListing listing,ArrayList<String> likes, String thumbnailUrl) {
         this.shortsUrl = shortsUrl;
         this.userId = userId;
         this.userName = userName;
@@ -21,6 +21,7 @@ public class Shorts {
         this.listing = listing;
         this.likes = likes;
         this.datePosted = datePosted;
+        this.thumbnailUrl = thumbnailUrl;
     }
 
     public String getId() {
@@ -96,4 +97,14 @@ public class Shorts {
     public void setDatePosted(Date datePosted) {
         this.datePosted = datePosted;
     }
+
+ public String getThumbnailUrl() {
+        return thumbnailUrl;
+    }
+
+    public void setThumbnailUrl(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
+    }
+
+
 }

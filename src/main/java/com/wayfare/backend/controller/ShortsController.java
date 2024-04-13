@@ -55,13 +55,9 @@ public class ShortsController {
         toAdd = null;
         try {
             toAdd = new Mapper().toShortsNoTour(dto);
-        } catch (IOException e) {
+        } catch (IllegalArgumentException e) {
             e.printStackTrace();
-            return new ResponseObject(false, "Server error");
-        } catch (InterruptedException e) {
-            return new ResponseObject(false, "Server error");
-        } catch (ApiException e) {
-            return new ResponseObject(false, "Server error");
+            return new ResponseObject(false, "Listing not found");
         }
         shortsRepository.save(toAdd);
         return new ResponseObject(true, "Short added");
@@ -80,13 +76,9 @@ public class ShortsController {
         toAdd = null;
         try {
             toAdd = new Mapper(tourRepository).toShorts(dto,id);
-        } catch (IOException e) {
+        } catch (IllegalArgumentException e) {
             e.printStackTrace();
-            return new ResponseObject(false, "Server error");
-        } catch (InterruptedException e) {
-            return new ResponseObject(false, "Server error");
-        } catch (ApiException e) {
-            return new ResponseObject(false, "Server error");
+            return new ResponseObject(false, "Listing not found");
         }
         shortsRepository.save(toAdd);
         return new ResponseObject(true, "Short added");

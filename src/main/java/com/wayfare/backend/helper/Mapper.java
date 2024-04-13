@@ -129,7 +129,7 @@ public class Mapper {
         );
     }
 
-    public Booking toBooking(BookingDTO bookingDTO) throws IOException, InterruptedException, ApiException {
+    public Booking toBooking(BookingDTO bookingDTO) throws IllegalArgumentException{
         TourListing tourListing = tourRepo.findById(bookingDTO.getListingId()).orElseThrow();
         WayfareUserDetails user = getCurrentUserDetails();
         String userId = user.getId();
@@ -152,7 +152,7 @@ public class Mapper {
         );
     }
 
-    public Shorts toShortsNoTour(ShortsDTO shortsDTO) throws IOException, InterruptedException, ApiException {
+    public Shorts toShortsNoTour(ShortsDTO shortsDTO) {
         //TourListing tourListing = tourRepo.findById(listingId).orElseThrow();
         WayfareUserDetails user = getCurrentUserDetails();
         String userId = user.getId();
@@ -165,10 +165,11 @@ public class Mapper {
                 shortsDTO.getDescription(),
                 shortsDTO.getDatePosted(),
                 null,
-                likes
+                likes,
+                shortsDTO.getThumbnailUrl()
         );
     }
-    public Shorts toShorts(ShortsDTO shortsDTO, String listingId) throws IOException, InterruptedException, ApiException {
+    public Shorts toShorts(ShortsDTO shortsDTO, String listingId) throws IllegalArgumentException {
         TourListing tourListing = tourRepo.findById(listingId).orElseThrow();
         WayfareUserDetails user = getCurrentUserDetails();
         String userId = user.getId();
@@ -182,7 +183,8 @@ public class Mapper {
                 shortsDTO.getDescription(),
                 shortsDTO.getDatePosted(),
                 tourListing,
-                likes
+                likes,
+                shortsDTO.getThumbnailUrl()
         );
     }
 

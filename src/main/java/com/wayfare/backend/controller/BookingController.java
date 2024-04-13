@@ -199,13 +199,9 @@ public class BookingController {
             toAdd = null;
             try {
                 toAdd = new Mapper(tourRepository).toBooking(dto);
-            } catch (IOException e) {
+            } catch (IllegalArgumentException e) {
                 e.printStackTrace();
-                return new ResponseObject(false, "Server error");
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            } catch (ApiException e) {
-                throw new RuntimeException(e);
+                return new ResponseObject(false, "Listing not found");
             }
         }
         bookingRepository.save(toAdd);

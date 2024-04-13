@@ -21,9 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.wayfare.backend.model.Review;
+import com.wayfare.backend.model.Shorts;
 import com.wayfare.backend.model.TourListing;
 import com.wayfare.backend.model.User;
 import com.wayfare.backend.repository.ReviewRepository;
+import com.wayfare.backend.repository.ShortsRepository;
 import com.wayfare.backend.repository.TourRepository;
 import com.wayfare.backend.repository.UserRepository;
 import com.wayfare.backend.request.EditAccountDetailsRequest;
@@ -41,14 +43,16 @@ public class UserController {
     private final UserRepository userRepo;
     private final ReviewRepository reviewRepo;
     private final TourRepository tourRepo;
+    private final ShortsRepository shortsRepo;
 
     ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
-    public UserController(AuthenticationManager authenticationManager, UserRepository userRepo, ReviewRepository reviewRepo, TourRepository tourRepo) {
+    public UserController(AuthenticationManager authenticationManager, UserRepository userRepo, ReviewRepository reviewRepo, TourRepository tourRepo, ShortsRepository shortsRepo) {
         this.authenticationManager = authenticationManager;
         this.userRepo = userRepo;
         this.reviewRepo = reviewRepo;
         this.tourRepo = tourRepo;
+        this.shortsRepo = shortsRepo;
     }
 
     @GetMapping("/api/v1/user/{username}")
@@ -245,4 +249,9 @@ public class UserController {
         return new ResponseObject(true, response);
     }
 
+    @GetMapping("/api/v1/profileshorts/{userId}")
+    public ResponseObject getAllShortsByUserId(@PathVariable String userId) {
+        List<Shorts> allShorts = shortsRepo.findAllByUserId(userId);
+        return new ResponseObject(true, allShorts);
+    }
 }

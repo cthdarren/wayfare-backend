@@ -8,12 +8,15 @@ public class ShortsDTO extends ValidateClass {
     private final String description;
     private final String shortsUrl;
     private final Date datePosted;
+    private final String thumbnailUrl;
 
-    public ShortsDTO(String description, String shortsUrl, Date datePosted) {
+    public ShortsDTO(String description, String shortsUrl, Date datePosted, String thumbnailUrl) {
         this.description = description;
         this.shortsUrl = shortsUrl;
         this.datePosted = datePosted;
+        this.thumbnailUrl = thumbnailUrl;
     }
+
     public String getDescription() {
         return description;
     }
@@ -25,9 +28,13 @@ public class ShortsDTO extends ValidateClass {
         return datePosted;
     }
 
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
+    }
+
     @Override
     public void validate() {
-        if (getShortsUrl() == null || getDatePosted() == null){
+        if (getShortsUrl() == null | getDatePosted() == null | getThumbnailUrl() == null){
             addErrors("Missing JSON Fields");
         }
         getErrors().remove(null);
