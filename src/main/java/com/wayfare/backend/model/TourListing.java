@@ -4,6 +4,7 @@ import com.wayfare.backend.model.object.TimeRange;
 import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.Instant;
 import java.util.ArrayList;
 
 @Document(collection = "tourListings")
@@ -22,6 +23,7 @@ public class TourListing {
     private Double rating;
     private Integer reviewCount;
     private String userId;
+    private final Instant dateCreated;
 
     public TourListing(
             String title,
@@ -36,7 +38,8 @@ public class TourListing {
             int minPax,
             double rating,
             int reviewCount,
-            String userId
+            String userId,
+            Instant dateCreated
 
     ) {
         this.title = title;
@@ -52,6 +55,7 @@ public class TourListing {
         this.userId = userId;
         this.rating = rating;
         this.reviewCount = reviewCount;
+        this.dateCreated = dateCreated;
     }
 
     public String getId() {
@@ -137,6 +141,11 @@ public class TourListing {
     }
 
     public void setCategory(CategoryEnum category) {this.category = category;}
+
+    public Instant getDateCreated() {
+        return dateCreated;
+    }
+
 
 
 }

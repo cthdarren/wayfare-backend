@@ -124,7 +124,8 @@ public class Mapper {
                 tourListingCreationDTO.getMinPax(),
                 0,
                 0,
-                userId
+                userId,
+                Instant.now()
         );
     }
 
