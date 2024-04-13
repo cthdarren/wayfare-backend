@@ -168,6 +168,7 @@ public class TourController {
         TourListing toAdd = null;
         try {
             toAdd = new Mapper().toTourListing(dto, user.getId());
+            System.out.println(toAdd.getDateCreated());
         } catch (IOException e) {
             e.printStackTrace();
             return new ResponseObject(false, "Server error");

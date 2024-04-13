@@ -146,6 +146,4 @@ public class TourListing {
         return dateCreated;
     }
 
-
-
 }
