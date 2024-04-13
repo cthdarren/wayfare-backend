@@ -62,10 +62,17 @@ public class ShortsController {
     @GetMapping("/api/v1/short/{id}")
     public ResponseObject getShortById(@PathVariable String id){
         Optional<Shorts> toView = shortsRepository.findById(id);
-        if (toView.isEmpty())
+
+        if (toView.isPresent()){
+            Shorts shorts = toView.get();
+            List<CommentWithUser> comments = commentRepo.findAllJoinUserByJourneyId(shorts.getId());
+            ShortsWithComment result = (new ShortsWithComment(shorts.getId(), shorts.getShortsUrl(), shorts.getUserName(), shorts.getUserId(), shorts.getDescription(), shorts.getDatePosted(), shorts.getListing(), shorts.getLikes(), shorts.getThumbnailUrl(), shorts.getPosterPictureUrl(), comments));
+            return new ResponseObject(true, result);
+        }else {
             return new ResponseObject(false, "Journey not found");
-        
-        return new ResponseObject(true, toView);
+        }
+
+
     }
 
     @PostMapping("/shorts/create")
