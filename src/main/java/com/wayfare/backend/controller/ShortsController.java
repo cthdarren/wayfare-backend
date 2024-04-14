@@ -141,5 +141,16 @@ public class ShortsController {
         else
             return new ResponseObject(false, "Journey not found");
     }
+    @GetMapping("/api/v1/shorts/comment/{id}")
+    public ResponseObject commentsForShort(@PathVariable String id){
+        Optional<Shorts> toView = shortsRepository.findById(id);
+        if (toView.isPresent()){
+            Shorts shorts = toView.get();
+            List<CommentWithUser> comments = commentRepo.findAllJoinUserByJourneyId(shorts.getId());
+            return new ResponseObject(true, comments);
+        }else {
+            return new ResponseObject(false, "Journey not found");
+        }
+    }
 }
 
