@@ -2,6 +2,7 @@ package com.wayfare.backend.model;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -11,9 +12,9 @@ public class Shorts {
     private String shortsUrl,description,userId,userName, thumbnailUrl, posterPictureUrl;
     private TourListing listing;
     private ArrayList<String> likes;
-    private Date datePosted;
+    private Instant datePosted;
 
-    public Shorts(String shortsUrl, String userName,String userId, String description, Date datePosted, TourListing listing,ArrayList<String> likes, String thumbnailUrl, String posterPictureUrl) {
+    public Shorts(String shortsUrl, String userName, String userId, String description, Instant datePosted, TourListing listing, ArrayList<String> likes, String thumbnailUrl, String posterPictureUrl) {
         this.shortsUrl = shortsUrl;
         this.userId = userId;
         this.userName = userName;
@@ -87,11 +88,11 @@ public class Shorts {
         }
     }
 
-    public Date getDatePosted() {
+    public Instant getDatePosted() {
         return datePosted;
     }
 
-    public void setDatePosted(Date datePosted) {
+    public void setDatePosted(Instant datePosted) {
         this.datePosted = datePosted;
     }
 

@@ -1,6 +1,7 @@
 package com.wayfare.backend.model;
 
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,10 +11,10 @@ public class ShortsWithComment{
     private String shortsUrl,description,userId,userName, thumbnailUrl, posterPictureUrl;
     private TourListing listing;
     private ArrayList<String> likes;
-    private Date datePosted;
+    private Instant datePosted;
     private List<CommentWithUser> comments;
 
-    public ShortsWithComment(String id, String shortsUrl, String userName,String userId, String description, Date datePosted, TourListing listing,ArrayList<String> likes, String thumbnailUrl, String posterPictureUrl, List<CommentWithUser> comments) {
+    public ShortsWithComment(String id, String shortsUrl, String userName,String userId, String description, Instant datePosted, TourListing listing,ArrayList<String> likes, String thumbnailUrl, String posterPictureUrl, List<CommentWithUser> comments) {
         this.id = id;
         this.shortsUrl = shortsUrl;
         this.userId = userId;
@@ -55,7 +56,7 @@ public class ShortsWithComment{
         return likes;
     }
 
-    public Date getDatePosted() {
+    public Instant getDatePosted() {
         return datePosted;
     }
 
