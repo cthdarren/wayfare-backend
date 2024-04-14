@@ -149,7 +149,7 @@ public class ShortsController {
             return new ResponseObject(false, "Journey not found");
         }
     }
-    @PostMapping("short/delete/{id}")
+    @PostMapping("/short/delete/{id}")
     public ResponseObject deleteShortById(@PathVariable String id) {
         Optional<Shorts> shortsSingle = shortsRepository.findById(id);
         if (shortsSingle.isEmpty()) {
