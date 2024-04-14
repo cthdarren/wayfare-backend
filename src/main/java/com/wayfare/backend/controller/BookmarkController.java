@@ -25,6 +25,12 @@ public class BookmarkController {
         this.bookmarkRepo = bookmarkRepo;
     }
 
+    @GetMapping("/isbookmarked/{listingId}")
+    public ResponseObject isBookmarked(@PathVariable String listingId){
+        WayfareUserDetails user = getCurrentUserDetails();
+        return new ResponseObject(true, bookmarkRepo.existsByListingIdAndUserId(listingId, user.getId()));
+    }
+
     @GetMapping("/getbookmarks")
     public ResponseObject getBookmarks(){
         WayfareUserDetails user = getCurrentUserDetails();
