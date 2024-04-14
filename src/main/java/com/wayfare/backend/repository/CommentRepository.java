@@ -14,6 +14,8 @@ public interface CommentRepository extends MongoRepository<Comment, String> {
     List<Comment> findAllByJourneyIdOrderByDateCreatedAsc();
     List<Comment> findAllByUserId();
 
+    int deleteAllByJourneyId(String journeyId);
+
     @Aggregation(pipeline = {
         "{ $match: { journeyId: ?0}}",
         """

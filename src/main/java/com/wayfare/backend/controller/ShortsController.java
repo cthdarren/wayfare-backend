@@ -26,10 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static com.wayfare.backend.helper.helper.getCurrentUserDetails;
 
@@ -151,6 +148,21 @@ public class ShortsController {
         }else {
             return new ResponseObject(false, "Journey not found");
         }
+    }
+    @PostMapping("short/delete/{id}")
+    public ResponseObject deleteShortById(@PathVariable String id) {
+        Optional<Shorts> shortsSingle = shortsRepository.findById(id);
+        if (shortsSingle.isEmpty()) {
+            return new ResponseObject(false, "Booking does not exist");
+        }
+        Shorts shortFound = shortsSingle.get();
+        String currName = getCurrentUserDetails().getUsername();
+        if (!Objects.equals(currName, shortFound.getUserName())) {
+            return new ResponseObject(false, "You cannot delete a journey you do not own!");
+        }
+        int rowsDeleted = commentRepo.deleteAllByJourneyId(id);
+        shortsRepository.delete(shortFound);
+        return new ResponseObject(true, "Shorts successfully deleted");
     }
 }
 
