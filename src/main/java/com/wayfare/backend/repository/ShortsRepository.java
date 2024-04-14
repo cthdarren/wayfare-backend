@@ -11,4 +11,5 @@ public interface ShortsRepository extends MongoRepository<Shorts, String> {
     // @Aggregation()
     // List<Shorts> findAllJoinComments();
     List<Shorts> findAllByUserId(String userId);
+    List<Shorts> findAllByUserIdOrderByDatePostedDesc(String userId);
 }
