@@ -210,12 +210,12 @@ public class BookingController {
     }
 
     // edit booking using its id
-    @PostMapping("/booking/edit/{id}")
-    public ResponseObject editBooking(@PathVariable String id, @RequestBody BookingDTO dto) {
+    @PostMapping("/booking/edit")
+    public ResponseObject editBooking(@RequestBody BookingDTO dto) {
         dto.validate();
         if (dto.hasErrors()){return new ResponseObject(false, dto.getErrors());}
 
-        Optional<Booking> booking = bookingRepository.findById(id);
+        Optional<Booking> booking = bookingRepository.findById(dto.getListingId());
 
         Date dateBooked = dto.getDateBooked();
         TimeRange bookingDuration = dto.getBookingDuration();

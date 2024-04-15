@@ -207,7 +207,7 @@ public class UserController {
     public ResponseObject getUserProfileById(@PathVariable String userId){
         Optional<User> getUser = userRepo.findById(userId);
         if (getUser.isEmpty()){
-            return new ResponseObject(false, "Username does not exist");
+            return new ResponseObject(false, "UserId does not exist");
         }
         User toView =getUser.get();
         List<Review> userReviews = reviewRepo.findByRevieweeIdOrderByDateCreatedDesc(toView.getId());
@@ -253,6 +253,9 @@ public class UserController {
     @GetMapping("/api/v1/profileshorts/{username}")
     public ResponseObject getAllShortsByUserId(@PathVariable String username) {
         User user = userRepo.findByUsername(username);
+        if (user == null){
+            return new ResponseObject(false, "Username does not exist");
+        }
         List<Shorts> allShorts = shortsRepo.findAllByUserIdOrderByDatePostedDesc(user.getId());
         return new ResponseObject(true, allShorts);
     }
