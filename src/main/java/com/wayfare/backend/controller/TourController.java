@@ -2,6 +2,7 @@ package com.wayfare.backend.controller;
 
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
@@ -32,6 +33,7 @@ import org.springframework.data.geo.Metrics;
 import org.springframework.data.geo.Point;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import static com.wayfare.backend.helper.helper.getCurrentUserDetails;
@@ -79,71 +81,114 @@ public class TourController {
             @RequestParam(required = false) String latitude,
             @RequestParam(required = false) String kmdistance,
             @RequestParam(required = false) String numberPax,
-            @RequestParam(required = false) Date startDate,
-            @RequestParam(required = false) Date endDate
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate
             )
     {
-
-        try {
-            List<TourListing> combinedListings = new ArrayList<>();
-
-            if (numberPax == null | numberPax == "0"){
-                return new ResponseObject(true, tourRepo.findByLocationNearOrderByRatingDesc(new Point(Double.parseDouble(longitude),Double.parseDouble(latitude)),
-                 new Distance(Double.parseDouble(kmdistance), Metrics.KILOMETERS)));
-            }
-
-            // Check if location parameters are provided
-            if (longitude != null && latitude != null && kmdistance != null && numberPax != null) {
-                double dLong = Double.parseDouble(longitude);
-                double dLat = Double.parseDouble(latitude);
-                double dDist = Double.parseDouble(kmdistance);
-                Integer iNumberPax = Integer.parseInt(numberPax);
-                if (dLong < -180 || dLong > 180 || dLat < -90 || dLat > 90) {
-                    return new ResponseObject(false, "Invalid coordinates");
-                }
-                // Perform the location-based search
-                List<TourListing> listByLocation = tourRepo.findByLocationNearAndMaxPaxGreaterThanEqualAndMinPaxLessThanEqualOrderByRatingDesc(
-                        new Point(dLong,dLat),
-                        new Distance(dDist, Metrics.KILOMETERS),
-                        iNumberPax,
-                        iNumberPax
-                );
-
-                combinedListings.addAll(listByLocation);
-            }
-
-            // Check if date range parameters are provided
-            if (startDate != null && endDate != null) {
-                // Perform the date range search
-                List<TourListing> availableListings = tourRepo.findAvailableListingsByDateRange(startDate, endDate);
-
-                if (combinedListings.isEmpty()) {
-                    combinedListings.addAll(availableListings);
-                } else {
-                    // Retains listings matching both criteria
-                    combinedListings.retainAll(availableListings);
-                }
-            }
-            return new ResponseObject(true, combinedListings);
-
-            // DEBUGGING
-        } catch (NumberFormatException e) {
-            System.out.println(e.getMessage());
-            return new ResponseObject(false, "Invalid parameters");
-        } catch (AuthenticationCredentialsNotFoundException e) {
-            System.out.println(e.getMessage());
-            return new ResponseObject(false, "Unauthorized: Invalid credentials");
-        } catch (MongoQueryException e) {
-            System.out.println(e.getMessage());
-            return new ResponseObject(false, "Error fetching listings (database error)");
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-            return new ResponseObject(false, "Invalid request parameters");
-        } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
-            return new ResponseObject(false, "Internal Server Error");
+        if (longitude == null & latitude == null & kmdistance == null & numberPax == null & startDate == null & endDate == null)
+        {
+            return new ResponseObject(true,  tourRepo.findByLocationNearOrderByRatingDesc(new Point(0, 0), new Distance(20050.0, Metrics.KILOMETERS)));
         }
+        if (longitude != null & latitude != null & kmdistance != null){
+            Double doubleLong = Double.parseDouble(longitude);
+            Double doubleLat = Double.parseDouble(latitude);
+            Double doubleKmdistance = Double.parseDouble(kmdistance);
+            if (numberPax == null & startDate == null & endDate == null){
+                return new ResponseObject(true, tourRepo.findByLocationNearOrderByRatingDesc(
+                        new Point(doubleLong, doubleLat),
+                        new Distance(doubleKmdistance, Metrics.KILOMETERS)));
+            }
+            if (numberPax != null){
+                Integer intPax = Integer.parseInt(numberPax);
+                if (startDate == null & endDate == null){
+                    return new ResponseObject(true, tourRepo.findByLocationNearAndMaxPaxGreaterThanEqualAndMinPaxLessThanEqualOrderByRatingDesc(
+                            new Point(doubleLong, doubleLat),
+                            new Distance(doubleKmdistance, Metrics.KILOMETERS),
+                            intPax,
+                            intPax
+                    ));
+                }
+                else if (startDate != null & endDate != null){
+                    return new ResponseObject(true, tourRepo.findWithAllParams(doubleLong, doubleLat, new Distance(doubleKmdistance, Metrics.KILOMETERS).getNormalizedValue(), startDate, endDate));
+                }
+            }
+            if (startDate != null & endDate != null){
+                return new ResponseObject(true, tourRepo.findAvailableListingsByLocAndDateRange(doubleLong, doubleLat, new Distance(doubleKmdistance, Metrics.KILOMETERS).getNormalizedValue(), startDate, endDate));
+            }
+            else
+                return new ResponseObject(false, "Invalid parameters");
+        }
+        if (numberPax != null){
+            Integer intPax = Integer.parseInt(numberPax);
+            if (startDate != null & endDate != null){
+                return new ResponseObject(true, tourRepo.findAvailableListingsByPaxAndDateRange(intPax, startDate, endDate));
+            }
+            return new ResponseObject(true, tourRepo.findByMaxPaxGreaterThanEqualAndMinPaxLessThanEqualOrderByRatingDesc(intPax, intPax));
+        }
+        if (startDate != null & endDate != null){
+            return new ResponseObject(true, tourRepo.findAvailableListingsByDateRange(startDate, endDate));
+        }
+        return new ResponseObject(false, "Invalid parameters");
 
+//        try {
+//            List<TourListing> combinedListings = new ArrayList<>();
+//
+//            if (numberPax == null | numberPax == "0"){
+//                return new ResponseObject(true, tourRepo.findByLocationNearOrderByRatingDesc(new Point(Double.parseDouble(longitude),Double.parseDouble(latitude)),
+//                 new Distance(Double.parseDouble(kmdistance), Metrics.KILOMETERS)));
+//            }
+//
+//            // Check if location parameters are provided
+//            if (longitude != null && latitude != null && kmdistance != null && numberPax != null) {
+//                double dLong = Double.parseDouble(longitude);
+//                double dLat = Double.parseDouble(latitude);
+//                double dDist = Double.parseDouble(kmdistance);
+//                Integer iNumberPax = Integer.parseInt(numberPax);
+//                if (dLong < -180 || dLong > 180 || dLat < -90 || dLat > 90) {
+//                    return new ResponseObject(false, "Invalid coordinates");
+//                }
+//                // Perform the location-based search
+//                List<TourListing> listByLocation = tourRepo.findByLocationNearAndMaxPaxGreaterThanEqualAndMinPaxLessThanEqualOrderByRatingDesc(
+//                        new Point(dLong,dLat),
+//                        new Distance(dDist, Metrics.KILOMETERS),
+//                        iNumberPax,
+//                        iNumberPax
+//                );
+//
+//                combinedListings.addAll(listByLocation);
+//            }
+//
+//            // Check if date range parameters are provided
+//            if (startDate != null && endDate != null) {
+//                // Perform the date range search
+//                List<TourListing> availableListings = tourRepo.findAvailableListingsByDateRange(Instant.parse(startDate), Instant.parse(endDate));
+//
+//                if (combinedListings.isEmpty()) {
+//                    combinedListings.addAll(availableListings);
+//                } else {
+//                    // Retains listings matching both criteria
+//                    combinedListings.retainAll(availableListings);
+//                }
+//            }
+//            return new ResponseObject(true, combinedListings);
+//
+//            // DEBUGGING
+//        } catch (NumberFormatException e) {
+//            System.out.println(e.getMessage());
+//            return new ResponseObject(false, "Invalid parameters");
+//        } catch (AuthenticationCredentialsNotFoundException e) {
+//            System.out.println(e.getMessage());
+//            return new ResponseObject(false, "Unauthorized: Invalid credentials");
+//        } catch (MongoQueryException e) {
+//            System.out.println(e.getMessage());
+//            return new ResponseObject(false, "Error fetching listings (database error)");
+//        } catch (IllegalArgumentException e) {
+//            System.out.println(e.getMessage());
+//            return new ResponseObject(false, "Invalid request parameters");
+//        } catch (RuntimeException e) {
+//            System.out.println(e.getMessage());
+//            return new ResponseObject(false, "Internal Server Error");
+//        }
 
     }
 
