@@ -4,6 +4,7 @@ import com.wayfare.backend.helper.Mapper;
 import com.wayfare.backend.model.Booking;
 import com.wayfare.backend.model.Review;
 import com.wayfare.backend.model.TourListing;
+import com.wayfare.backend.model.User;
 import com.wayfare.backend.model.dto.ReviewDTO;
 import com.wayfare.backend.repository.BookingRepository;
 import com.wayfare.backend.repository.ReviewRepository;
@@ -47,16 +48,26 @@ public class ReviewController {
         }
     }
 
-    @GetMapping("/api/v1/listing/{id}/reviews")
+    @GetMapping("/api/v1/listing/{id}/firstfivereviews")
+    public ResponseObject getFirstFiveReviewsByListing(@PathVariable String id){
+        List<Review> reviewList = reviewRepo.findFirst5ByListingIdOrderByDateCreatedDesc(id);
+
+        return new ResponseObject(true, reviewList);
+    }
+
+    @GetMapping("/api/v1/listing/{id}/allreviews")
     public ResponseObject getReviewsByListing(@PathVariable String id){
         List<Review> reviewList = reviewRepo.findAllByListingIdOrderByDateCreatedDesc(id);
 
         return new ResponseObject(true, reviewList);
     }
 
-    @GetMapping("/api/v1/listing/{id}/firstfivereviews")
-    public ResponseObject getFirstFiveReviewsByListing(@PathVariable String id){
-        List<Review> reviewList = reviewRepo.findFirst5ByListingIdOrderByDateCreatedDesc(id);
+    @GetMapping("/api/v1/user/{username}/firstfivereviews")
+    public ResponseObject getFirstFiveReviewsByUsername(@PathVariable String username){
+        User user = userRepo.findByUsername(username);
+        if (user == null)
+            return new ResponseObject(false, "Username not found");
+        List<Review> reviewList = reviewRepo.findFirst5ByRevieweeIdOrderByDateCreatedDesc(user.getId());
 
         return new ResponseObject(true, reviewList);
     }
@@ -65,10 +76,13 @@ public class ReviewController {
     // *** GET ***
     // Gets all the reviews created by the logged-in user.
     // Authenticates using Bearer token in headers.
-    @GetMapping("/reviews")
-    public ResponseObject getReviewsByUser(){
-        WayfareUserDetails user = getCurrentUserDetails();
-        List<Review> reviewList = reviewRepo.findAllByUserId(user.getId());
+    @GetMapping("/api/v1/user/{username}/allreviews")
+    public ResponseObject getReviewsByUser(@PathVariable String username){
+        User user = userRepo.findByUsername(username);
+        if (user == null)
+            return new ResponseObject(false, "Username not found");
+
+        List<Review> reviewList = reviewRepo.findByRevieweeIdOrderByDateCreatedDesc(user.getId());
         return new ResponseObject(true, reviewList);
     }
 

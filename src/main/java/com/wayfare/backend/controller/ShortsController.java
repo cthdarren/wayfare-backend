@@ -63,7 +63,7 @@ public class ShortsController {
         if (toView.isPresent()){
             Shorts shorts = toView.get();
             List<CommentWithUser> comments = commentRepo.findAllJoinUserByJourneyId(shorts.getId());
-            ShortsWithComment result = (new ShortsWithComment(shorts.getId(), shorts.getShortsUrl(), shorts.getUserName(), shorts.getUserId(), shorts.getDescription(), shorts.getDatePosted(), shorts.getListing(), shorts.getLikes(), shorts.getThumbnailUrl(), shorts.getPosterPictureUrl(), comments));
+            ShortsWithComment result = (new ShortsWithComment(shorts.getId(), shorts.getShortsUrl(), shorts.getUserName(), shorts.getUserId(), shorts.getDescription(), shorts.getDatePosted(), shorts.getListing(), shorts.getLikes(), shorts.getThumbnailUrl(), userRepository.findByUsername(shorts.getUserName()).getPictureUrl(), comments));
             return new ResponseObject(true, result);
         }else {
             return new ResponseObject(false, "Journey not found");

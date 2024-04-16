@@ -14,17 +14,16 @@ import java.util.Optional;
 public interface ReviewRepository extends MongoRepository<Review, String> {
 
     // all the reviews that someone has created
-    List<Review> findAllByUserId(String userId);
+    List<Review> findAllByUserIdOrderByDateCreatedDesc(String userId);
 
     //all the reviews that has been made by other people for this person
-    List<Review> findAllByRevieweeId(String revieweeId);
+    List<Review> findAllByRevieweeIdOrderByDateCreatedDesc(String revieweeId);
+    List<Review> findFirst5ByRevieweeIdOrderByDateCreatedDesc(String revieweeId);
 
     List<Review> findAllByListingId(String listingId);
     List<Review> findAllByListingIdOrderByDateCreatedDesc(String listingId);
     List<Review> findFirst5ByListingIdOrderByDateCreatedDesc(String listingId);
-    List<Review> findFirst5ByListingUserIdOrderByDateCreatedDesc(String UserId);
 
-    List<Review> findFirst5ByRevieweeIdOrderByDateCreatedDesc(String UserId);
     List<Review> findByRevieweeIdOrderByDateCreatedDesc(String UserId);
 
     @Aggregation(pipeline = {
