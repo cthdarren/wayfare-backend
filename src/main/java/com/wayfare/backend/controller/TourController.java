@@ -87,21 +87,21 @@ public class TourController {
     {
         if (longitude == null & latitude == null & kmdistance == null & numberPax == null & startDate == null & endDate == null)
         {
-            return new ResponseObject(true,  tourRepo.findByLocationNearOrderByRatingDesc(new Point(0, 0), new Distance(20050.0, Metrics.KILOMETERS)));
+            return new ResponseObject(true,  tourRepo.findByLocationNear(new Point(0, 0), new Distance(20050.0, Metrics.KILOMETERS)));
         }
         if (longitude != null & latitude != null & kmdistance != null){
             Double doubleLong = Double.parseDouble(longitude);
             Double doubleLat = Double.parseDouble(latitude);
             Double doubleKmdistance = Double.parseDouble(kmdistance);
             if (numberPax == null & startDate == null & endDate == null){
-                return new ResponseObject(true, tourRepo.findByLocationNearOrderByRatingDesc(
+                return new ResponseObject(true, tourRepo.findByLocationNear(
                         new Point(doubleLong, doubleLat),
                         new Distance(doubleKmdistance, Metrics.KILOMETERS)));
             }
             if (numberPax != null){
                 Integer intPax = Integer.parseInt(numberPax);
                 if (startDate == null & endDate == null){
-                    return new ResponseObject(true, tourRepo.findByLocationNearAndMaxPaxGreaterThanEqualAndMinPaxLessThanEqualOrderByRatingDesc(
+                    return new ResponseObject(true, tourRepo.findByLocationNearAndMaxPaxGreaterThanEqualAndMinPaxLessThanEqual(
                             new Point(doubleLong, doubleLat),
                             new Distance(doubleKmdistance, Metrics.KILOMETERS),
                             intPax,
@@ -123,7 +123,7 @@ public class TourController {
             if (startDate != null & endDate != null){
                 return new ResponseObject(true, tourRepo.findAvailableListingsByPaxAndDateRange(intPax, startDate, endDate));
             }
-            return new ResponseObject(true, tourRepo.findByMaxPaxGreaterThanEqualAndMinPaxLessThanEqualOrderByRatingDesc(intPax, intPax));
+            return new ResponseObject(true, tourRepo.findByMaxPaxGreaterThanEqualAndMinPaxLessThanEqual(intPax, intPax));
         }
         if (startDate != null & endDate != null){
             return new ResponseObject(true, tourRepo.findAvailableListingsByDateRange(startDate, endDate));

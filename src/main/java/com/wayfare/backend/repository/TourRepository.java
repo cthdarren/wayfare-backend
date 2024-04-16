@@ -133,13 +133,6 @@ public interface TourRepository extends MongoRepository<TourListing, String> {
                           },
                         },
                       },
-                    """,
-            """
-                    {
-                      "$sort": {
-                        "listing.rating": -1
-                      }
-                    }
                     """
     })
     List<TourListing> findWithAllParams(Double longitude, Double latitude, Double radianDistance, String instantStartDateSearch, String instantEndDateSearch);
@@ -247,13 +240,6 @@ public interface TourRepository extends MongoRepository<TourListing, String> {
                           },
                         },
                       },
-                    """,
-            """
-                    {
-                      "$sort": {
-                        "listing.rating": -1
-                      }
-                    }
                     """
     })
     List<TourListing> findAvailableListingsByPaxAndDateRange(Integer numPax, String startDate, String endDate);
@@ -352,13 +338,6 @@ public interface TourRepository extends MongoRepository<TourListing, String> {
                           },
                         },
                       },
-                    """,
-            """
-                    {
-                      "$sort": {
-                        "listing.rating": -1
-                      }
-                    }
                     """
     })
     List<TourListing> findAvailableListingsByDateRange(String startDate, String endDate);
@@ -470,21 +449,14 @@ public interface TourRepository extends MongoRepository<TourListing, String> {
                           },
                         },
                       },
-                    """,
-            """
-                    {
-                      "$sort": {
-                        "listing.rating": -1
-                      }
-                    }
                     """
     })
     List<TourListing> findAvailableListingsByLocAndDateRange(Double longitude, Double latitude, Double radiansDistance, String startDate, String endDate);
 
     //https://docs.spring.io/spring-data/mongodb/reference/mongodb/repositories/query-methods.html#mongodb.repositories.queries.geo-spatial
     // Find listings based on location
-    List<TourListing> findByLocationNearAndMaxPaxGreaterThanEqualAndMinPaxLessThanEqualOrderByRatingDesc(Point location, Distance distance, Integer maxPax, Integer minPax);
-    List<TourListing> findByMaxPaxGreaterThanEqualAndMinPaxLessThanEqualOrderByRatingDesc(Integer maxPax, Integer minPax);
+    List<TourListing> findByLocationNearAndMaxPaxGreaterThanEqualAndMinPaxLessThanEqual(Point location, Distance distance, Integer maxPax, Integer minPax);
+    List<TourListing> findByMaxPaxGreaterThanEqualAndMinPaxLessThanEqual(Integer maxPax, Integer minPax);
 
-    List<TourListing> findByLocationNearOrderByRatingDesc(Point location, Distance distance);
+    List<TourListing> findByLocationNear(Point location, Distance distance);
 }
